@@ -71,7 +71,9 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
 learningPathApiController.getLearningPaths = async (req, res) => {
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();
-    let loginfo = "Requested learning path with query: {";
+    let language = query.language ? query.language : /.*/;
+
+    let loginfo = "Requested learning path with query: {language: " + language + ", ";
 
     if (query.all != undefined) {
         query = {
@@ -90,7 +92,9 @@ learningPathApiController.getLearningPaths = async (req, res) => {
     }
     logger.info(loginfo.slice(0, -2) + "}")
 
-    query = { $or: queryList }
+    query = { $and: [{ $or: queryList }, { language: language }] }
+
+
 
     let paths;
     await new Promise((resolve) => {
@@ -109,6 +113,7 @@ learningPathApiController.getLearningPaths = async (req, res) => {
             resPaths.push({
                 _id: p._id,
                 hruid: p.hruid,
+                language: p.language,
                 title: p.title,
                 description: p.description,
                 image: p.image.toString('base64'),
