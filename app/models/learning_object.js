@@ -51,7 +51,7 @@ const learningObjectSchema = new mongoose.Schema({
     content_type: {
         required: true,
         type: String,
-        enum: ["text/plain", "text/markdown", "text/html", "image/image", "application/pdf", "audio/mpeg"],  // TODO: add all allowed content types
+        enum: ["text/plain", "text/markdown", "text/html", "image/image", "application/pdf", "audio/mpeg", "blockly"],  // TODO: add all allowed content types
     },
     available: {
         type: Boolean,

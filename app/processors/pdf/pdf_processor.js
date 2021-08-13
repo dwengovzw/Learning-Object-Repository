@@ -17,21 +17,17 @@ class PdfProcessor extends Processor {
      * @param {object} args Optional arguments specific to the render function of the PdfProcessor
      * @returns 
      */
-    render(pdfUrl, args = { files: [] }) {
-        if (!args.files || args.files.length <= 0) {
-            UserLogger.error("The pdf file cannot be found. Please check if the filename is spelled correctly.")
-            return "";
-        }
-        if (!findFile(pdfUrl, args.files)) {
-            UserLogger.error("The pdf file cannot be found. Please check if the filename is spelled correctly.")
-            return "";
+    render(pdfUrl, args = { files: [], metadata: {} }) {
+        if ((!args.files || args.files.length <= 0 || !findFile(pdfUrl, args.files)) && !isValidHttpUrl(pdfUrl)) {
+            UserLogger.error("The pdf file cannot be found. Please check if the url is spelled correctly.")
+            throw new InvalidArgumentError("The pdf file cannot be found. Please check if the url is spelled correctly.");
         }
 
-        if (!isValidHttpUrl(pdfUrl) && (!pdfUrl || !pdfUrl.match(/^(?!http.*$)[^.].*\.pdf/))) {
-            throw new InvalidArgumentError("The pdf url is not valid.");
+        if (!args.metadata._id) {
+            throw new InvalidArgumentError("The metadata for for the object which uses the file '" + pdfUrl + "' is not loaded in the processor.");
         }
 
-        return DOMPurify.sanitize(`<embed src="${pdfUrl}" type="application/pdf" width="100%" height="800px""/>`, { ADD_TAGS: ["embed"] })
+        return DOMPurify.sanitize(`<embed src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${args.metadata._id}/${pdfUrl}" type="application/pdf" width="100%" height="800px"/>`, { ADD_TAGS: ["embed"] })
 
     }
 }

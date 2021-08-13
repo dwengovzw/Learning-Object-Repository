@@ -128,7 +128,7 @@ var dwenguino_lcd_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/dwenguino light.jpg",
+      "src": "../../../static/img/dwenguino light.jpg",
       "width": 150,
       "height": 63,
       "alt": "*"
@@ -240,7 +240,7 @@ var sonar_sensor_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/sonar.png",
+      "src": "../../../static/img/sonar.png",
       "width": 150,
       "height": 87,
       "alt": "*"
@@ -357,7 +357,7 @@ var dc_motor_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/dc.png",
+      "src": "../../../static/img/dc.png",
       "width": 150,
       "height": 90,
       "alt": "Image Dc motor"
@@ -392,7 +392,7 @@ var dwenguino_servo_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/servo.png",
+      "src": "../../../static/img/servo.png",
       "width": 100,
       "height": 100,
       "alt": "*"

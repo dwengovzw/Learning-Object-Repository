@@ -1,15 +1,27 @@
 import Logger from "../../logger.js"
 import path from "path"
 import LearningObjectRepository from "../../repository/learning_object_repository.js";
+import fs from "fs";
 
 let logger = Logger.getLogger()
 
 let learningObjectApiController = {}
 
-learningObjectApiController.getLearningObject = (req, res) => {
+learningObjectApiController.getLearningObject = async (req, res) => {
     let id = req.params.id;
-    let redirectpath = path.join("/", process.env.LEARNING_OBJECT_STORAGE_LOCATION, id);
-    return res.redirect(redirectpath);
+    let file = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, id, "index.html");
+    let resHtml;
+    await new Promise((resolve) => {
+        fs.readFile(file, 'utf8', function (err, data) {
+            if (err) {
+                return console.log(err);
+            }
+            resHtml = data.replace(/@@URL_REPLACE@@/g, `${process.env.DOMAIN_URL}`);
+            resolve();
+        });
+    })
+
+    return res.send(resHtml);
 };
 
 learningObjectApiController.getMetadata = async (req, res) => {

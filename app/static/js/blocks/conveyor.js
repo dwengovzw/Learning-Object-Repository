@@ -39,7 +39,7 @@ var conveyor_belt_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/conveyor/conveyor.png",
+      "src": "../../../static/img/conveyor/conveyor.png",
       "width": 100,
       "height": 120,
       "alt": "*"
@@ -74,7 +74,7 @@ var conv_button_json = {
   "args0": [
     {
       "type": "field_image",
-      "src": "../../app/static/img/conveyor/button.png",
+      "src": "../../../static/img/conveyor/button.png",
       "width": 30,
       "height": 30,
       "alt": "*"
@@ -110,7 +110,7 @@ var color_sensor_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/conveyor/rgb_sensor.png",
+      "src": "../../../static/img/conveyor/rgb_sensor.png",
       "width": 80,
       "height": 80,
       "alt": "*"

@@ -99,7 +99,7 @@ var pir_sensor_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/pir.png",
+      "src": "../../../static/img/pir.png",
       "width": 150,
       "height": 87,
       "alt": "*"
@@ -134,7 +134,7 @@ var sound_sensor_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/sound_sensor.png",
+      "src": "../../../static/img/socialrobot/sound_sensor.png",
       "width": 80,
       "height": 34,
       "alt": "*"
@@ -169,7 +169,7 @@ var touch_sensor_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/touch_sensor.png",
+      "src": "../../../static/img/socialrobot/touch_sensor.png",
       "width": 50,
       "height": 50,
       "alt": "*"
@@ -204,7 +204,7 @@ var button_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/button.svg",
+      "src": "../../../static/img/socialrobot/button.svg",
       "width": 50,
       "height": 50,
       "alt": "*"
@@ -236,7 +236,7 @@ var socialrobot_rgbled_json = {
   "args0": [
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/rgb_led.svg",
+      "src": "../../../static/img/socialrobot/rgb_led.svg",
       "width": 30,
       "height": 30,
       "alt": "rgbled"
@@ -489,7 +489,7 @@ var socialrobot_servo_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/servo.png",
+      "src": "../../../static/img/servo.png",
       "width": 100,
       "height": 100,
       "alt": "*"
@@ -530,7 +530,7 @@ var socialrobot_arms_down_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/arms_down.png",
+      "src": "../../../static/img/socialrobot/arms_down.png",
       "width": 177,
       "height": 147,
       "alt": "*"
@@ -584,7 +584,7 @@ var socialrobot_arms_up_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/arms_up.png",
+      "src": "../../../static/img/socialrobot/arms_up.png",
       "width": 177,
       "height": 147,
       "alt": "*"
@@ -684,7 +684,7 @@ var socialrobot_eyes_left_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/turn_eyes_left.png",
+      "src": "../../../static/img/socialrobot/turn_eyes_left.png",
       "width": 150,
       "height": 65,
       "alt": "*"
@@ -737,7 +737,7 @@ var socialrobot_eyes_right_json = {
     },
     {
       "type": "field_image",
-      "src": "../../app/static/img/socialrobot/turn_eyes_right.png",
+      "src": "../../../static/img/socialrobot/turn_eyes_right.png",
       "width": 150,
       "height": 65,
       "alt": "*"
