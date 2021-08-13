@@ -73,7 +73,7 @@ learningPathApiController.getLearningPaths = async (req, res) => {
     let repos = new LearningPathRepository();
     let loginfo = "Requested learning path with query: {";
 
-    if (query.all) {
+    if (query.all != undefined) {
         query = {
             title: query.all,
             description: query.all,
