@@ -73,14 +73,9 @@ class LearningObjectMarkdownRenderer {
             let proc = new AudioProcessor();
             return proc.render(href.split(/\/(.+)/, 2)[1], { files: this.args.files, metadata: this.args.metadata });
 
-        } else if (href.startsWith(this.videoPrefix)) {
+        } else if (href.startsWith(this.videoPrefix) || href.startsWith(this.notebookPrefix)) {
             let proc = new ExternProcessor();
             return proc.render(href.split(/\/(.+)/, 2)[1]);
-
-        } else if (href.startsWith(this.notebookPrefix)) {
-            let proc = new ExternProcessor();
-            let url = "https://nbviewer.jupyter.org/urls/" + (href.split(/\/(.+)/, 2)[1]).replace(/^https?:\/\//, '');
-            return proc.render(url);
 
         } else if (href.startsWith(this.blocklyPrefix)) {
             let proc = new BlocklyProcessor();

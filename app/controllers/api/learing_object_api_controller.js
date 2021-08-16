@@ -31,7 +31,7 @@ learningObjectApiController.getMetadata = async (req, res) => {
     await new Promise((resolve) => {
         repos.findById(req.params.id, (err, res) => {
             if (err) {
-                logger.error("Could not retrieve learning object from database: " + err.message);
+                logger.error("Could not retrieve learning object from database with id " + req.params.id + ":" + err.message);
             }
             metadata = res;
             resolve();
@@ -40,7 +40,7 @@ learningObjectApiController.getMetadata = async (req, res) => {
     if (metadata) {
         return res.json(metadata);
     }
-    return res.send("Could not retrieve learning object from database.");
+    return res.send("Could not retrieve learning object from database with id " + req.params.id + ".");
 };
 
 

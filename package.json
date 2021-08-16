@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --input-type module --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "start-production": "babel-node -r dotenv/config app/index.js",
     "start": "nodemon --exec babel-node -r dotenv/config app/index.js"
   },
   "keywords": [],

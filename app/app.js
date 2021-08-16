@@ -6,6 +6,7 @@ import ltijs from "ltijs"
 import schedule from 'node-schedule'
 import { pullAndProcessRepository } from './utils/git.js'
 import cors from "cors";
+import { urlReplaceInStaticFiles } from './utils/utils.js'
 
 
 const logger = Logger.getLogger();
@@ -85,6 +86,8 @@ app.set('view engine', 'ejs');
 schedule.scheduleJob('0 0 * * *', function () {
     pullAndProcessRepository(path.resolve("repos"));
 });
+
+urlReplaceInStaticFiles();
 
 
 export default app
