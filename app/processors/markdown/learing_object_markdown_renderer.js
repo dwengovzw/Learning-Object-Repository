@@ -82,7 +82,7 @@ class LearningObjectMarkdownRenderer {
             if (this.args.files) {
                 let file = findFile(href.split(/\/(.+)/, 2)[1], this.args.files)
                 if (file) {
-                    return proc.render(file.buffer, { language: this.args.metadata.language ? this.args.metadata.language : "nl" });
+                    return proc.render(file.buffer, { language: this.args.metadata.language ? this.args.metadata.language : "nl", id: this.args.metadata._id });
                 }
 
             }

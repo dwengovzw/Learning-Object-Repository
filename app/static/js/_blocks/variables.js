@@ -207,3 +207,6 @@ Blockly.Constants.Variables.RENAME_OPTION_CALLBACK_FACTORY = function (block) {
     Blockly.Variables.renameVariable(workspace, variable);
   };
 };
+
+// Hacky!
+let varDone = true;

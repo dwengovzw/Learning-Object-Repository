@@ -27,6 +27,10 @@ class LearningObjectRepository {
         LearningObject.find({}, callback);
     }
 
+    find(query, callback = (err) => { console.log(err) }) {
+        LearningObject.find(query, callback);
+    }
+
     findById(id, callback = (err) => { console.log(err) }) {
         LearningObject.findById(id, callback);
     }

@@ -17,53 +17,78 @@ class BlocklyProcessor extends Processor {
      * @param {object} args Optional arguments specific to the render function of the BlocklyProcessor
      * @returns 
      */
-    render(blocklyXml, args = { language: "nl" }) {
+    render(blocklyXml, args = { language: "nl", id: "" }) {
         if (!args.language || args.language == "") {
             args.language = "nl";
         }
         let html = `
-        <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+        <div id="blocklyDiv_${args.id}" style="height: 480px; width: 600px;"></div>
 
         <script>
 
-            function removePreviousScriptTags(){
-                console.log("removing scripts")
-
-                var scripts = document.getElementsByClassName('blockly_script');
-                while(scripts[0]) {
-                    scripts[0].parentNode.removeChild(scripts[0]);
-                }
+            function loadScripts${args.id}() {
+                let dynamicScripts = [];
+                document.querySelectorAll('.dynamic_blockly_script').forEach((scr) => {
+                    dynamicScripts.push(scr.cloneNode(true))
+                    scr.remove();
+                })
+                loadScript${args.id}(0, dynamicScripts)
             }
 
-            function loadScript(index) {
+            function loadDynamicScript${args.id}(dynamicScripts) {
+                try{        
+                    // Hacky!
+                    while(!varDone){
+                        setTimeout(() => {  }, 500);
+                        return;
+                    }
+                } catch(e){
+                    setTimeout(() => {  loadDynamicScript${args.id}(dynamicScripts); }, 500);
+                    return;
+                }
+
+                if(dynamicScripts){
+                    dynamicScripts.forEach((scr) => {
+                        document.getElementsByTagName("head")[0].appendChild(scr);
+                        console.log("loaded script " + scr.id);
+                    })
+                }
+                let code = 'function injectBlockly${args.id}() {let workspace = Blockly.inject("blocklyDiv_${args.id}", { readOnly: true, scrollbars: true, zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2, pinch: true } }); var xml = Blockly.Xml.textToDom(\\'${blocklyXml}\\'); Blockly.Xml.domToWorkspace(xml, workspace); } injectBlockly${args.id}()'
+                let script = document.createElement("script");
+                script.className = "blockly_script dynamic_blockly_script";
+                script.id = "blockly_script${args.id}"
+                script.type = "text/javascript";
+                script.innerHTML = code;
+                document.getElementsByTagName("head")[0].appendChild(script);
+                console.log("loaded blockly_script${args.id}");
+            }
+
+            function loadScript${args.id}(index, dynamicScripts) {
                 let scripts = ["blockly_compressed.js", "msg/${args.language}.js", "msg2/${args.language}.js", "blocks_compressed.js",
                 "blocks/arduino.js", "blocks/comments.js", "blocks/conveyor.js", "blocks/drawingrobot.js", "blocks/dwenguino_new.js",
                 "blocks/lists.js", "blocks/procedures.js", "blocks/socialrobot.js", "blocks/variables_dynamic.js", "blocks/variables.js"]
+                
                 if(index < scripts.length){
                     if(!document.getElementById("blockly_script" + index)){
                         let script = document.createElement("script");
                         script.id = "blockly_script" + index;
+                        script.className = "blockly_script"
                         script.type = "text/javascript";
-                        script.onload = function () {
-                            loadScript(index + 1);
-                        }
                         script.src = "@@URL_REPLACE@@/static/js/" + scripts[index]
                         document.getElementsByTagName("head")[0].appendChild(script);
-                    } else {
-                        loadScript(index + 1);
+
+                        script.onload = function () {
+                            console.log("loaded blockly_script" + index);
+                            loadScript${args.id}(index + 1, dynamicScripts);
+                        }
+                    } else{
+                        loadDynamicScript${args.id}(dynamicScripts);
                     }
                 } else {
-                    removePreviousScriptTags();
-                    let code = 'function injectBlockly() {let workspace = Blockly.inject("blocklyDiv", { readOnly: true, scrollbars: true, zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2, pinch: true } }); var xml = Blockly.Xml.textToDom(\\'${blocklyXml}\\'); Blockly.Xml.domToWorkspace(xml, workspace); } injectBlockly()'
-                    let script = document.createElement("script");
-                    script.className = "blockly_script";
-                    script.type = "text/javascript";
-                    script.innerHTML = code;
-                    document.getElementsByTagName("head")[0].appendChild(script);
-
+                    loadDynamicScript${args.id}(dynamicScripts);
                 }
             }
-            loadScript(0);
+            loadScripts${args.id}();
         </script>
         `
         return html; //TODO is not sanitized using DOMPurify.sanitize (problems with script tags)

@@ -166,7 +166,8 @@ learningObjectController.processFiles = (files, metadata = {}) => {
                 // Find pdf file
                 if (ext == ".xml") {
                     inputString = f.buffer.toString('utf8');
-                    args.language = metadata.language
+                    args.language = metadata.language;
+                    args.id = metadata._id;
                     resFiles.push(f);
                     return true;
                 }

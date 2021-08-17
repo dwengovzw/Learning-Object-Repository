@@ -83,6 +83,7 @@ app.set('view engine', 'ejs');
 
 // a cronjob (every day at midnight) to pull the repository and process the learning-objects/learning-paths
 // every 10 seconds for debugging purposes: */10 * * * * *
+// every day at 0h00 in production: 0 0 * * *
 schedule.scheduleJob('0 0 * * *', function () {
     pullAndProcessRepository(path.resolve("repos"));
 });
