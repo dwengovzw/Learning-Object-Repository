@@ -12,6 +12,7 @@ describe("Tests for the creation of learning objects", () => {
         const loSpec = {
             hruid: "testobject1",
             language: "EN",
+            version: 3,
             title: "Test object 1 title",
             description: "This is a description of test object 1",
             keywords: ["a", "b", ",", "1"],
@@ -25,16 +26,22 @@ describe("Tests for the creation of learning objects", () => {
                 callback_url: "",
                 callback_schema: ""
             },
-            content_location: "http://www.dwengo.org"
+            content_location: "http://www.dwengo.org",
+            estimated_time: 20,
+            skos_concepts: [
+                'http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen',
+                'http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso'
+            ],
+            teacher_exclusive: true
         };
         const lo = new LearningObject(loSpec);
         const loId = await lo.save();
         const fetchedLo = await LearningObject.findById(loId["_id"]).lean(); // Lean converts query result to pojo
 
         // Check if all the properties are correct
-        expect(fetchedLo.version).toEqual(0);
         expect(fetchedLo.hruid).toEqual(loSpec.hruid);
         expect(fetchedLo.language).toEqual(loSpec.language.toLowerCase().trim());
+        expect(fetchedLo.version).toEqual(loSpec.version);
         expect(fetchedLo.title).toEqual(loSpec.title.trim());
         expect(fetchedLo.description).toEqual(loSpec.description.trim());
         expect(fetchedLo.keywords).toEqual(loSpec.keywords);
@@ -47,43 +54,16 @@ describe("Tests for the creation of learning objects", () => {
         expect(fetchedLo.return_value.callback_url).toEqual(loSpec.return_value.callback_url);
         expect(fetchedLo.return_value.callback_schema).toEqual(loSpec.return_value.callback_schema);
         expect(fetchedLo.content_location).toEqual(loSpec.content_location);
-    });
-
-    test("Test if version number is incremented automatically after new save", async () => {
-        let loSpec = {
-            hruid: "testobject1",
-            language: "EN",
-            title: "Test object 1 title",
-            description: "This is a description of test object 1",
-            keywords: ["a", "b", ",", "1"],
-            copyright: "cc by",
-            licence: "none",
-            content_type: "text/plain",
-            available: true,
-            target_ages: [12, 13, 17],
-            difficulty: 9,
-            return_value: {
-                callback_url: "",
-                callback_schema: ""
-            },
-            content_location: "http://www.dwengo.org"
-        };
-        const lo = new LearningObject(loSpec);
-        let loId = await lo.save();
-        loSpec["uuid"] = loId.uuid;
-        loSpec["hruid"] = "testobject1-v2"
-        const lo2 = new LearningObject(loSpec);
-        let loId2 = await lo2.save(); // save a second time
-        const fetchedLo = await LearningObject.findById(loId2["_id"]).lean(); // Lean converts query result to pojo
-
-        // Check if all the properties are correct
-        expect(fetchedLo.version).toEqual(1);
+        expect(fetchedLo.estimated_time).toEqual(loSpec.estimated_time);
+        expect(fetchedLo.skos_concepts).toEqual(loSpec.skos_concepts);
+        expect(fetchedLo.teacher_exclusive).toEqual(loSpec.teacher_exclusive);
     });
 
     test("Test rounding of difficulty and target age", async () => {
         let loSpec = {
             hruid: "testobject1",
             language: "EN",
+            version: 3,
             title: "Test object 1 title",
             description: "This is a description of test object 1",
             keywords: ["a", "b", ",", "1"],
@@ -97,7 +77,13 @@ describe("Tests for the creation of learning objects", () => {
                 callback_url: "",
                 callback_schema: ""
             },
-            content_location: "http://www.dwengo.org"
+            content_location: "http://www.dwengo.org",
+            estimated_time: 20,
+            skos_concepts: [
+                'http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen',
+                'http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso'
+            ],
+            teacher_exclusive: true
         };
         const lo = new LearningObject(loSpec);
         let loId = await lo.save();
@@ -112,6 +98,7 @@ describe("Tests for the creation of learning objects", () => {
         let loSpec = {
             hruid: "testobject1",
             language: "NOLANG",
+            version: 3,
             title: "Test object 1 title",
             description: "This is a description of test object 1",
             keywords: ["a", "b", ",", "1"],
@@ -125,7 +112,13 @@ describe("Tests for the creation of learning objects", () => {
                 callback_url: "",
                 callback_schema: ""
             },
-            content_location: "http://www.dwengo.org"
+            content_location: "http://www.dwengo.org",
+            estimated_time: 20,
+            skos_concepts: [
+                'http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen',
+                'http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso'
+            ],
+            teacher_exclusive: true
         };
         const lo = new LearningObject(loSpec);
         console.log("created new learning object");
@@ -141,6 +134,7 @@ describe("Tests for the creation of learning objects", () => {
         let loSpec = {
             hruid: "testobject1",
             language: "NOLANG",
+            version: 3,
             title: "Test object 1 title",
             description: "This is a description of test object 1",
             keywords: ["a", "b", ",", "1"],
@@ -154,7 +148,13 @@ describe("Tests for the creation of learning objects", () => {
                 callback_url: "",
                 callback_schema: ""
             },
-            content_location: "http://www.dwengo.org"
+            content_location: "http://www.dwengo.org",
+            estimated_time: 20,
+            skos_concepts: [
+                'http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen',
+                'http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso'
+            ],
+            teacher_exclusive: true
         };
         const lo = new LearningObject(loSpec);
         console.log("created new learning object");

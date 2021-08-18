@@ -23,7 +23,11 @@ class PdfProcessor extends Processor {
             throw new InvalidArgumentError("The pdf file cannot be found. Please check if the url is spelled correctly.");
         }
 
-        if (!args.metadata._id) {
+        if (isValidHttpUrl(pdfUrl)) {
+            return DOMPurify.sanitize(`<embed src="${pdfUrl}" type="application/pdf" width="100%" height="800px"/>`, { ADD_TAGS: ["embed"] })
+        }
+
+        if (!args.metadata || !args.metadata._id) {
             throw new InvalidArgumentError("The metadata for for the object which uses the file '" + pdfUrl + "' is not loaded in the processor.");
         }
 
