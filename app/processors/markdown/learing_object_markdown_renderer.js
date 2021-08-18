@@ -17,6 +17,7 @@ class LearningObjectMarkdownRenderer {
     learingObjectPrefix = '@learning-object';
     pdfPrefix = '@pdf';
     audioPrefix = '@audio';
+    externPrefix = '@extern';
     videoPrefix = '@youtube';
     notebookPrefix = '@notebook';
     blocklyPrefix = '@blockly';
@@ -73,7 +74,7 @@ class LearningObjectMarkdownRenderer {
             let proc = new AudioProcessor();
             return proc.render(href.split(/\/(.+)/, 2)[1], { files: this.args.files, metadata: this.args.metadata });
 
-        } else if (href.startsWith(this.videoPrefix) || href.startsWith(this.notebookPrefix)) {
+        } else if (href.startsWith(this.externPrefix) || href.startsWith(this.videoPrefix) || href.startsWith(this.notebookPrefix)) {
             let proc = new ExternProcessor();
             return proc.render(href.split(/\/(.+)/, 2)[1]);
 
