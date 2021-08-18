@@ -6,6 +6,10 @@ learningPathApiRouter.route("/search").get((req, res) => {
     learningPathApiController.getLearningPaths(req, res);
 });
 
+learningPathApiRouter.route("/languages").get((req, res) => {
+    learningPathApiController.getLanguages(req, res);
+});
+
 learningPathApiRouter.route("/:id").get((req, res) => {
     learningPathApiController.getLearningPathFromId(req, res);
 });

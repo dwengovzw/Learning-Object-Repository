@@ -60,6 +60,36 @@ learningPathApiController.validateObjectReferencesInPath = async (path) => {
     return errors;
 }
 
+learningPathApiController.getLanguages = async (req, res) => {
+    let repos = new LearningPathRepository();
+    let paths = [];
+    await new Promise((resolve) => {
+        repos.find({}, (err, res) => {
+            if (err) {
+                logger.error("Could not retrieve learning paths from database: " + err.message);
+            } else {
+                paths = res;
+            }
+            resolve();
+        })
+    });
+    let languages = [];
+    if (paths) {
+        paths.forEach(p => {
+            if (!languages.includes(p.language)) {
+                languages.push(p.language);
+            }
+        })
+    }
+    let defaultLanguages = ['nl', 'en', 'fr', 'de'];
+    defaultLanguages.forEach(lang => {
+        if (!languages.includes(lang)) {
+            languages.push(lang);
+        }
+    })
+    return res.json(languages);
+}
+
 learningPathApiController.getLearningPathFromId = async (req, res) => {
     let path;
     let repos = new LearningPathRepository();
@@ -68,8 +98,9 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
         repos.findById(req.params.id, (err, res) => {
             if (err) {
                 logger.error("Could not retrieve learning path from database: " + err.message);
+            } else {
+                path = res;
             }
-            path = res;
             resolve();
         })
     });
