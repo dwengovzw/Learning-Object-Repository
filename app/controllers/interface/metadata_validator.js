@@ -27,6 +27,7 @@ class MetadataValidator {
         this.content_location = _metadata.content_location;
         this.estimated_time = _metadata.estimated_time;
         this.skos_concepts = _metadata.skos_concepts;
+        this.teacher_exclusive = _metadata.teacher_exclusive
     }
 
     validators = {
@@ -332,6 +333,14 @@ class MetadataValidator {
                 }
             } else {
                 return "- A parameter skos_concepts is required.\n";
+            }
+        },
+
+        teacher_exclusive() {
+            if (this.teacher_exclusive != undefined) {
+                if (typeof this.teacher_exclusive != "boolean") {
+                    return "- The teacher_exclusive parameter needs to be of type boolean.\n";
+                }
             }
         }
     }

@@ -90,7 +90,11 @@ const learningObjectSchema = new mongoose.Schema({
             type: String,
             required: true
         }
-    ]
+    ],
+    teacher_exclusive: {
+        type: Boolean,
+        default: false
+    }
 
 
 }, { timestamps: { createdAt: 'created_at' } });
