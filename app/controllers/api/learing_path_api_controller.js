@@ -5,6 +5,7 @@ import JsonValidator from "../../utils/json_validator.js";
 import { readFileSync } from "fs";
 import LearningPath from "../../models/learning_path.js";
 import UserLogger from "../../utils/user_logger.js";
+import learningObjectApiController from "./learing_object_api_controller.js";
 
 let logger = Logger.getLogger()
 
@@ -34,6 +35,31 @@ learningPathApiController.saveLearningPath = (file) => {
     }
 }
 
+learningPathApiController.validateObjectReferencesInPath = async (path) => {
+    let errors = "";
+    if (path.nodes) {
+        for (let i = 0; i < path.nodes.length; i++) {
+            const node = path.nodes[i];
+            let query = { hruid: node.learningobject_hruid, language: node.language, version: node.version };
+            let metadata = await learningObjectApiController.getMetadata(query);
+            if (!metadata) {
+                errors += `\n\t- A learning object with hruid: ${query.hruid}, language: ${query.language}, version: ${query.version}, doesn't exist.`
+            }
+            if (node.transitions) {
+                for (let j = 0; j < node.transitions.length; j++) {
+                    const trans = node.transitions[j];
+                    let query = { hruid: trans.next.hruid, language: trans.next.language, version: trans.next.version };
+                    let metadata = await learningObjectApiController.getMetadata(query);
+                    if (!metadata) {
+                        errors += `\n\t- A learning object with hruid: ${query.hruid}, language: ${query.language}, version: ${query.version}, doesn't exist.`
+                    }
+                }
+            }
+        }
+    }
+    return errors;
+}
+
 learningPathApiController.getLearningPathFromId = async (req, res) => {
     let path;
     let repos = new LearningPathRepository();
@@ -48,21 +74,25 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
         })
     });
     if (path) {
-        let resPath = {};
-        // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
-        resPath = {
-            _id: path._id,
-            hruid: path.hruid,
-            title: path.title,
-            description: path.description,
-            image: path.image.toString('base64'),
-            nodes: path.nodes,
-            uuid: path.uuid,
-            created_at: path.created_at,
-            updatedAt: path.updatedAt,
-            __v: path.__v
+        let errors = await learningPathApiController.validateObjectReferencesInPath(path);
+        if (errors) {
+            UserLogger.error(`The learning path (hruid: ${path.hruid}, language: ${path.language}) has invalid references to learning-objects:${errors}`)
+        } else {
+            // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
+            let resPath = {
+                _id: path._id,
+                hruid: path.hruid,
+                title: path.title,
+                description: path.description,
+                image: path.image.toString('base64'),
+                nodes: path.nodes,
+                uuid: path.uuid,
+                created_at: path.created_at,
+                updatedAt: path.updatedAt,
+                __v: path.__v
+            }
+            return res.json(resPath);
         }
-        return res.json(resPath);
     }
     return res.send("Could not retrieve learning path from database.");
 
@@ -94,8 +124,6 @@ learningPathApiController.getLearningPaths = async (req, res) => {
 
     query = { $and: [{ $or: queryList }, { language: language }] }
 
-
-
     let paths;
     await new Promise((resolve) => {
         repos.find(query, (err, res) => {
@@ -109,21 +137,27 @@ learningPathApiController.getLearningPaths = async (req, res) => {
     if (paths) {
         let resPaths = [];
         // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
-        paths.forEach(p => {
-            resPaths.push({
-                _id: p._id,
-                hruid: p.hruid,
-                language: p.language,
-                title: p.title,
-                description: p.description,
-                image: p.image.toString('base64'),
-                nodes: p.nodes,
-                uuid: p.uuid,
-                created_at: p.created_at,
-                updatedAt: p.updatedAt,
-                __v: p.__v
-            })
-        });
+        for (let i = 0; i < paths.length; i++) {
+            const p = paths[i];
+            let error = await learningPathApiController.validateObjectReferencesInPath(p)
+            if (!error) {
+                resPaths.push({
+                    _id: p._id,
+                    hruid: p.hruid,
+                    language: p.language,
+                    title: p.title,
+                    description: p.description,
+                    image: p.image.toString('base64'),
+                    nodes: p.nodes,
+                    uuid: p.uuid,
+                    created_at: p.created_at,
+                    updatedAt: p.updatedAt,
+                    __v: p.__v
+                })
+            } else {
+                UserLogger.error(`The learning path (hruid: ${p.hruid}, language: ${p.language}) has invalid references to learning-objects:${error}`)
+            }
+        }
         return res.json(resPaths);
     }
 
