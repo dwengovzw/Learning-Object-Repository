@@ -13,9 +13,10 @@ learningObjectApiController.getMetadata = async (query) => {
     await new Promise((resolve) => {
         repos.find(query, (err, res) => {
             if (err) {
-                logger.error("Could not retrieve learning object from database with id " + req.params.id + ":" + err.message);
+                logger.error(`Could not retrieve learning object from database (hruid: ${query.hruid}, language: ${query.language} and version: ${query.version}): ${err.message}`);
+            } else {
+                metadata = res[0];
             }
-            metadata = res[0];
             resolve();
         })
     });
@@ -74,7 +75,7 @@ learningObjectApiController.requestMetadata = async (req, res) => {
     if (metadata) {
         return res.json(metadata);
     }
-    return res.send("Could not retrieve learning object from database with id " + req.params.id + ".");
+    return res.send(`Could not retrieve learning object from database with hruid: ${query.hruid}, language: ${query.language} and version: ${query.version}.`);
 };
 
 

@@ -14,7 +14,7 @@ test("Test if audio with correct input is rendered correctly.", () => {
     expect(proc.render(inputUrl, inputArgs)).toBe(expectedOutput);
 });
 
-test("Test if audio without type argument is rendered correctly", () => {
+test("Test if audio without type argument is rendered correctly.", () => {
     let proc = new AudioProcessor();
     let inputUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
     let inputArgs = { metadata: {} }
@@ -25,13 +25,15 @@ test("Test if audio without type argument is rendered correctly", () => {
     expect(proc.render(inputUrl, inputArgs)).toBe(expectedOutput);
 });
 
-test("Test if audio render with an invalid type argument throws an error.", () => {
+test("Test if audio with an invalid type is rendered correctly.", () => {
     let proc = new AudioProcessor();
     let inputUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
     let inputArgs = { metadata: { content_type: "image/image" } }
-    expect(() => {
-        proc.render(inputUrl, inputArgs)
-    }).toThrow(InvalidArgumentError)
+    let expectedOutput = DOMPurify.sanitize(`<audio controls>
+                <source src="${inputUrl}" type=audio/mpeg>
+                Your browser does not support the audio element.
+                </audio>`);
+    expect(proc.render(inputUrl, inputArgs)).toBe(expectedOutput);
 });
 
 test("Test if audio with an empty type argument is rendered correctly.", () => {

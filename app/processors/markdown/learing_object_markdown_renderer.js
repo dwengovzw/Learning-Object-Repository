@@ -42,11 +42,13 @@ class LearningObjectMarkdownRenderer {
     // render a custom link when the prefix for a learning object is used.
     link(href, title, text) {
         if (href.startsWith(this.learingObjectPrefix)) {
-            // let dirCont = fs.readdirSync(path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, href.split(/\/(.+)/, 2)[1]));
-            // let htmlFile = dirCont.find((file) => {
-            //     return file.match(/.*\.html/)
-            // });
-            return `<a href="@@URL_REPLACE@@/api/learningObject/getContent/${href.split(/\/(.+)/, 2)[1]}"><b>${title}</b> - ${text}</a>`
+            let query = href.split(/\/(.+)/, 2)[1].split("/")
+            return `<a href="@@URL_REPLACE@@/api/learningObject/getWrapped?hruid=${query[0]}&language=${query[1]}&version=${query[2]}" title="${title}">${text}</a>`
+        } else if (href.startsWith(this.blocklyPrefix)) {
+            if (title) {
+                return `<a href="@@URL_REPLACE@@/storage/${this.args.metadata._id}/${href.split(/\/(.+)/, 2)[1]}" title="${title}" download>${text}</a>`
+            }
+            return `<a href="@@URL_REPLACE@@/storage/${this.args.metadata._id}/${href.split(/\/(.+)/, 2)[1]}" download>${text}</a>`
         } else {
             if (isValidHttpUrl(href)) {
                 return false;

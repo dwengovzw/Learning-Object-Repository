@@ -26,10 +26,8 @@ class AudioProcessor extends Processor {
         }
 
         let type;
-        if (!args.metadata || !args.metadata.content_type) {
+        if (!args.metadata || !args.metadata.content_type || !this.types.includes(args.metadata.content_type)) {
             type = this.types[0];
-        } else if (!this.types.includes(args.metadata.content_type)) {
-            throw new InvalidArgumentError("The content_type is not correct. " + args.metadata.content_type + " is not a audio-type.");
         } else {
             type = args.metadata.content_type;
         }
