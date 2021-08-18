@@ -81,12 +81,6 @@ learningPathApiController.getLanguages = async (req, res) => {
             }
         })
     }
-    let defaultLanguages = ['nl', 'en', 'fr', 'de'];
-    defaultLanguages.forEach(lang => {
-        if (!languages.includes(lang)) {
-            languages.push(lang);
-        }
-    })
     return res.json(languages);
 }
 
