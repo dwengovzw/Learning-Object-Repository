@@ -7,6 +7,8 @@ import learningPathApiController from '../controllers/api/learing_path_api_contr
 
 let logger = Logger.getLogger();
 
+
+
 /**
  * Pulls the given repository and processes the subdirectories containing a metadata or index file, creating learning-objects.
  * @param {string} destination - the destination directory for the remote files
