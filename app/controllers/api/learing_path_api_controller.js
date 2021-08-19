@@ -11,24 +11,44 @@ let logger = Logger.getLogger()
 
 let learningPathApiController = {}
 
-learningPathApiController.saveLearningPath = (file) => {
+learningPathApiController.saveLearningPath = async (file) => {
     let json = JSON.parse(file.buffer.toString());
     let jsonValidator = new JsonValidator(JSON.parse(readFileSync(path.resolve("app", "controllers", "api", "learning_path_schema.json"))));
     let valid = jsonValidator.validate(json);
-    if (valid) {
+    json.image = Buffer.from(json.image, 'base64');
 
-        json.image = Buffer.from(json.image, 'base64');
-        let learningPath = LearningPath(json);
+    if (valid) {
         let repos = new LearningPathRepository();
+
+        let existing;
+        await new Promise((resolve) => {
+            repos.find({ language: json.language, hruid: json.hruid }, (err, res) => {
+                if (err) {
+                    logger.error("Could not retrieve learning path from database: " + err.message);
+                } else {
+                    if (res.length > 0 && res[0]) {
+                        existing = res[0];
+                        for (const [key, value] of Object.entries(json)) {
+                            existing[key] = value;
+                        }
+                    }
+                }
+                resolve();
+            })
+        });
+        let learningPath = existing || LearningPath(json);
+
+
         repos.save(learningPath, (err) => {
             if (err) {
-                logger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be saved: " + err.message);
-                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be saved due to an error with the database or with the data.")
+                logger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
+                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the data.")
             } else {
-                logger.info("The learning-path with hruid '" + learningPath.hruid + "' has been saved correctly.");
-                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' has been saved correctly.");
+                logger.info("The learning-path with hruid '" + learningPath.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
             }
         })
+
     } else {
         let errorString = "Errors while saving learning-path from file " + file.originalname + ": " + jsonValidator.getErrors().map((e) => e.message);
         logger.error(errorString);
