@@ -11,6 +11,10 @@ let logger = Logger.getLogger()
 
 let learningPathApiController = {}
 
+/**
+ * save the new learning path or update the existing learning-path
+ * @param {object} file the json-file with learning-path definition
+ */
 learningPathApiController.saveLearningPath = async (file) => {
     let json = JSON.parse(file.buffer.toString());
     let jsonValidator = new JsonValidator(JSON.parse(readFileSync(path.resolve("app", "controllers", "api", "learning_path_schema.json"))));
@@ -55,6 +59,13 @@ learningPathApiController.saveLearningPath = async (file) => {
     }
 }
 
+
+/**
+ * validate if the references (combination hruid, language and version) of learning-objects are 
+ * correct
+ * @param {object} path the learning-path that needs to be validated
+ * @returns 
+ */
 learningPathApiController.validateObjectReferencesInPath = async (path) => {
     let errors = "";
     if (path.nodes) {
@@ -80,6 +91,12 @@ learningPathApiController.validateObjectReferencesInPath = async (path) => {
     return errors;
 }
 
+/**
+ * request all languages for which learning-paths are defined
+ * @param {object} req 
+ * @param {object} res 
+ * @returns all languages
+ */
 learningPathApiController.getLanguages = async (req, res) => {
     let repos = new LearningPathRepository();
     let paths = [];
@@ -104,6 +121,12 @@ learningPathApiController.getLanguages = async (req, res) => {
     return res.json(languages);
 }
 
+/**
+ * request learning-path from database based on unique id
+ * @param {object} req 
+ * @param {object} res 
+ * @returns learning-path
+ */
 learningPathApiController.getLearningPathFromId = async (req, res) => {
     let path;
     let repos = new LearningPathRepository();
@@ -143,6 +166,12 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
 
 }
 
+/**
+ * request learning-paths from database based on query
+ * @param {object} req
+ * @param {object} res
+ * @returns list of learning-paths
+ */
 learningPathApiController.getLearningPaths = async (req, res) => {
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();

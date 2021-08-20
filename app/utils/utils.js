@@ -16,6 +16,11 @@ let isValidHttpUrl = function (urlString) {
     return url.protocol === "http:" || url.protocol === "https:";
 }
 
+/**
+ * replaces all @@URL_REPLACE@@ placeholders in the static blockly-blocks files
+ * by taking reading the template files (_blocks) and writing the replaced content to the
+ * usable files (blocks)
+ */
 let urlReplaceInStaticFiles = async function () {
     let jsDir = path.resolve("app", "static", "js");
     let dirCont = fs.readdirSync(path.join(jsDir, "_blocks"));

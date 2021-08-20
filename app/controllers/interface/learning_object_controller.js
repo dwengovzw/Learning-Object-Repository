@@ -20,16 +20,22 @@ let logger = Logger.getLogger()
 
 let learningObjectController = {}
 
-learningObjectController.readLearningObject = (req, res) => {
-
-};
-
+/**
+ * renders create-learning-object interface page (not used anymore)
+ * @param {object} req 
+ * @param {object} res 
+ */
 learningObjectController.getCreateLearningObject = (req, res) => {
     res.render('interface/learning_object/learning_object.create.ejs', {
         hello: "Hello learning object!"
     });
 };
 
+/**
+ * renders interface with table with all learning-objects
+ * @param {object} req
+ * @param {object} res
+ */
 learningObjectController.getAllLearningObjects = async (req, res) => {
     let objects = await learningObjectController.findAllObjects();
 
@@ -63,6 +69,11 @@ learningObjectController.findAllObjects = async () => {
     return objects.map((obj) => { return { id: obj._id.toString(), hruid: obj.hruid, language: obj.language, version: obj.version, available: obj.available, url: path.join("/api/learningObject/getContent/", obj._id.toString()) } });
 }
 
+/**
+ * find and return the index.md file
+ * @param {array} files 
+ * @returns index.md file
+ */
 learningObjectController.findMarkdownIndex = (files) => {
     let indexregex = /.*index.md$/
     for (let i = 0; i < files.length; i++) {
@@ -284,12 +295,14 @@ learningObjectController.saveSourceFiles = (files, destination) => {
     }
 }
 
-
+/**
+ * create new learning-object or update existing learning-object
+ * @param {object} req 
+ * @param {object} res 
+ */
 learningObjectController.createLearningObject = async (req, res) => {
     logger.info("Trying to create learning object");
     try {
-        //await uploadFilesMiddleware(req, res);
-
         // Extract metadata and the metadata filename from files (if there's a index.md file, the html filename and html string are also extracted)
         let [metadata, metadataFile, markdown] = learningObjectController.extractMetadata(req.files);
 
@@ -379,21 +392,6 @@ learningObjectController.createLearningObject = async (req, res) => {
 
     } catch (error) {
         logger.error(error.message);
-
-        if (error.code === "LIMIT_UNEXPECTED_FILE") {
-            //return res.send("Too many files to upload.");
-        }
-        //return res.send(`Error when trying upload many files: ${error}`);
     }
 };
-
-
-learningObjectController.updateLearningObject = (req, res) => {
-
-};
-
-learningObjectController.deleteLearningObject = (req, res) => {
-
-};
-
 export default learningObjectController;
