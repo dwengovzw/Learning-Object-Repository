@@ -17,7 +17,8 @@ const learningPathSchema = new mongoose.Schema({
         trim: true,
     },
     image: {
-        type: Buffer
+        type: Buffer,
+        required: true
     },
     language: {
         type: String,

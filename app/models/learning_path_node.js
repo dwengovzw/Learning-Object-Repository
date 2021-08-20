@@ -27,8 +27,13 @@ const nodeTransitionSchema = new mongoose.Schema({
     condition: {
         type: String
     },
+    default: {
+        type: Boolean,
+        default: false
+    },
     next: {
-        type: nextNodeSchema
+        type: nextNodeSchema,
+        required: true
     }
 });
 
