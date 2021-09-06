@@ -167,6 +167,14 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
 }
 
 /**
+ * Remove all learning paths from the database. Done before adding them from git repository.
+ */
+learningPathApiController.removeLearningPaths = async () => {
+    let repos = new LearningPathRepository();
+    repos.removeAll();
+};
+
+/**
  * request learning-paths from database based on query
  * @param {object} req
  * @param {object} res

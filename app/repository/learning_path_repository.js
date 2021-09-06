@@ -13,6 +13,9 @@ class LearningPathRepository {
     findById(id, callback = (err) => { console.log(err) }) {
         LearningPath.findById(id, callback);
     }
+    removeAll(callback = (err) => { console.log(err) }){
+        LearningPath.remove({}, callback);
+    }
 }
 
 export default LearningPathRepository

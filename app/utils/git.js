@@ -76,6 +76,8 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
             let checkDirRec = (dir) => {
                 let dirCont = fs.readdirSync(dir);
                 if (dir.match(/.*learning.paths?.*/)) {
+                    // Remove existing learning paths (only keep the ones currently in the repo)
+                    learningPathApiController.removeLearningPaths();
                     // Process learning paths
                     dirCont.forEach(f => {
                         if (f.match(/.*\.json/) && fs.lstatSync(path.join(dir, f)).isFile()) {
