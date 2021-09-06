@@ -11,12 +11,11 @@ let logger = Logger.getLogger();
 
 /**
  * Pulls the given repository and processes the subdirectories containing a metadata or index file, creating learning-objects.
+ * Also processes the directory learning_paths and creates learning-paths using the .json files
  * @param {string} destination - the destination directory for the remote files
- * @param {string} repository - the url to the remote repository
  * @param {string} branch - the branch in the remote repository (default is 'main')
  */
 let pullAndProcessRepository = async function (destination, branch = "main") {
-    //let repository = "https://github.com/JariDeGraeve/learning-objects-test.git";
     let repository = process.env.LEARNING_OBJECTS_GIT_REPOSITORY
     // Pull Git repos
 
@@ -70,42 +69,42 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
             return res;
         }
 
-        //if (changes) {    // Comment for easier debugging
-        // Check directory recursively for learning-object root-directories + extract learning paths
-        let checkDirRec = (dir) => {
-            let dirCont = fs.readdirSync(dir);
-            if (dir.match(/.*learning.paths?.*/)) {
-                // Process learning paths
-                dirCont.forEach(f => {
-                    if (f.match(/.*\.json/) && fs.lstatSync(path.join(dir, f)).isFile()) {
-                        learningPathApiController.saveLearningPath({ originalname: f, buffer: fs.readFileSync(path.join(dir, f)) });
-                    }
-                });
-            }
-            if (dirCont.some(f => /.*index.md|.*metadata.(md|yaml)/.test(f))) {
-                // Process directory if index or metadata file is present.
-                let files = dirCont.map((f) => {
-                    if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
-                        let subfiles = getSubDirFiles(path.join(dir, f))
-                        return { originalname: f, isDir: true, sub: subfiles };
-                    } else {
-                        return { originalname: f, isDir: false, buffer: fs.readFileSync(path.join(dir, f)) };
-                    }
-                });
-                learningObjectController.createLearningObject({ files: files }, {})
-            } else {
-                // Check subdirectories
-                dirCont.forEach(f => {
-                    if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
-                        checkDirRec(path.join(dir, f));
-                    }
-                });
-            }
-        };
+        if (changes) {    // Comment for easier debugging
+            // Check directory recursively for learning-object root-directories + extract learning paths
+            let checkDirRec = (dir) => {
+                let dirCont = fs.readdirSync(dir);
+                if (dir.match(/.*learning.paths?.*/)) {
+                    // Process learning paths
+                    dirCont.forEach(f => {
+                        if (f.match(/.*\.json/) && fs.lstatSync(path.join(dir, f)).isFile()) {
+                            learningPathApiController.saveLearningPath({ originalname: f, buffer: fs.readFileSync(path.join(dir, f)) });
+                        }
+                    });
+                }
+                if (dirCont.some(f => /.*index.md|.*metadata.(md|yaml)/.test(f))) {
+                    // Process directory if index or metadata file is present.
+                    let files = dirCont.map((f) => {
+                        if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
+                            let subfiles = getSubDirFiles(path.join(dir, f))
+                            return { originalname: f, isDir: true, sub: subfiles };
+                        } else {
+                            return { originalname: f, isDir: false, buffer: fs.readFileSync(path.join(dir, f)) };
+                        }
+                    });
+                    learningObjectController.createLearningObject({ files: files }, {})
+                } else {
+                    // Check subdirectories
+                    dirCont.forEach(f => {
+                        if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
+                            checkDirRec(path.join(dir, f));
+                        }
+                    });
+                }
+            };
 
-        // Start recursion by checking the root directory.
-        checkDirRec(destination);
-        // }
+            // Start recursion by checking the root directory.
+            checkDirRec(destination);
+        }
     } catch (e) {
         console.log(e)
     }

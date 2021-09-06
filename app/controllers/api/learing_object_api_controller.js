@@ -7,6 +7,11 @@ let logger = Logger.getLogger()
 
 let learningObjectApiController = {}
 
+/**
+ * get the metadata from a learning-object based on a query
+ * @param {object} query 
+ * @returns metadata object from database
+ */
 learningObjectApiController.getMetadata = async (query) => {
     let repos = new LearningObjectRepository();
     let metadata;
@@ -23,7 +28,11 @@ learningObjectApiController.getMetadata = async (query) => {
     return metadata
 }
 
-
+/**
+ * get html content for learning-object based on query
+ * @param {object} query 
+ * @returns raw html content for learning-object
+ */
 learningObjectApiController.getHtmlObject = async (query) => {
     let metadata = await learningObjectApiController.getMetadata(query);
     let resHtml = "";
@@ -52,6 +61,12 @@ learningObjectApiController.getHtmlObject = async (query) => {
     return resHtml;
 }
 
+/**
+ * get raw learning-object content
+ * @param {object} req 
+ * @param {object} res 
+ * @returns 
+ */
 learningObjectApiController.getLearningObject = async (req, res) => {
     let query = req.query ? req.query : {};
     let resHtml = await learningObjectApiController.getHtmlObject(query) || "";
@@ -59,6 +74,12 @@ learningObjectApiController.getLearningObject = async (req, res) => {
 
 };
 
+/**
+ * get wrapped learning-object content
+ * @param {object} req
+ * @param {object} res
+ * @returns
+ */
 learningObjectApiController.getWrappedLearningObject = async (req, res) => {
     let query = req.query ? req.query : {};
     let content = await learningObjectApiController.getHtmlObject(query) || "";
@@ -68,6 +89,12 @@ learningObjectApiController.getWrappedLearningObject = async (req, res) => {
     });
 }
 
+/**
+ * get metadata for learning-object
+ * @param {object} req
+ * @param {object} res
+ * @returns
+ */
 learningObjectApiController.requestMetadata = async (req, res) => {
     let query = req.query ? req.query : {};
     let metadata = await learningObjectApiController.getMetadata(query);

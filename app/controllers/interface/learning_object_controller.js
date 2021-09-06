@@ -20,16 +20,22 @@ let logger = Logger.getLogger()
 
 let learningObjectController = {}
 
-learningObjectController.readLearningObject = (req, res) => {
-
-};
-
+/**
+ * renders create-learning-object interface page (not used anymore)
+ * @param {object} req 
+ * @param {object} res 
+ */
 learningObjectController.getCreateLearningObject = (req, res) => {
     res.render('interface/learning_object/learning_object.create.ejs', {
         hello: "Hello learning object!"
     });
 };
 
+/**
+ * renders interface with table with all learning-objects
+ * @param {object} req
+ * @param {object} res
+ */
 learningObjectController.getAllLearningObjects = async (req, res) => {
     let objects = await learningObjectController.findAllObjects();
 
@@ -63,6 +69,11 @@ learningObjectController.findAllObjects = async () => {
     return objects.map((obj) => { return { id: obj._id.toString(), hruid: obj.hruid, language: obj.language, version: obj.version, available: obj.available, url: path.join("/api/learningObject/getContent/", obj._id.toString()) } });
 }
 
+/**
+ * find and return the index.md file
+ * @param {array} files 
+ * @returns index.md file
+ */
 learningObjectController.findMarkdownIndex = (files) => {
     let indexregex = /.*index.md$/
     for (let i = 0; i < files.length; i++) {
@@ -284,13 +295,14 @@ learningObjectController.saveSourceFiles = (files, destination) => {
     }
 }
 
-
-
+/**
+ * create new learning-object or update existing learning-object
+ * @param {object} req 
+ * @param {object} res 
+ */
 learningObjectController.createLearningObject = async (req, res) => {
     logger.info("Trying to create learning object");
     try {
-        //await uploadFilesMiddleware(req, res);
-
         // Extract metadata and the metadata filename from files (if there's a index.md file, the html filename and html string are also extracted)
         let [metadata, metadataFile, markdown] = learningObjectController.extractMetadata(req.files);
 
@@ -306,46 +318,43 @@ learningObjectController.createLearningObject = async (req, res) => {
             throw new InvalidArgumentError("The metadata is not correctly formatted. See user.log for more info.")
         }
         logger.info("Correct metadata for learning object with hruid '" + metadata.hruid + "' found in '" + metadataFile.originalname + "'");
-        let existing = ids.find((o) => o.hruid == metadata.hruid && o.language == metadata.language && o.version == metadata.version)
         let id;
         let repos = new LearningObjectRepository();
         let dbError = false;
 
-        if (existing) {
-            // hruid, language and version need to be uniqe => update existing object
-            //const learningObject = new LearningObject(metadata);
-            //learningObject['_id'] = existing.id;
-            id = existing.id;
-            // update metadata in database
-            await new Promise((resolve) => {
-                repos.update(id, (err) => {
-                    if (err) {
-                        logger.error("The object with hruid '" + metadata.hruid + "' could not be updated: " + err.message);
-                        UserLogger.error("The object with hruid '" + metadata.hruid + "' could not be updated due to an error with the database or with the metadata.")
-                        dbError = true;
+        // check if object with this hruid, language and version already exists 
+        let existing;
+        await new Promise((resolve) => {
+            repos.find({ hruid: metadata.hruid, language: metadata.language, version: metadata.version }, (err, res) => {
+                if (err) {
+                    logger.error("Could not retrieve learning object from database: " + err.message);
+                } else {
+                    if (res.length > 0 && res[0]) {
+                        existing = res[0];
+                        for (const [key, value] of Object.entries(metadata)) {
+                            existing[key] = value;
+                        }
                     }
-                    logger.info("The metadata for the object with hruid '" + metadata.hruid + "' has been updated correctly.");
-                    resolve();
-                })
-            });
-        } else {
-            // Create learning object
-            const learningObject = new LearningObject(metadata);
-            id = learningObject['_id'].toString();
-            // save metadata in database
-            await new Promise((resolve) => {
-                repos.save(learningObject, (err) => {
-                    if (err) {
-                        logger.error("The object with hruid '" + learningObject.hruid + "' could not be saved: " + err.message);
-                        UserLogger.error("The object with hruid '" + learningObject.hruid + "' could not be saved due to an error with the database or with the metadata.")
-                        dbError = true;
-                    }
-                    logger.info("The metadata for the object with hruid '" + learningObject.hruid + "' has been saved correctly.");
-                    resolve();
-                })
-            });
+                }
+                resolve();
+            })
+        });
 
-        }
+        // Save new object or update existing one
+        let learningObject = existing || new LearningObject(metadata);
+        id = learningObject['_id'].toString();
+        await new Promise((resolve) => {
+            repos.save(learningObject, (err) => {
+                if (err) {
+                    logger.error("The object with hruid '" + metadata.hruid + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
+                    UserLogger.error("The object with hruid '" + metadata.hruid + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the metadata.")
+                    dbError = true;
+                }
+                logger.info("The metadata for the object with hruid '" + metadata.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                resolve();
+            })
+        });
+
         metadata._id = id;
 
         if (!dbError) {
@@ -383,21 +392,6 @@ learningObjectController.createLearningObject = async (req, res) => {
 
     } catch (error) {
         logger.error(error.message);
-
-        if (error.code === "LIMIT_UNEXPECTED_FILE") {
-            //return res.send("Too many files to upload.");
-        }
-        //return res.send(`Error when trying upload many files: ${error}`);
     }
 };
-
-
-learningObjectController.updateLearningObject = (req, res) => {
-
-};
-
-learningObjectController.deleteLearningObject = (req, res) => {
-
-};
-
 export default learningObjectController;

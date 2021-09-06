@@ -11,30 +11,61 @@ let logger = Logger.getLogger()
 
 let learningPathApiController = {}
 
-learningPathApiController.saveLearningPath = (file) => {
+/**
+ * save the new learning path or update the existing learning-path
+ * @param {object} file the json-file with learning-path definition
+ */
+learningPathApiController.saveLearningPath = async (file) => {
     let json = JSON.parse(file.buffer.toString());
     let jsonValidator = new JsonValidator(JSON.parse(readFileSync(path.resolve("app", "controllers", "api", "learning_path_schema.json"))));
     let valid = jsonValidator.validate(json);
-    if (valid) {
+    json.image = Buffer.from(json.image, 'base64');
 
-        json.image = Buffer.from(json.image, 'base64');
-        let learningPath = LearningPath(json);
+    if (valid) {
         let repos = new LearningPathRepository();
+
+        let existing;
+        await new Promise((resolve) => {
+            repos.find({ language: json.language, hruid: json.hruid }, (err, res) => {
+                if (err) {
+                    logger.error("Could not retrieve learning path from database: " + err.message);
+                } else {
+                    if (res.length > 0 && res[0]) {
+                        existing = res[0];
+                        for (const [key, value] of Object.entries(json)) {
+                            existing[key] = value;
+                        }
+                    }
+                }
+                resolve();
+            })
+        });
+        let learningPath = existing || LearningPath(json);
+
+
         repos.save(learningPath, (err) => {
             if (err) {
-                logger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be saved: " + err.message);
-                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be saved due to an error with the database or with the data.")
+                logger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
+                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the data.")
             } else {
-                logger.info("The learning-path with hruid '" + learningPath.hruid + "' has been saved correctly.");
-                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' has been saved correctly.");
+                logger.info("The learning-path with hruid '" + learningPath.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
             }
         })
+
     } else {
         let errorString = "Errors while saving learning-path from file " + file.originalname + ": " + jsonValidator.getErrors().map((e) => e.message);
         logger.error(errorString);
     }
 }
 
+
+/**
+ * validate if the references (combination hruid, language and version) of learning-objects are 
+ * correct
+ * @param {object} path the learning-path that needs to be validated
+ * @returns 
+ */
 learningPathApiController.validateObjectReferencesInPath = async (path) => {
     let errors = "";
     if (path.nodes) {
@@ -60,6 +91,12 @@ learningPathApiController.validateObjectReferencesInPath = async (path) => {
     return errors;
 }
 
+/**
+ * request all languages for which learning-paths are defined
+ * @param {object} req 
+ * @param {object} res 
+ * @returns all languages
+ */
 learningPathApiController.getLanguages = async (req, res) => {
     let repos = new LearningPathRepository();
     let paths = [];
@@ -84,6 +121,12 @@ learningPathApiController.getLanguages = async (req, res) => {
     return res.json(languages);
 }
 
+/**
+ * request learning-path from database based on unique id
+ * @param {object} req 
+ * @param {object} res 
+ * @returns learning-path
+ */
 learningPathApiController.getLearningPathFromId = async (req, res) => {
     let path;
     let repos = new LearningPathRepository();
@@ -123,6 +166,12 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
 
 }
 
+/**
+ * request learning-paths from database based on query
+ * @param {object} req
+ * @param {object} res
+ * @returns list of learning-paths
+ */
 learningPathApiController.getLearningPaths = async (req, res) => {
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();
