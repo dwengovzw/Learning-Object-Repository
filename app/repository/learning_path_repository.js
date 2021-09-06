@@ -14,7 +14,11 @@ class LearningPathRepository {
         LearningPath.findById(id, callback);
     }
     removeAll(callback = (err) => { console.log(err) }){
-        LearningPath.remove({}, callback);
+        LearningPath.deleteMany({}).then(function(){
+            console.log("Data deleted"); // Success
+        }).catch(function(error){
+            callback(error); // Failure
+        });
     }
 }
 
