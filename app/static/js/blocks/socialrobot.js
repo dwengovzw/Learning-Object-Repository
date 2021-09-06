@@ -37,6 +37,8 @@ var ledmatrixDropdown = [
   ["4", "3"]
 ];
 
+console.log(document.currentScript);
+
 let eyePatternDropdown = [
   [Blockly.Msg['ledmatrix']['restPosition'], '0'],
   [Blockly.Msg['ledmatrix']['blink1'], '1'],
