@@ -69,6 +69,8 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
             return res;
         }
 
+        changes = true;
+
         if (changes) {    // Comment for easier debugging
             // Check directory recursively for learning-object root-directories + extract learning paths
             let checkDirRec = (dir) => {
