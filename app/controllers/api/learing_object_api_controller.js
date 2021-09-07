@@ -84,8 +84,8 @@ learningObjectApiController.getWrappedLearningObject = async (req, res) => {
     let query = req.query ? req.query : {};
     let content = await learningObjectApiController.getHtmlObject(query) || "";
     return res.render('api/learning_object/learning_object.getWrapped.ejs', {
-        content: content,
-        domainURL: process.env.DOMAIN_URL
+        basePath: process.env.DOMAIN_URL,
+        content: content
     });
 }
 

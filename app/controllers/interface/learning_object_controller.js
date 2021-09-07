@@ -27,7 +27,8 @@ let learningObjectController = {}
  */
 learningObjectController.getCreateLearningObject = (req, res) => {
     res.render('interface/learning_object/learning_object.create.ejs', {
-        hello: "Hello learning object!"
+        hello: "Hello learning object!",
+        basePath: process.env.DOMAIN_URL
     });
 };
 
@@ -45,6 +46,7 @@ learningObjectController.getAllLearningObjects = async (req, res) => {
 
     res.render('interface/learning_object/learning_object.all.ejs', {
         hello: "Hello learning object!",
+        basePath: process.env.DOMAIN_URL,
         objects: objects.sort((a, b) => sortHruid(a, b) || sortLanguage(a, b) || sortVersion(a, b))
     });
 };

@@ -53,6 +53,7 @@
 </style>
 
 <script>
+    let basePath = "<%= basePath %>"
     function filterLog() {
       // Declare variables
       var input, filter, ul, li, a, i, txtValue;
@@ -97,7 +98,7 @@
         // Send a request to the server to start processing
         $.ajax({
             type: "GET",
-            url: '/api/manage/forceProcess',
+            url: basePath + '/api/manage/forceProcess',
             success: (data) => {
                 // When processing is done, the server sends a response
                 if (data == "done"){

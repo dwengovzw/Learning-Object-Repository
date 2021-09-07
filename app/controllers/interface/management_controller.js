@@ -40,6 +40,7 @@ managementController.forceProcess = (req, res) => {
 
 managementController.overview = async (req, res) => {
     return res.render('interface/management/management.overview.ejs', {
+        basePath: process.env.DOMAIN_URL,
         title: "Management interface",
         logLines: await managementController.getLogLines()
     });
