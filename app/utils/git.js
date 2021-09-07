@@ -4,6 +4,7 @@ import path from 'path'
 import simpleGit from 'simple-git';
 import Logger from '../logger.js';
 import learningPathApiController from '../controllers/api/learing_path_api_controller.js';
+import UserLogger from "../utils/user_logger.js"
 
 let logger = Logger.getLogger();
 
@@ -16,6 +17,9 @@ let logger = Logger.getLogger();
  * @param {string} branch - the branch in the remote repository (default is 'main')
  */
 let pullAndProcessRepository = async function (destination, branch = "main") {
+    // Clear the previous log
+    UserLogger.clear()
+    
     let repository = process.env.LEARNING_OBJECTS_GIT_REPOSITORY
     // Pull Git repos
 

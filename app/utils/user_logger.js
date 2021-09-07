@@ -41,6 +41,12 @@ class UserLogger {
             console.log(message.trimRight("\n"));
         }
     }
+
+    static clear(){
+        fs.truncate(path.resolve("user.log"), 0, () => {
+            console.log("cleared user log");
+        })
+    }
 }
 
 export default UserLogger;
