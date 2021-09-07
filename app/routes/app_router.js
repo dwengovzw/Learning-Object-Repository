@@ -2,6 +2,7 @@ import express from 'express';
 import learningObjectRouter from "./interface/learning_object_router.js"
 import learningObjectApiRouter from "./api/learing_object_api_router.js"
 import learningPathApiRouter from "./api/learing_path_api_router.js"
+import managementRouter from './interface/management_router.js';
 import path from "path"
 import fs from "fs"
 
@@ -32,5 +33,6 @@ appRouter.get('/log', function (req, res) {
 appRouter.use("/interface/learningObject", learningObjectRouter);
 appRouter.use("/api/learningObject", learningObjectApiRouter);
 appRouter.use("/api/learningPath", learningPathApiRouter);
+appRouter.use("/api/manage", managementRouter);
 
 export default appRouter;

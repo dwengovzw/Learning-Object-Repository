@@ -84,6 +84,7 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
                             learningPathApiController.saveLearningPath({ originalname: f, buffer: fs.readFileSync(path.join(dir, f)) });
                         }
                     });
+                    console.log("Done processing learning paths")
                 }
                 if (dirCont.some(f => /.*index.md|.*metadata.(md|yaml)/.test(f))) {
                     // Process directory if index or metadata file is present.

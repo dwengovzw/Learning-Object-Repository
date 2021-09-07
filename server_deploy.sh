@@ -13,8 +13,8 @@ echo 'DATABASE_URL=mongodb://localhost:27017/learning_object_database' >> .env
 echo 'ERASE_DATABASE_ON_SYNC=true' >> .env
 echo 'LEARNING_OBJECTS_GIT_REPOSITORY=https://github.com/dwengovzw/learning_content' >> .env
 echo 'DOMAIN_URL=http://83.217.67.53/backend' >> .env
-#echo "LEARNING_OBJECT_LOADING_SCHEDULE = '0 0 * * *'" >> .env
-echo "LEARNING_OBJECT_LOADING_SCHEDULE = '*/10 * * * * *'" >> .env
+echo "LEARNING_OBJECT_LOADING_SCHEDULE = '0 0 * * *'" >> .env # Each day at midnight
+#echo "LEARNING_OBJECT_LOADING_SCHEDULE = '*/10 * * * * *'" >> .env
 echo "LEARNING_OBJECT_REPOSITORY_LOCATION = '/home/ubuntu/dwengo-deploy/learning_object_backend/repos'" >> .env
 
 #restart application (was started with: pm2 start 'npm run start-production' --name learning-object-repository)
