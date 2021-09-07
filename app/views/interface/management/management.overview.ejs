@@ -86,7 +86,7 @@
     function updateLog(){
         $.ajax({
             type: "GET",
-            url: '/api/manage/logsraw',
+            url: basePath + '/api/manage/logsraw',
             success: (data) => {
                 let lines = JSON.parse(data);
                 resetLog(lines);
