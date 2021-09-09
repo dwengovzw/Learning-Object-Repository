@@ -18,7 +18,6 @@ class ProcessingProxy {
         this.processors[ProcessorContentType.TEXT_PLAIN] = new TextProcessor();
         this.processors[ProcessorContentType.AUDIO_MPEG] = new AudioProcessor();
         this.processors[ProcessorContentType.APPLICATION_PDF] = new PdfProcessor();
-
         this.processors[ProcessorContentType.EXTERN] = new ExternProcessor();
         this.processors[ProcessorContentType.BLOCKLY] = new BlocklyProcessor();
     }

@@ -350,8 +350,10 @@ class MetadataValidator {
      * Validates the metadata
      * @returns [object, boolean] - the object is the possibly updated metadata, 
      * and the boolean indicates if the validation was succesfull
+     * 
+     * @param filelocation optional location of the learing object in the repository (for logging info)
      */
-    validate() {
+    validate(filelocation = "") {
         let errors = "";
         Object.values(this.validators).map(value => {
             if (typeof value === 'function') {
@@ -363,7 +365,7 @@ class MetadataValidator {
         })
 
         if (errors && errors.length > 0) {
-            let title = "Metadata errors for the learning-object "
+            let title = "Metadata errors for the learning-object" + ((filelocation == "") ? "" : ` at '${filelocation}' `)
                 + (this.hruid && typeof this.hruid == "string" ? "with hruid '" + this.hruid + "'" : "without a hruid");
             UserLogger.error(errors, title);
             return [this.metadata, false];

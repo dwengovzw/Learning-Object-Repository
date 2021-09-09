@@ -45,11 +45,11 @@ learningPathApiController.saveLearningPath = async (file) => {
 
         repos.save(learningPath, (err) => {
             if (err) {
-                logger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
-                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the data.")
+                logger.error("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
+                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the data.")
             } else {
-                logger.info("The learning-path with hruid '" + learningPath.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
-                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                logger.info("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' has been " + (existing ? "updated " : "saved") + " correctly.");
             }
         })
 
@@ -171,7 +171,7 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
  */
 learningPathApiController.removeLearningPaths = async () => {
     let repos = new LearningPathRepository();
-    repos.removeAll();
+    return repos.removeAll();
 };
 
 /**

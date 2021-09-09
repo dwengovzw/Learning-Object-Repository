@@ -12,14 +12,11 @@
 <input type="text" id="myInput" onkeyup="filterLog()" placeholder="Search...">
 
 <ul id="myUL">
-    <% logLines.forEach(function(line){ %>
-       <li><%- line %></li>
-    <% }); %>
+    
 </ul>
 
 <style>
     #myInput {
-        background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
         width: 100%; /* Full-width */
@@ -77,9 +74,20 @@
         ul = document.getElementById("myUL");
         $(ul).empty(); // Clear the list
         newLogData.forEach((element, index, inputArray) => {
-            let node = document.createElement('li');    // Create new list item
-            node.appendChild(document.createTextNode(element)); // Append log element text to li
-            ul.appendChild(node); // Add li to list
+            let style = {}
+            if (element.includes("[INFO]")){
+                style = {
+                    "color": "orange"
+                }
+            }else if (element.includes("[ERROR]")){
+                style = {
+                    "color": "red"
+                }
+            }
+            let item = $('<li>');
+            item.html(element);
+            item.css(style);
+            $("#myUL").append(item);
         })
     }
 
@@ -109,6 +117,9 @@
             }
         })
     }
+    $(document).ready(() => {
+        updateLog();
+    })
 </script>
 
 <%- include("./../../shared/footer.ejs") %>

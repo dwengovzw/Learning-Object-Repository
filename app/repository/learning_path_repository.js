@@ -13,12 +13,17 @@ class LearningPathRepository {
     findById(id, callback = (err) => { console.log(err) }) {
         LearningPath.findById(id, callback);
     }
-    removeAll(callback = (err) => { console.log(err) }){
-        LearningPath.deleteMany({}).then(function(){
-            console.log("Data deleted"); // Success
-        }).catch(function(error){
-            callback(error); // Failure
-        });
+    async removeAll(callback = (err) => { console.log(err) }){
+        return new Promise((resolve, reject) => {
+            LearningPath.deleteMany({}).then(function(){
+                console.log("Data deleted"); // Success
+                resolve()
+            }).catch(function(error){
+                callback(error); // Failure
+                reject();
+            });
+        })
+        
     }
 }
 

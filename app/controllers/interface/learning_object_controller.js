@@ -217,7 +217,7 @@ learningObjectController.processMarkdown = (md, files, metadata) => {
  * @param {array} files 
  * @returns the metadata and if a index.md file is used also returns the new html filename and content.
  */
-learningObjectController.extractMetadata = (files) => {
+learningObjectController.extractMetadata = (files, learning_object_location) => {
     // index.md 
     let indexfile = learningObjectController.findMarkdownIndex(files);  // Look for the index markdown file
     if (indexfile) {
@@ -247,7 +247,7 @@ learningObjectController.extractMetadata = (files) => {
                     metadata = yaml.load(metadataText);
                 } catch (e) {
                     logger.error(`Unable to convert metadata to YAML: ${e}`);
-                    UserLogger.error(`There is an syntax-error in the metadata: ${e}`);
+                    UserLogger.error(`Error in file: ${learning_object_location}/${indexfile.originalname}`,`There is an syntax-error in the metadata: ${e}`);
                 }
                 return [metadata, metadatafile];
             }
@@ -304,9 +304,10 @@ learningObjectController.saveSourceFiles = (files, destination) => {
  */
 learningObjectController.createLearningObject = async (req, res) => {
     logger.info("Trying to create learning object");
+    let learning_object_location = req.filelocation;
     try {
         // Extract metadata and the metadata filename from files (if there's a index.md file, the html filename and html string are also extracted)
-        let [metadata, metadataFile, markdown] = learningObjectController.extractMetadata(req.files);
+        let [metadata, metadataFile, markdown] = learningObjectController.extractMetadata(req.files, learning_object_location);
 
         // Validate metadata
         let ids = await learningObjectController.findAllObjects();
@@ -314,7 +315,7 @@ learningObjectController.createLearningObject = async (req, res) => {
 
         let valid;
 
-        [metadata, valid] = val.validate();
+        [metadata, valid] = val.validate(learning_object_location);
 
         if (!valid) {
             throw new InvalidArgumentError("The metadata is not correctly formatted. See user.log for more info.")
@@ -348,11 +349,11 @@ learningObjectController.createLearningObject = async (req, res) => {
         await new Promise((resolve) => {
             repos.save(learningObject, (err) => {
                 if (err) {
-                    logger.error("The object with hruid '" + metadata.hruid + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
-                    UserLogger.error("The object with hruid '" + metadata.hruid + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the metadata.")
+                    logger.error("The object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
+                    UserLogger.error("The object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the metadata.")
                     dbError = true;
                 }
-                logger.info("The metadata for the object with hruid '" + metadata.hruid + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                logger.info("The metadata for the object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' has been " + (existing ? "updated " : "saved") + " correctly.");
                 resolve();
             })
         });
@@ -383,10 +384,10 @@ learningObjectController.createLearningObject = async (req, res) => {
             learningObjectController.saveSourceFiles(resFiles, destination);
 
             if (existing) {
-                UserLogger.info("The learning-object with hruid '" + metadata.hruid + "' and id '" + id + "' was updated correctly");
+                UserLogger.info("The learning-object with hruid '" + metadata.hruid + "' and id '" + id + "' at location '" + learning_object_location + "' was updated correctly");
 
             } else {
-                UserLogger.info("The learning-object with hruid '" + metadata.hruid + "' was created correctly with id " + id);
+                UserLogger.info("The learning-object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' was created correctly with id " + id);
 
             }
 

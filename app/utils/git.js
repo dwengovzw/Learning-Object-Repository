@@ -76,12 +76,13 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
         changes = true;
 
         if (changes) {    // Comment for easier debugging
+            // Remove existing learning paths (only keep the ones currently in the repo)
+            let result = learningPathApiController.removeLearningPaths();
+            await result
             // Check directory recursively for learning-object root-directories + extract learning paths
             let checkDirRec = (dir) => {
                 let dirCont = fs.readdirSync(dir);
                 if (dir.match(/.*learning.paths?.*/)) {
-                    // Remove existing learning paths (only keep the ones currently in the repo)
-                    learningPathApiController.removeLearningPaths();
                     // Process learning paths
                     dirCont.forEach(f => {
                         if (f.match(/.*\.json/) && fs.lstatSync(path.join(dir, f)).isFile()) {
@@ -91,6 +92,7 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
                     console.log("Done processing learning paths")
                 }
                 if (dirCont.some(f => /.*index.md|.*metadata.(md|yaml)/.test(f))) {
+                    UserLogger.info(`Processing directory '${dir}' as learning object`, "GIT PROCESSOR INFO:")
                     // Process directory if index or metadata file is present.
                     let files = dirCont.map((f) => {
                         if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
@@ -100,7 +102,7 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
                             return { originalname: f, isDir: false, buffer: fs.readFileSync(path.join(dir, f)) };
                         }
                     });
-                    learningObjectController.createLearningObject({ files: files }, {})
+                    learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
                 } else {
                     // Check subdirectories
                     dirCont.forEach(f => {

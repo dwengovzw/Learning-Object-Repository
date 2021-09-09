@@ -3,6 +3,7 @@ import learningObjectRouter from "./interface/learning_object_router.js"
 import learningObjectApiRouter from "./api/learing_object_api_router.js"
 import learningPathApiRouter from "./api/learing_path_api_router.js"
 import managementRouter from './interface/management_router.js';
+import ltiRouter from './lti/lti_router.js';
 import path from "path"
 import fs from "fs"
 
@@ -34,5 +35,6 @@ appRouter.use("/interface/learningObject", learningObjectRouter);
 appRouter.use("/api/learningObject", learningObjectApiRouter);
 appRouter.use("/api/learningPath", learningPathApiRouter);
 appRouter.use("/api/manage", managementRouter);
+appRouter.use("/lti", ltiRouter);
 
 export default appRouter;

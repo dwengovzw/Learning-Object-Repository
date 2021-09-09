@@ -29,7 +29,7 @@ class ExternProcessor extends Processor {
         }
 
 
-        return DOMPurify.sanitize(`<iframe width="420px" height="315px" src="${externURL}"></iframe>`, { ADD_TAGS: ["iframe"] });
+        return DOMPurify.sanitize(`<div class="iframe-container"><iframe width="420px" height="315px" src="${externURL}"></iframe></div>`, { ADD_TAGS: ["iframe"] });
 
     }
 }
