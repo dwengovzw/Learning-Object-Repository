@@ -15,6 +15,10 @@ ltiRouter.route("/initiate_login").post((req, res) => {
     ltiController.initiate_login(req, res);
 });
 
+ltiRouter.route("/authorize").post((req, res) => {
+    ltiController.authorize(req, res)
+})
+
 
 
 export default ltiRouter;
