@@ -176,7 +176,7 @@ learningObjectController.processFiles = (files, metadata = {}) => {
                 }
                 break;
             case ProcessorContentType.BLOCKLY:
-                // Find pdf file
+                // Find xml file
                 if (ext == ".xml") {
                     inputString = f.buffer.toString('utf8');
                     args.language = metadata.language;
@@ -185,6 +185,16 @@ learningObjectController.processFiles = (files, metadata = {}) => {
                     return true;
                 }
                 break;
+            case ProcessorContentType.EXTERN:
+                // find a .txt file in the learing object folder containing the external url
+                if (ext == ".txt") {
+                    inputString = f.buffer.toString('utf8').trim();
+                    resFiles.push(f)
+                    args.height = 700;
+                    args.aspect_ratio = "iframe-1-1"
+                    return true
+                }
+                break
             default:
                 //Not supposed to happen
                 logger.error("Coudn't process this content type: " + metadata.content_type);
@@ -354,6 +364,8 @@ learningObjectController.createLearningObject = async (req, res) => {
                     dbError = true;
                 }
                 logger.info("The metadata for the object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                UserLogger.info("The metadata for the object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                
                 resolve();
             })
         });
@@ -394,7 +406,9 @@ learningObjectController.createLearningObject = async (req, res) => {
         }
 
     } catch (error) {
+        console.log(learning_object_location)
         logger.error(error.message);
+        UserLogger.error(error.message, learning_object_location)
     }
 };
 export default learningObjectController;

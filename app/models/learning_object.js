@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import { v4 as uuidv4 } from 'uuid'
 import Logger from "../logger.js"
+import { ProcessorContentType } from "../../app/processors/content_type.js"
 
 const Schema = mongoose;
 
@@ -51,7 +52,7 @@ const learningObjectSchema = new mongoose.Schema({
     content_type: {
         required: true,
         type: String,
-        enum: ["text/plain", "text/markdown", "text/html", "image/image", "application/pdf", "audio/mpeg", "blockly"],
+        enum: Object.values(ProcessorContentType) //["text/plain", "text/markdown", "text/html", "image/image", "application/pdf", "audio/mpeg", "blockly", "extern"],
     },
     available: {
         type: Boolean,

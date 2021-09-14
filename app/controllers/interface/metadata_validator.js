@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import Logger from "../../logger.js"
 import UserLogger from '../../utils/user_logger.js'
+import { ProcessorContentType } from '../../processors/content_type.js'
 
 class MetadataValidator {
 
@@ -206,7 +207,7 @@ class MetadataValidator {
             }
 
             // existing content type
-            let types = ["text/plain", "text/markdown", "text/html", "image/image", "application/pdf", "audio/mpeg", "blockly"];
+            let types = Object.values(ProcessorContentType) // ["text/plain", "text/markdown", "text/html", "image/image", "application/pdf", "audio/mpeg", "blockly", "extern"];
             if (!types.includes(this.content_type)) {
                 let err = "- This content_type is not valid. Make sure the content type is one of the following: \n";
                 types.forEach(type => {

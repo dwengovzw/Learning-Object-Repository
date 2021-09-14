@@ -4,7 +4,10 @@ import fs from 'fs'
 import NonceStore from "../../models/nonce_store.js"
 import queryString from "querystring"
 import jwt from "jsonwebtoken"
-
+import https from "https"
+import crypto from "crypto"
+import jwkToPem from "jwk-to-pem"
+import { Buffer } from "buffer"
 
 let logger = Logger.getLogger()
 
@@ -37,6 +40,7 @@ ltiController.initiate_login = async (req, res) => {
         nonce = await ltiController.generate_nonce_for_user_id(params.login_hint)
     }catch(err){
         res.sendStatus(500) // internal server error
+        return
     }
     let redirect_query = {
         scope: "openid",
@@ -55,29 +59,105 @@ ltiController.initiate_login = async (req, res) => {
     res.redirect(302, ilearn_authentication_endpoint + "?" + query)
 }
 
+/**
+ * Decode the id_token sent by i-Learn, verify it and redirect to the requested content.
+ * @param {*} req 
+ * @param {*} res 
+ */
 ltiController.authorize = async (req, res) => {
     let id_token = req.body.id_token
+    let header, payload, signature;
+    let split_id_token = id_token.split(".")
+    signature = split_id_token.pop()
+    const split_id_token_obj = split_id_token.map((elem) => JSON.parse(Buffer.from(elem, "base64")));
+    [header, payload] = split_id_token_obj
     try {
-        // TODO: get ilear public key for verification
-        let decoded = jwt.verify(id_token, "<i-learn-public-key>")
-        // TODO: process decoded info and redirect to learning object page
+        let i_learn_key
+        let i_learn_key_pem
+        try {
+            let keys = await ltiController.retrieve_i_learn_public_keys();  // Try to get the i_lear public key for signing the token
+            i_learn_key = ltiController.select_key(header, keys);        // Select correct key for this token
+            i_learn_key_pem = jwkToPem(i_learn_key);
+        } catch (err) {
+            res.sendStatus(500) // Unable to retrieve the key: Internal server error
+            return
+        }
+        let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: "https://saltire.lti.app/platform" })  // Verify token with i-learn public key
+        //let valid_signature = ltiController.verify_signature(i_learn_key.n, id_token);
+        let valid_nonce = await ltiController.validate_nonce_for_user_id(decoded_payload.sub, decoded_payload.nonce);  // Validate nonce for user_id
+        if (!valid_nonce){
+            res.sendStatus(401) // unauthorized
+        }else{
+            let resource_id = payload["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+            res.redirect(302, `${process.env.I_LEARN_REDIRECT_URI}?_id=${resource_id}`)  // Redirect to requested content
+        }
+        return
     } catch (err) {
-        res.sendStatus(500) // internal server error
+        res.sendStatus(401) // unauthorized
     }
-
-
-    /*let split_token = id_token.split('.')
-    // map each element in the token to a javascript object
-    split_token.forEach((element, index, original) => {
-        original[index] = JSON.parse(Buffer.from(element, 'base64').toString())
-    })
-    let [header, payload, signature] = split_token*/
-
-
 }
 
-ltiController.validate_id_token = (header, payload, singature) => {
+/**
+ * Select the correct key for verifying the id_token based on the algorithm information in the header of the id_token
+ * @param {String} id_token the id_token that has to be verified
+ * @param {Array} keys Array of javascript objects containing the keys 
+ */
+ltiController.select_key = (header, keys) => {
+    if (!header.alg){
+        throw new Error(`No algorithm specified`)
+    }
+    keys = keys.filter((key) => {
+        if (header.kid == key.kid && header.alg == key.alg){
+            return true
+        }else{
+            return false
+        }
+    })
+    if (!keys.length){
+        throw new Error("No matching key found.")
+    }
+    return keys[0]
+}
 
+/**
+ * Sends a request to the i-Learn server to request their public key
+ * TODO: clean up logging output!
+ */
+ltiController.retrieve_i_learn_public_keys = async () => {
+    return new Promise((resolve, reject) => {
+        let req = https.request(process.env.I_LEARN_KEY_LOCATION, (res) => {
+            let data = ""
+            console.log(`STATUS: ${res.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+            res.setEncoding('utf8');
+            res.on('data', (chunk) => {
+                console.log(`BODY: ${chunk}`);
+                data += chunk
+            });
+            res.on('end', () => {
+                console.log('No more data in response.');
+                console.log(data);
+                data = JSON.parse(data);
+                /*data = data.keys.filter(key => {
+                    // For now only use RS256 encryption
+                    if (key.alg == "RS256"){
+                        return true
+                    }else{
+                        return false
+                    }
+                })*/
+
+                resolve(data.keys)
+            });
+        });
+    
+        req.on('error', (e) => {
+            console.error(`problem with request: ${e.message}`);
+            reject(e)
+        });
+        req.end();
+    })
+    
 }
 
 ltiController.generate_nonce_for_user_id = async (user_id) => {

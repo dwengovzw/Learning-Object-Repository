@@ -14,7 +14,7 @@ const nonceStoreSchema = new mongoose.Schema({
         required: true,
         default: uuidv4, // Use automatically generated nonce
     },
-    createdAt: { type: Date, expires: 5, default: Date.now()} // Automatically timestamped and removed after 20 seconds
+    createdAt: { type: Date, expires: 20, default: Date.now()} // Automatically timestamped and removed after 20 seconds
 });
 
 
