@@ -27,6 +27,9 @@ echo "I_LEARN_ISSUER_ID = 'https://saltire.lti.app/platform/token/s65d9e32638de5
 echo "I_LEARN_TOOL_LAUNCH_URI = 'https://83.217.67.53/backend'" >> .env
 echo "I_LEARN_REDIRECT_URI = 'https://83.217.67.53/backend/api/learningObject/getWrapped'" >> .env
 
+# Install dependancies
+npm install
+
 #restart application (was started with: pm2 start 'npm run start-production' --name learning-object-repository)
 
 pm2 restart learning-object-repository

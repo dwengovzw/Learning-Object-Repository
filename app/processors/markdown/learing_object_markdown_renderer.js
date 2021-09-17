@@ -11,7 +11,8 @@ import BlocklyProcessor from "../blockly/blockly_processor.js";
 import { findFile } from "../../utils/file_io.js";
 import InlineImageProcessor from "../image/inline_image_processor.js";
 import { isValidHttpUrl } from "../../utils/utils.js";
-
+import LearningObjectRepository from "../../repository/learning_object_repository.js";
+import learningObjectApiController from "../../controllers/api/learing_object_api_controller.js";
 
 class LearningObjectMarkdownRenderer {
     learingObjectPrefix = '@learning-object';
@@ -99,6 +100,9 @@ class LearningObjectMarkdownRenderer {
             }
             UserLogger.error("The blockly preview could not load. Are you sure the correct xml file was passed?")
             return "";
+        }else if (href.startsWith(this.learingObjectPrefix)){
+            let [hruid, version, language] = href.split(/\/(.+)/, 2)[1].split("/")
+            return learningObjectApiController.getHtmlObject({hruid: hruid, version: version, language: language})
         } else {
             // embedded image
             let proc = new InlineImageProcessor();
