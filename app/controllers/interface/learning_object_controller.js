@@ -21,6 +21,7 @@ let logger = Logger.getLogger()
 let learningObjectController = {}
 
 /**
+ * @deprecated for now the learning objects are loaded and processed through git
  * renders create-learning-object interface page (not used anymore)
  * @param {object} req 
  * @param {object} res 
@@ -186,14 +187,7 @@ learningObjectController.processFiles = (files, metadata = {}) => {
                 }
                 break;
             case ProcessorContentType.EXTERN:
-                // find a .txt file in the learing object folder containing the external url
-                if (ext == ".txt") {
-                    inputString = f.buffer.toString('utf8').trim();
-                    resFiles.push(f)
-                    args.height = 700;
-                    args.aspect_ratio = "iframe-1-1"
-                    return true
-                }
+                //External content does not have dependend files since content is hosted externally
                 break
             default:
                 //Not supposed to happen
@@ -202,7 +196,6 @@ learningObjectController.processFiles = (files, metadata = {}) => {
         }
         return false
     });
-    logger.info("Processing file " + file["originalname"]);
     let proc = new ProcessingProxy(constrArgs);
     return [proc.render(metadata.content_type, inputString, args), resFiles];
 };
@@ -377,10 +370,20 @@ learningObjectController.createLearningObject = async (req, res) => {
             let resFiles;
             let htmlString
             if (metadataFile.originalname.includes("metadata.")) {
-                // If the metadata comes from a metadata.md or metadata.yaml file the correct content file needs to be processed
-                // This is how we get the html filename and html string.
-                // It also returns the nescessary files that need to be saved.
-                [htmlString, resFiles] = learningObjectController.processFiles(req.files, metadata);
+                if (metadata.content_type == ProcessorContentType.EXTERN){
+                    // Extern content is not contained in the learning object folder so no files have to be processed
+                    // The only thing that has to be saved is the content rendered within an iframe
+                    let proc = new ProcessingProxy();
+                    resFiles = [] // No resource files, content is extern
+                    let args = {aspect_ratio: 'iframe-1-1'}
+                    htmlString = proc.render(metadata.content_type, metadata.content_location, args)
+                }else{
+                    // If the metadata comes from a metadata.md or metadata.yaml file the correct content file needs to be processed
+                    // This is how we get the html filename and html string.
+                    // It also returns the nescessary files that need to be saved.
+                    [htmlString, resFiles] = learningObjectController.processFiles(req.files, metadata);
+                }
+                
 
             } else {
                 // If a index.md file is used, all other files need to be stored aswell because they can be used in the markdown

@@ -20,4 +20,8 @@ learningObjectApiRouter.route('/downloadFile/*').get((req, res) => {
     res.download(path.resolve(req.params[0]));
 });
 
+learningObjectApiRouter.route('/search').get((req, res) => {
+    learningObjectApiController.search(req, res);
+})
+
 export default learningObjectApiRouter;

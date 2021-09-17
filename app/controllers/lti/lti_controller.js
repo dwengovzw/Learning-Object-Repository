@@ -71,6 +71,10 @@ ltiController.authorize = async (req, res) => {
     signature = split_id_token.pop()
     const split_id_token_obj = split_id_token.map((elem) => JSON.parse(Buffer.from(elem, "base64")));
     [header, payload] = split_id_token_obj
+    if (payload["https://purl.imsglobal.org/spec/lti/claim/message_type"] != "LtiResourceLinkRequest"){
+        res.sendStatus(406) // unsupported operation (not acceptable)
+        return
+    }
     try {
         let i_learn_key
         let i_learn_key_pem
@@ -83,12 +87,12 @@ ltiController.authorize = async (req, res) => {
             return
         }
         let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: "https://saltire.lti.app/platform" })  // Verify token with i-learn public key
-        //let valid_signature = ltiController.verify_signature(i_learn_key.n, id_token);
         let valid_nonce = await ltiController.validate_nonce_for_user_id(decoded_payload.sub, decoded_payload.nonce);  // Validate nonce for user_id
         if (!valid_nonce){
             res.sendStatus(401) // unauthorized
         }else{
             let resource_id = payload["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+            // TODO: Check if the resource exists and redirect to either dwengo hosted content or extenal link.
             res.redirect(302, `${process.env.I_LEARN_REDIRECT_URI}?_id=${resource_id}`)  // Redirect to requested content
         }
         return
@@ -131,26 +135,13 @@ ltiController.retrieve_i_learn_public_keys = async () => {
             console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
             res.setEncoding('utf8');
             res.on('data', (chunk) => {
-                console.log(`BODY: ${chunk}`);
                 data += chunk
             });
             res.on('end', () => {
-                console.log('No more data in response.');
-                console.log(data);
                 data = JSON.parse(data);
-                /*data = data.keys.filter(key => {
-                    // For now only use RS256 encryption
-                    if (key.alg == "RS256"){
-                        return true
-                    }else{
-                        return false
-                    }
-                })*/
-
                 resolve(data.keys)
             });
         });
-    
         req.on('error', (e) => {
             console.error(`problem with request: ${e.message}`);
             reject(e)

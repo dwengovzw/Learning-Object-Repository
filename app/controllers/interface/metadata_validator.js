@@ -290,13 +290,13 @@ class MetadataValidator {
         },
 
         content_location() {
-            // required
-            if (this.content_location == undefined) {
-                return "- A parameter content_location is required.\n";
+            // Required if content type is extern
+            if (this.content_type == ProcessorContentType.EXTERN && this.content_location == undefined) {
+                return "- If the content type is extern, content_location has to be specified.\n";
             }
 
             // type String
-            if (typeof this.content_location != "string") {
+            if (this.content_location && typeof this.content_location != "string") {
                 return "- The content_location parameter needs to be of type string.\n";
             }
         },

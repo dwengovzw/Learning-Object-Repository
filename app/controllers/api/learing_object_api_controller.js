@@ -2,10 +2,24 @@ import Logger from "../../logger.js"
 import path from "path"
 import LearningObjectRepository from "../../repository/learning_object_repository.js";
 import fs from "fs";
+import { ProcessorContentType } from "../../processors/content_type.js";
 
 let logger = Logger.getLogger()
 
 let learningObjectApiController = {}
+
+/**
+ * Filter the query object so only attributes that are searchable in the database are left.
+ * Thanks to: https://stackoverflow.com/a/56592365/13057688
+ * @param {*} query query object containing search terms 
+ */
+learningObjectApiController.filterQueryForSearch = (query, attributes) => {
+    return Object.fromEntries(
+        attributes
+        .filter(key => key in query)
+        .map(key => [key, query[key]])
+      );
+}
 
 /**
  * get the metadata from a learning-object based on a query
@@ -61,6 +75,65 @@ learningObjectApiController.getHtmlObject = async (query) => {
     return resHtml;
 }
 
+learningObjectApiController.constructSearchQuery = async (query) => {
+    // Map html to mongoose query
+    // TODO: add option to search based on educational goals: , 'educational_goals'
+    let attributes = ['searchTerm', 'uuid', 'hruid', 'version', 'language', 'title', 'description', 'keywords', 'content_type', 'target_ages', 'min_difficulty', 'max_difficulty', 'min_time', 'max_time', 'skos_concepts', 'teacher_exclusive' ]
+    let search_query_filters = 
+        attributes
+        .filter(key => key in query)    // Only keep attributes that are present in the html query
+        .map((key) => {      
+            if (key == 'searchTerm'){
+                return { '$text': { '$search': query[key]}} // Search in all text attributes
+            }else if (['uuid', 'hruid', 'version', 'language', 'content_type', 'available', 'teacher_exclusive', 'difficulty'].includes(key)){
+                return { [key]: query[key] }    // Copy query for simple attributes
+            } else if (['title', 'description'].includes(key)){
+                const regex = new RegExp(query[key], 'i')
+                return {[key]:  {'$regex': regex }}
+            } else if (key == 'target_ages' || key == 'keywords' || key == 'skos_concepts'){
+                return {[key]: {'$in': JSON.parse(query[key])}}
+            } else if (key == 'min_difficulty'){
+                return {difficulty: {'$gte': query[key]}}
+            } else if (key == 'max_difficulty'){
+                return {difficulty: {'$lte': query[key]}}
+            }  else if (key == 'min_time'){
+                return {estimated_time: {'$gte': query[key]}}
+            } else if (key == 'max_time'){
+                return {estimated_time: {'$lte': query[key]}}
+            }
+       })
+    
+    let search_query = {}
+    if (Object.keys(search_query_filters).length !== 0){
+        if (Object.keys(search_query_filters).length === 1){
+            search_query = search_query_filters[0]
+        }else{
+            search_query = { $and: search_query_filters }
+        }
+    }
+    return search_query
+}
+
+learningObjectApiController.search = async (req, res) => {
+    let query = req.query ? req.query : {}
+    let search_query = await learningObjectApiController.constructSearchQuery(query);
+
+    let repos = new LearningObjectRepository();
+    let metadata = await new Promise((resolve) => {
+        repos.find(search_query, (err, res) => {
+            if (err) {
+                console.log(err);
+            }
+            resolve(res);
+        })
+    });
+    
+    if (metadata) {
+        return res.json(metadata);
+    }
+    return res.send(`An error occured during search, check if your query is correct!`);
+}
+
 /**
  * get raw learning-object content
  * @param {object} req 
@@ -69,6 +142,22 @@ learningObjectApiController.getHtmlObject = async (query) => {
  */
 learningObjectApiController.getLearningObject = async (req, res) => {
     let query = req.query ? req.query : {};
+    let redirect = query.hasOwnProperty('redirect'); // Check if redirect attribute is present
+    let searchableAttributes = ['uuid', 'hruid', 'version', 'language']
+    query = learningObjectApiController.filterQueryForSearch(query, searchableAttributes) 
+    // If a the redirect parameter is present -> do not render the content
+    // as dwengo content but do an immediate redirect to the external content
+    if (redirect == true){
+        let metadata = await learningObjectApiController.getMetadata(query)
+        // Check if the content type is extern and content_location is present
+        if (metadata.content_type == ProcessorContentType.EXTERN){
+            if (metadata.content_location){
+                return res.redirect(metadata.content_location)
+            }else{
+                return res.sendStatus(404) // Not found
+            }
+        }
+    }
     let resHtml = await learningObjectApiController.getHtmlObject(query) || "";
     return res.send(resHtml);
 
@@ -82,6 +171,8 @@ learningObjectApiController.getLearningObject = async (req, res) => {
  */
 learningObjectApiController.getWrappedLearningObject = async (req, res) => {
     let query = req.query ? req.query : {};
+    let searchableAttributes = ['uuid', 'hruid', 'version', 'language']
+    query = learningObjectApiController.filterQueryForSearch(query, searchableAttributes) 
     let content = await learningObjectApiController.getHtmlObject(query) || "";
     return res.render('api/learning_object/learning_object.getWrapped.ejs', {
         basePath: process.env.DOMAIN_URL,
@@ -97,6 +188,8 @@ learningObjectApiController.getWrappedLearningObject = async (req, res) => {
  */
 learningObjectApiController.requestMetadata = async (req, res) => {
     let query = req.query ? req.query : {};
+    let searchableAttributes = ['uuid', 'hruid', 'version', 'language']
+    query = learningObjectApiController.filterQueryForSearch(query, searchableAttributes) 
     let metadata = await learningObjectApiController.getMetadata(query);
 
     if (metadata) {

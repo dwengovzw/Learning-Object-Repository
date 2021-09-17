@@ -79,8 +79,7 @@ const learningObjectSchema = new mongoose.Schema({
         callback_schema: { type: Object }
     },
     content_location: {
-        type: String,
-        required: true
+        type: String
     },
     estimated_time: {
         type: Number,
@@ -102,6 +101,7 @@ const learningObjectSchema = new mongoose.Schema({
 
 // Enforce unique index on combination of _id, version and language
 learningObjectSchema.index({ hruid: 1, version: 1, language: 1 }, { unique: true });
+learningObjectSchema.index({ title: 'text', description: 'text', keywords: 'text', educational_goals: 'text', skos_concepts: 'text'}, {default_language: "none"})
 // Check if content location is correct URL
 // learningObjectSchema.path('content_location').validate((val) => {
 //     let urlRegex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-]))?/;
