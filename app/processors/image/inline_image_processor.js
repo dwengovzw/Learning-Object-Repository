@@ -18,7 +18,7 @@ class InlineImageProcessor extends Processor {
      */
     render(imageUrl, args = { altText: "", metadata: {} }) {
 
-        if (!isValidHttpUrl(imageUrl) && (!imageUrl || !imageUrl.match(/^(?!http.*$)[^.].*\.(jpe?g|png|svg)/))) {
+        if (!isValidHttpUrl(imageUrl) && (!imageUrl || !imageUrl.toLowerCase().match(/^(?!http.*$)[^.].*\.(jpe?g|png|svg)/))) {
             UserLogger.error("The image cannot be found. Please check if the url is spelled correctly.")
             throw new InvalidArgumentError("The image cannot be found. Please check if the url is spelled correctly.");
         }
