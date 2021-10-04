@@ -45,7 +45,7 @@ class LearningObjectMarkdownRenderer {
         if (href.startsWith(this.learingObjectPrefix)) {
             // link to learning-object
             let query = href.split(/\/(.+)/, 2)[1].split("/")
-            return `<a href="@@URL_REPLACE@@/api/learningObject/getWrapped?hruid=${query[0]}&language=${query[1]}&version=${query[2]}" target="_blank" title="${title}">${text}</a>`
+            return `<a href="@@URL_REPLACE@@/api/learningObject/getRaw?hruid=${query[0]}&language=${query[1]}&version=${query[2]}&redirect=true" target="_blank" title="${title}">${text}</a>`
         } else if (href.startsWith(this.blocklyPrefix)) {
             // link to blockly (downloads)
             if (title) {
@@ -100,10 +100,10 @@ class LearningObjectMarkdownRenderer {
             }
             UserLogger.error("The blockly preview could not load. Are you sure the correct xml file was passed?")
             return "";
-        }else if (href.startsWith(this.learingObjectPrefix)){
+        }/*else if (href.startsWith(this.learingObjectPrefix)){
             let [hruid, version, language] = href.split(/\/(.+)/, 2)[1].split("/")
             return learningObjectApiController.getHtmlObject({hruid: hruid, version: version, language: language})
-        } else {
+        }*/ else {
             // embedded image
             let proc = new InlineImageProcessor();
             return proc.render(href, { metadata: this.args.metadata })

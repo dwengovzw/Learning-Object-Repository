@@ -41,7 +41,8 @@ class BlocklyProcessor extends Processor {
 
                 for(let i = 0; i < 14; i++) {
                     let scr = document.getElementById("blockly_script" + i);
-                    if(!scr.dataset.loaded) {
+                    // If one of the required scripts is not loaded yet, check again after 500ms
+                    if(scr == null || !scr.dataset.loaded) {
                         setTimeout(() => {  loadDynamicScript${args.id}(); }, 500);
                         return;
                     }

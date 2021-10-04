@@ -8,6 +8,7 @@ import https from "https"
 import crypto from "crypto"
 import jwkToPem from "jwk-to-pem"
 import { Buffer } from "buffer"
+import ContentRequest from "../../models/content_request.js"
 
 let logger = Logger.getLogger()
 
@@ -54,6 +55,13 @@ ltiController.initiate_login = async (req, res) => {
         prompt: "none",
         lti_message_hint: params.lti_message_hint
     }
+
+    // Save which user requested what and when
+    let contentRequest = new ContentRequest()
+    contentRequest.user_id = params.login_hint
+    contentRequest.content_id = params.target_link_uri
+    contentRequest.save().then(savedRequest => {console.log(savedRequest)})
+
     let query = queryString.stringify(redirect_query);
     // Redirect back to i-Learn
     res.redirect(302, ilearn_authentication_endpoint + "?" + query)
