@@ -19,6 +19,10 @@ ltiRouter.route("/authorize").post((req, res) => {
     ltiController.authorize(req, res)
 })
 
+// Route used when learning object repository is 
+ltiRouter.route('/auth').get((req, res) => {
+    ltiController.auth(req, res);
+})
 
 
 export default ltiRouter;

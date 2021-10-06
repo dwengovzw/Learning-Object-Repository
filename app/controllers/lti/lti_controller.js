@@ -187,4 +187,8 @@ ltiController.remove_nonce_for_user_id = async (user_id, nonce) => {
     })
 }
 
+ltiController.auth = async (req, res) => {
+    
+}
+
 export default ltiController;

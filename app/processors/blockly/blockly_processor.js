@@ -33,7 +33,7 @@ class BlocklyProcessor extends Processor {
         }
 
         let html = `
-        <div id="blocklyDiv_${args.id}" style="height: 480px; width: 600px;"></div>
+        <div id="blocklyDiv_${args.id}" class="blocklyDiv" style="height: 480px; "></div>
 
         <script>
 
