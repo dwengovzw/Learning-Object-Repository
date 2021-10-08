@@ -6,6 +6,7 @@ import managementRouter from './interface/management_router.js';
 import ltiRouter from './lti/lti_router.js';
 import path from "path"
 import fs from "fs"
+import authenticationRouter from './authentication/authentication_router.js';
 
 let appRouter = express.Router();
 
@@ -36,5 +37,6 @@ appRouter.use("/api/learningObject", learningObjectApiRouter);
 appRouter.use("/api/learningPath", learningPathApiRouter);
 appRouter.use("/api/manage", managementRouter);
 appRouter.use("/lti", ltiRouter);
+appRouter.use("/user", authenticationRouter);
 
 export default appRouter;

@@ -16,7 +16,7 @@ class ExternProcessor extends Processor {
      * @param {object} args Optional arguments specific to the render function of the ExternProcessor
      * @returns 
      */
-    render(externURL, args = {height: 315, aspect_ratio: 'iframe-16-9'}) {
+    render(externURL, {height = 315, aspect_ratio = 'iframe-16-9'} = {}) {
         if (!isValidHttpUrl(externURL)) {
             throw new InvalidArgumentError("The url is not valid: " + externURL);
         }
@@ -29,7 +29,7 @@ class ExternProcessor extends Processor {
         }
 
 
-        return DOMPurify.sanitize(`<div class="iframe-container ${args.aspect_ratio}"><iframe width="420px" height="${args.height}px" src="${externURL}"></iframe></div>`, { ADD_TAGS: ["iframe"] });
+        return DOMPurify.sanitize(`<div class="iframe-container ${aspect_ratio}"><iframe width="420px" height="${height}px" src="${externURL}" allowfullscreen></iframe></div>`, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']});
 
     }
 }

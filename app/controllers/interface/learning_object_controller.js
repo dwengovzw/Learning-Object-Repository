@@ -375,7 +375,11 @@ learningObjectController.createLearningObject = async (req, res) => {
                     // The only thing that has to be saved is the content rendered within an iframe
                     let proc = new ProcessingProxy();
                     resFiles = [] // No resource files, content is extern
-                    let args = {aspect_ratio: 'iframe-1-1'}
+                    let ar = 'iframe-1-1'
+                    if (metadata.aspect_ratio){
+                        ar = metadata.aspect_ratio
+                    }
+                    let args = {aspect_ratio: ar}
                     htmlString = proc.render(metadata.content_type, metadata.content_location, args)
                 }else{
                     // If the metadata comes from a metadata.md or metadata.yaml file the correct content file needs to be processed

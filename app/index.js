@@ -4,6 +4,7 @@ import https from 'https'
 import fs from "fs"
 import Logger from './logger.js'
 import { connectDb, models } from "./models/db_connection.js"
+import User from "./models/user.js"
 
 let logger = Logger.getLogger();
 
@@ -33,3 +34,15 @@ let startServer = () => {
         logger.info(`Running https server on port ${process.env.HTTPS_PORT}`);
     });
 }
+
+// Create admin user
+let adminuser = new User()
+adminuser.username = process.env.ADMIN_USER_USERNAME
+adminuser.setPassword(process.env.ADMIN_USER_PASSWORD)
+adminuser.save((err, savedUser) => {
+    if (err) {
+        console.log(`Error creating admin user: ${err}`)
+    } else {
+        console.log("succesfully created admin user")
+    }
+})

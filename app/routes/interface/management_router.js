@@ -6,19 +6,38 @@ let logger = Logger.getLogger()
 let managementRouter = express.Router({ mergeParams: true });
 
 managementRouter.route("/logs").get((req, res) => {
-    managementController.getLogs(req, res);
+    if (req.user && req.user.approved){
+        managementController.getLogs(req, res);
+    }else{
+        res.redirect("/user/login")
+    }
+    
 })
 
 managementRouter.route("/forceProcess").get((req, res) => {
-    managementController.forceProcess(req, res);
+    if (req.user && req.user.approved){
+        managementController.forceProcess(req, res);
+    }else{
+        res.redirect("/user/login")
+    }
+    
 })
 
-managementRouter.route("/overview").get((req, res) => {
-    managementController.overview(req, res);
+managementRouter.route("/overview").get( (req, res) => {
+    if (req.user && req.user.approved){
+        return managementController.overview(req, res);
+    }else{
+        res.redirect("/user/login")
+    }
 })
 
 managementRouter.route("/logsraw").get((req, res) => {
-    managementController.logLines(req, res);
+    if (req.user && req.user.approved){
+        managementController.logLines(req, res);
+    }else{
+        res.redirect("/user/login")
+    }
+    
 })
 
 

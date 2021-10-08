@@ -94,6 +94,10 @@ const learningObjectSchema = new mongoose.Schema({
     teacher_exclusive: {
         type: Boolean,
         default: false
+    },
+    aspect_ratio: {
+        type: String,
+        default: "iframe-1-1"
     }
 
 

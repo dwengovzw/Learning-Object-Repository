@@ -7,6 +7,13 @@ import schedule from 'node-schedule'
 import { pullAndProcessRepository } from './utils/git.js'
 import cors from "cors";
 import { urlReplaceInStaticFiles } from './utils/utils.js'
+import passport from "passport"
+import passportLocal from "passport-local"
+import cookieParser from "cookie-parser"
+import session from "express-session"
+import bodyParser from "body-parser"
+import User from "./models/user.js"
+
 
 
 const logger = Logger.getLogger();
@@ -16,6 +23,41 @@ logger.info(`Running in ${process.env.NODE_ENV} environment`)
 
 const app = express();
 app.use(cors())
+
+// setup authentication middleware
+app.use(cookieParser());
+app.use(session({ secret: "dwengo" }));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+  
+  passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
+  });
+
+passport.use(new passportLocal.Strategy((username, password, done) => {
+    User.findOne({ username: username }, (err, foundUser) => {
+        if (err){
+            return done(err)
+        }
+        if (!foundUser){
+            return done(null, false)
+        }
+        if (!foundUser.validPassword(password) || !foundUser.approved){
+            return done(null, false)
+        }
+        return done(null, foundUser)
+    })
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -32,6 +74,10 @@ app.use('/js', express.static(path.join(path.resolve(), 'app/static/js')));
 app.use('/static', express.static(path.join(path.resolve(), 'app/static')));
 app.set('views', path.join(path.resolve(), 'app', 'views'));
 app.set('view engine', 'ejs');
+
+
+
+
 
 // a cronjob (every day at midnight) to pull the repository and process the learning-objects/learning-paths
 // every 10 seconds for debugging purposes: */10 * * * * *
