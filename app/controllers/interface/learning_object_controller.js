@@ -11,9 +11,9 @@ import ProcessingProxy from "../../processors/processing_proxy.js"
 import { ProcessorContentType } from "../../processors/content_type.js"
 import yaml from "js-yaml"
 import MetadataValidator from "./metadata_validator.js"
-import UserLogger from '../../utils/user_logger.js'
 import InvalidArgumentError from "../../utils/invalid_argument_error.js"
 import LearningObjectRepository from "../../repository/learning_object_repository.js"
+import ProcessingHistory from "../../models/processing_history.js"
 
 
 let logger = Logger.getLogger()
@@ -239,7 +239,7 @@ learningObjectController.extractMetadata = (files, learning_object_location) => 
                 // metadata.md
                 let mdString = metadatafile.buffer.toString('utf8');   // Read index markdown file into string
                 let splitdata = MarkdownProcessor.stripYAMLMetaData(mdString);   // Strip metadata and markdown from eachother
-                return [splitdata.metadata, metadatafile];
+                return [splitdata.metadata, metadatafile, ""];
             } else {
                 // metadata.yaml
                 let metadataText = metadatafile.buffer.toString('utf8').trim();
@@ -249,10 +249,10 @@ learningObjectController.extractMetadata = (files, learning_object_location) => 
                 try {
                     metadata = yaml.load(metadataText);
                 } catch (e) {
-                    logger.error(`Unable to convert metadata to YAML: ${e}`);
-                    UserLogger.error(`Error in file: ${learning_object_location}/${indexfile.originalname}`,`There is an syntax-error in the metadata: ${e}`);
+                    ProcessingHistory.error("generalError", "99999999", "en", 
+                        `Error in file: ${learning_object_location}/${indexfile.originalname}`,`There is an syntax-error in the metadata: ${e}`)
                 }
-                return [metadata, metadatafile];
+                return [metadata, metadatafile, ""];
             }
         } else {
             logger.error("There is no index.md, metadata.md or metadata.yaml file!")
@@ -352,13 +352,11 @@ learningObjectController.createLearningObject = async (req, res) => {
         await new Promise((resolve) => {
             repos.save(learningObject, (err) => {
                 if (err) {
-                    logger.error("The object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
-                    UserLogger.error("The object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the metadata.")
+                    ProcessingHistory.error(metadata.hruid, metadata.version, metadata.language,
+                        "The object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the metadata.")
                     dbError = true;
                 }
-                logger.info("The metadata for the object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' has been " + (existing ? "updated " : "saved") + " correctly.");
-                UserLogger.info("The metadata for the object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' has been " + (existing ? "updated " : "saved") + " correctly.");
-                
+                ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, "The metadata for the object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' has been " + (existing ? "updated " : "saved") + " correctly.")
                 resolve();
             })
         });
@@ -403,11 +401,10 @@ learningObjectController.createLearningObject = async (req, res) => {
             learningObjectController.saveSourceFiles(resFiles, destination);
 
             if (existing) {
-                UserLogger.info("The learning-object with hruid '" + metadata.hruid + "' and id '" + id + "' at location '" + learning_object_location + "' was updated correctly");
-
+                ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, "The learning-object with hruid '" + metadata.hruid + "' and id '" + id + "' at location '" + learning_object_location + "' was updated correctly")
             } else {
-                UserLogger.info("The learning-object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' was created correctly with id " + id);
-
+                ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, "The learning-object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' was created correctly with id " + id)
+            
             }
 
         }
@@ -415,7 +412,8 @@ learningObjectController.createLearningObject = async (req, res) => {
     } catch (error) {
         console.log(learning_object_location)
         logger.error(error.message);
-        UserLogger.error(error.message, learning_object_location)
+        ProcessingHistory.error("generalError", "99999999", "en", error.message + " at location: learning_object_location")
+            
     }
 };
 export default learningObjectController;

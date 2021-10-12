@@ -3,7 +3,6 @@ import LearningObjectProcessor from "../learning_object/learing_object_processor
 import ProcessingProxy from "../processing_proxy.js";
 import fs from "fs"
 import path from "path"
-import UserLogger from "../../utils/user_logger.js";
 import PdfProcessor from "../pdf/pdf_processor.js";
 import AudioProcessor from "../audio/audio_processor.js";
 import ExternProcessor from "../extern/extern_processor.js";
@@ -13,6 +12,7 @@ import InlineImageProcessor from "../image/inline_image_processor.js";
 import { isValidHttpUrl } from "../../utils/utils.js";
 import LearningObjectRepository from "../../repository/learning_object_repository.js";
 import learningObjectApiController from "../../controllers/api/learing_object_api_controller.js";
+import ProcessingHistory from "../../models/processing_history.js";
 
 class LearningObjectMarkdownRenderer {
     learingObjectPrefix = '@learning-object';
@@ -98,7 +98,7 @@ class LearningObjectMarkdownRenderer {
                 }
 
             }
-            UserLogger.error("The blockly preview could not load. Are you sure the correct xml file was passed?")
+            ProcessingHistory.error("generalError", "99999999", "en", `"The blockly preview with reference ${href} could not be loaded. Are you sure the correct xml file was passed?`)
             return "";
         }/*else if (href.startsWith(this.learingObjectPrefix)){
             let [hruid, version, language] = href.split(/\/(.+)/, 2)[1].split("/")

@@ -3,7 +3,7 @@ import { isValidHttpUrl } from '../../utils/utils.js'
 import { findFile } from '../../utils/file_io.js'
 import InvalidArgumentError from '../../utils/invalid_argument_error.js'
 import DOMPurify from 'isomorphic-dompurify';
-import UserLogger from '../../utils/user_logger.js'
+import ProcessingHistory from "../../models/processing_history.js";
 
 class AudioProcessor extends Processor {
 
@@ -21,7 +21,12 @@ class AudioProcessor extends Processor {
     render(audioUrl, args = { files: [], metadata: {} }) {
 
         if ((!args.files || args.files.length <= 0 || !findFile(audioUrl, args.files)) && !isValidHttpUrl(audioUrl)) {
-            UserLogger.error("The audio file cannot be found. Please check if the url is spelled correctly.")
+            if (args.metadata && args.metadata.hruid && args.metadata.version && args.metadata.language){
+                ProcessingHistory.error(args.metadata.hruid, args.metadata.version, args.metadata.language, "The audio file cannot be found. Please check if the url is spelled correctly.")
+            }else{
+                ProcessingHistory.error("generalError", "99999999", "en", "The audio file cannot be found. Please check if the url is spelled correctly.")
+            }
+            
             throw new InvalidArgumentError("The audio file cannot be found. Please check if the url is spelled correctly.");
         }
 

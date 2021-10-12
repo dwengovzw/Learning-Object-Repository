@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
-import Logger from "../../logger.js"
-import UserLogger from '../../utils/user_logger.js'
 import { ProcessorContentType } from '../../processors/content_type.js'
+import ProcessingHistory from '../../models/processing_history.js'
 
 class MetadataValidator {
 
@@ -368,7 +367,7 @@ class MetadataValidator {
         if (errors && errors.length > 0) {
             let title = "Metadata errors for the learning-object" + ((filelocation == "") ? "" : ` at '${filelocation}' `)
                 + (this.hruid && typeof this.hruid == "string" ? "with hruid '" + this.hruid + "'" : "without a hruid");
-            UserLogger.error(errors, title);
+            ProcessingHistory.error(this.hruid, this.version, this.language, errors, title)
             return [this.metadata, false];
 
         }

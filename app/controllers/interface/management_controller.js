@@ -4,6 +4,7 @@ import path from 'path'
 import * as fsp from "fs/promises"
 import fs from 'fs'
 import util from 'util'
+import ProcessingHistory from '../../models/processing_history.js'
 
 
 let logger = Logger.getLogger()
@@ -53,6 +54,28 @@ managementController.logLines = async (req, res) => {
 }
 
 managementController.getLogLines = async () => {
+    let documents = await ProcessingHistory.find({}).exec();
+    let lines = []
+    documents.forEach((doc) => {
+        if (doc.errorList.length > 0){
+            let errorline = (doc.hruid == "generalError") ? `------------------Global processing errors-----------------\n` : `------------------ Errors for ${doc.hruid}-${doc.version}-${doc.language}-----------------\n`
+            doc.errorList.forEach((errorMessage) => {
+                errorline +=  `${errorMessage}`
+            })
+            lines.push(errorline)
+        }
+        if (doc.infoList.length > 0){
+            let infoline = (doc.hruid == "generalError") ? `------------------Global processing info-----------------\n` : `------------------ Info for ${doc.hruid}-${doc.version}-${doc.language}-----------------\n` 
+            doc.infoList.forEach((infoMessage) => {
+                infoline +=  `${infoMessage}`
+            })
+            lines.push(infoline)
+        }
+    })
+    return lines
+}
+
+/*managementController.getLogLines = async () => { 
     let logLines = await managementController.readLogFileIntoList();
     // Replace \n with <br>
     logLines.forEach((element, index, inputarray) => {
@@ -60,7 +83,7 @@ managementController.getLogLines = async () => {
     })
     logLines.reverse() //Reverse array to show latest errors first
     return logLines
-}
+}*/
 
 managementController.readLogFileIntoList = async () => {
     let file = path.resolve("user.log")

@@ -3,7 +3,7 @@ import { isValidHttpUrl } from '../../utils/utils.js'
 import { findFile } from '../../utils/file_io.js'
 import InvalidArgumentError from '../../utils/invalid_argument_error.js'
 import DOMPurify from 'isomorphic-dompurify';
-import UserLogger from '../../utils/user_logger.js'
+import ProcessingHistory from "../../models/processing_history.js";
 
 
 class PdfProcessor extends Processor {
@@ -19,7 +19,12 @@ class PdfProcessor extends Processor {
      */
     render(pdfUrl, args = { files: [], metadata: {} }) {
         if ((!args.files || args.files.length <= 0 || !findFile(pdfUrl, args.files)) && !isValidHttpUrl(pdfUrl)) {
-            UserLogger.error("The pdf file cannot be found. Please check if the url is spelled correctly.")
+            let errormessage = `The pdf file ${pdfUrl} cannot be found. Please check if the url is spelled correctly.`
+            if (args.metadata && args.metadata.hruid && args.metadata.version && args.metadata.language){
+                ProcessingHistory.error(args.metadata.hruid, args.metadata.version, args.metadata.language, errormessage)
+            }else{
+                ProcessingHistory.error("generalError", "99999999", "en", errormessage)
+            }
             throw new InvalidArgumentError("The pdf file cannot be found. Please check if the url is spelled correctly.");
         }
 

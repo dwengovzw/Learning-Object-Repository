@@ -4,21 +4,21 @@ import path from 'path'
 import simpleGit from 'simple-git';
 import Logger from '../logger.js';
 import learningPathApiController from '../controllers/api/learing_path_api_controller.js';
-import UserLogger from "../utils/user_logger.js"
+import ProcessingHistory from "../models/processing_history.js"
 
 let logger = Logger.getLogger();
 
-let initialiseRepo = async function(git) {
+let initialiseRepo = async function(git, repository) {
     return git
         .exec(() => logger.info("Initializing git repository..."))
         .init()
         .then(() => git.addRemote('origin', repository))
 }
 
-let initRepository = async function(git){
+let initRepository = async function(git, repository){
     return git.checkIsRepo('root')
             .then(isRepo => {
-                return !isRepo && initialiseRepo(git)
+                return !isRepo && initialiseRepo(git, repository)
             });
 }
 
@@ -47,13 +47,32 @@ let getSubDirFiles = (subdir) => {
     let dirCont = fs.readdirSync(subdir);
     let res = [];
     dirCont.forEach(f => {
-        if (fs.lstatSync(path.join(subdir, f)).isDirectory()) {
-            res.push({ originalname: f, isDir: true, sub: getSubDirFiles(path.join(subdir, f)) });
+        let fileinfo = fs.lstatSync(path.join(subdir, f))
+        if (fileinfo.isDirectory()) {
+            res.push({ originalname: f, info: fileinfo, isDir: true, sub: getSubDirFiles(path.join(subdir, f)) });
         } else {
-            res.push({ originalname: f, isDir: false, buffer: fs.readFileSync(path.join(subdir, f)) });
+            res.push({ originalname: f, info: fileinfo, isDir: false, buffer: fs.readFileSync(path.join(subdir, f)) });
         }
     });
     return res;
+}
+
+let findLastFileUpdateInDirectoryStructureMs = (file_list) => {
+    let lastUpdate = 0;
+    if (file_list.length !== 0) {
+        file_list.forEach(file => {
+            let update;
+            if (file.isDir){
+                update = findLastFileUpdateInDirectoryStructureMs(file.sub)
+            }else{
+                update = file.info.mtimeMs
+            }
+            if (update > lastUpdate){
+                lastUpdate = update
+            }
+        })
+    }
+    return lastUpdate
 }
 
 let findOverlap = function(a, b) {
@@ -95,42 +114,44 @@ let changedFilesInThisDirectory = (directory, changedFiles) => {
     return changes
 }
 
+
 // Check directory recursively for learning-object root-directories + extract learning paths
-let checkDirRec = (dir, changedFiles) => {
+let checkDirRec2 = async (dir) => {
     let dirCont = fs.readdirSync(dir);
     if (dir.match(/.*learning.paths?.*/)) {
         // Process learning paths
-        dirCont.forEach(f => {
+        for await (let f of dirCont){
             if (f.match(/.*\.json/) && fs.lstatSync(path.join(dir, f)).isFile()) {
-                learningPathApiController.saveLearningPath({ originalname: f, buffer: fs.readFileSync(path.join(dir, f)) });
+                await learningPathApiController.saveLearningPath({ originalname: f, buffer: fs.readFileSync(path.join(dir, f)) });
             }
-        });
+        }
         console.log("Done processing learning paths")
     }
     if (dirCont.some(f => /.*index.md|.*metadata.(md|yaml)/.test(f))) {
-        if (changedFilesInThisDirectory(dir, changedFiles)){
-            UserLogger.info(`Processing directory '${dir}' as learning object`, "GIT PROCESSOR INFO:")
-            // Process directory if index or metadata file is present.
-            let files = dirCont.map((f) => {
-                if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
-                    let subfiles = getSubDirFiles(path.join(dir, f))
-                    return { originalname: f, isDir: true, sub: subfiles };
-                } else {
-                    return { originalname: f, isDir: false, buffer: fs.readFileSync(path.join(dir, f)) };
-                }
-            });
-            learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
+        // Process directory if index or metadata file is present.
+        let files = getSubDirFiles(dir)
+        let [metadata, indexfile, markdown] = learningObjectController.extractMetadata(files, dir)
+        let lastFileChangeInFolder = findLastFileUpdateInDirectoryStructureMs(files)
+        let previousProcessingTimeForLearningObject = await ProcessingHistory.getLastProcessedTime(metadata.hruid, metadata.version, metadata.language)
+        // If learning object has changed files update it
+        if (lastFileChangeInFolder >= previousProcessingTimeForLearningObject){
+            await ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, 
+                `The learning object with hruid: ${metadata.hruid}, version: ${metadata.version}, and language: ${metadata.language} has changed since last time the processor was run`)
+            await ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, 
+                `Processing directory '${dir}' as learning object...`)
+            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
         } else {
-            UserLogger.info(`No changes in '${dir}': skipping...`, "GIT PROCESSOR INFO:")
+            // No changes to this learning object, keep log data from previous processing step.
+            await ProcessingHistory.markAsNew(metadata.hruid, metadata.version, metadata.language)
         }
 
     } else {
         // Check subdirectories
-        dirCont.forEach(f => {
+        for await (let f of dirCont){
             if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
-                checkDirRec(path.join(dir, f), changedFiles);
+                await checkDirRec2(path.join(dir, f));
             }
-        });
+        }
     }
 };
 
@@ -141,10 +162,7 @@ let checkDirRec = (dir, changedFiles) => {
  * @param {string} destination - the destination directory for the remote files
  * @param {string} branch - the branch in the remote repository (default is 'main')
  */
-let pullAndProcessRepository = async function (destination, branch = "main") {
-    // Clear the previous log
-    UserLogger.clear()
-    
+let pullAndProcessRepository = async function (destination, branch = "main") {    
     let repository = process.env.LEARNING_OBJECTS_GIT_REPOSITORY
     // Pull Git repos
 
@@ -156,18 +174,19 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
     const git = simpleGit({ baseDir: destination, binary: 'git' });
     try {
         // If the destination is not yet a git repos, init git repos.
-        await initRepository(git);
+        await initRepository(git, repository);
         // Pull changes
         let { changes, changedFiles } = await pullChanges(git, repository, branch)
-        // Process Files if there are changes in the directory
-        changes = true;
 
-        if (changes) {    // Comment for easier debugging
-            // Remove existing learning paths (only keep the ones currently in the repo)
-            let result = await learningPathApiController.removeLearningPaths();
-            // Start recursion by checking the root directory.
-            checkDirRec(destination, changedFiles);
-        }
+        // Remove existing learning paths (only keep the ones currently in the repo)
+        let result = await learningPathApiController.removeLearningPaths();
+        // Start recursion by checking the root directory.
+        await checkDirRec2(destination);
+        // Remove all log entries for learning objects without files in the last processing step
+        await ProcessingHistory.removeOldEntries()
+        // Mark all entries as old for the next time processing starts
+        await ProcessingHistory.markAllAsOld()
+
     } catch (e) {
         console.log(e)
     }

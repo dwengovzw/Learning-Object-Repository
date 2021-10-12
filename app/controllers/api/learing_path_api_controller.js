@@ -4,8 +4,8 @@ import LearningPathRepository from "../../repository/learning_path_repository.js
 import JsonValidator from "../../utils/json_validator.js";
 import { readFileSync } from "fs";
 import LearningPath from "../../models/learning_path.js";
-import UserLogger from "../../utils/user_logger.js";
 import learningObjectApiController from "./learing_object_api_controller.js";
+import ProcessingHistory from "../../models/processing_history.js";
 
 let logger = Logger.getLogger()
 
@@ -45,17 +45,17 @@ learningPathApiController.saveLearningPath = async (file) => {
 
         repos.save(learningPath, (err) => {
             if (err) {
-                logger.error("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' could not be " + (existing ? "updated " : "saved") + ": " + err.message);
-                UserLogger.error("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the data.")
+                ProcessingHistory.error(learningPath.hruid, 1, learningPath.language,
+                    "The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the data.")
             } else {
-                logger.info("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' has been " + (existing ? "updated " : "saved") + " correctly.");
-                UserLogger.info("The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' has been " + (existing ? "updated " : "saved") + " correctly.");
+                ProcessingHistory.info(learningPath.hruid, 1, learningPath.language,
+                    "The learning-path with hruid '" + learningPath.hruid + "' in file '" + file.originalname + "' has been " + (existing ? "updated " : "saved") + " correctly.")
             }
         })
 
     } else {
         let errorString = "Errors while saving learning-path from file " + file.originalname + ": " + jsonValidator.getErrors().map((e) => e.message);
-        logger.error(errorString);
+        ProcessingHistory.info("generalError", "99999999", "en", errorString)
     }
 }
 
@@ -144,7 +144,7 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
     if (path) {
         let errors = await learningPathApiController.validateObjectReferencesInPath(path);
         if (errors) {
-            UserLogger.error(`The learning path (hruid: ${path.hruid}, language: ${path.language}) has invalid references to learning-objects:${errors}`)
+            ProcessingHistory.error(path.hruid, 1, path.language, `The learning path (hruid: ${path.hruid}, language: ${path.language}) has invalid references to learning-objects:${errors}`)
         } else {
             // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
             let resPath = {
@@ -237,7 +237,8 @@ learningPathApiController.getLearningPaths = async (req, res) => {
                     __v: p.__v
                 })
             } else {
-                UserLogger.error(`The learning path (hruid: ${p.hruid}, language: ${p.language}) has invalid references to learning-objects:${error}`)
+                await ProcessingHistory.error(p.hruid, 1, p.language, 
+                    `The learning path (hruid: ${p.hruid}, language: ${p.language}) has invalid references to learning-objects:${error}`)
             }
         }
         return res.json(resPaths);

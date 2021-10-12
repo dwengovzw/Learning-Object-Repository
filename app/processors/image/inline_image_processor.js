@@ -2,8 +2,7 @@ import Processor from "../processor.js";
 import { isValidHttpUrl } from '../../utils/utils.js'
 import InvalidArgumentError from '../../utils/invalid_argument_error.js'
 import DOMPurify from 'isomorphic-dompurify';
-import Logger from "../../logger.js"
-import UserLogger from '../../utils/user_logger.js'
+import ProcessingHistory from "../../models/processing_history.js";
 
 class InlineImageProcessor extends Processor {
     constructor() {
@@ -19,7 +18,11 @@ class InlineImageProcessor extends Processor {
     render(imageUrl, args = { altText: "", metadata: {} }) {
 
         if (!isValidHttpUrl(imageUrl) && (!imageUrl || !imageUrl.toLowerCase().match(/^(?!http.*$)[^.].*\.(jpe?g|png|svg)/))) {
-            UserLogger.error("The image cannot be found. Please check if the url is spelled correctly.")
+            if (args.metadata && args.metadata.hruid && args.metadata.version && args.metadata.language){
+                ProcessingHistory.error(args.metadata.hruid, args.metadata.version, args.metadata.language, "The image cannot be found. Please check if the url is spelled correctly.")
+            }else{
+                ProcessingHistory.error("generalError", "99999999", "en", "The image cannot be found. Please check if the url is spelled correctly.")
+            }
             throw new InvalidArgumentError("The image cannot be found. Please check if the url is spelled correctly.");
         }
 
