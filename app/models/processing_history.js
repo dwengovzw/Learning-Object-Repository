@@ -48,7 +48,7 @@ processingHistorySchema.statics.info = async function(hruid, version, language, 
         message = (new Date()).toISOString() + " [INFO]: " + (title ? title + "\n" : "") + message + "\n"
                 + (message.charAt(message.length - 1) == "\n" ? "" : "\n");
         await this.findOneAndUpdate({hruid: hruid, version: version, language: language},
-            {$push: { infoList: message }, wasUpdated: true}, 
+            {$addToSet: { infoList: message }, wasUpdated: true}, 
             {upsert: true}
         )
     })
@@ -68,7 +68,7 @@ processingHistorySchema.statics.error = async function(hruid, version, language,
         message = (new Date()).toISOString() + " [ERROR]: " + (title ? title + "\n" : "") + message + "\n"
                 + (message.charAt(message.length - 1) == "\n" ? "" : "\n");
         await this.findOneAndUpdate({hruid: hruid, version: version, language: language},
-            {$push: { errorList: message }, wasUpdated: true}, 
+            {$addToSet: { errorList: message }, wasUpdated: true}, 
             {upsert: true}
         )
     })
