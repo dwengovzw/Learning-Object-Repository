@@ -27,8 +27,8 @@ echo "I_LEARN_ISSUER_ID = 'https://saltire.lti.app/platform/token/s65d9e32638de5
 echo "I_LEARN_TOOL_LAUNCH_URI = 'https://83.217.67.53/backend'" >> .env
 echo "I_LEARN_REDIRECT_URI = 'https://83.217.67.53/backend/api/learningObject/getWrapped'" >> .env
 echo "COOKIE_SECRET = '3b6d3794-7bc9-4c44-a649-b6e2798560ec'"
-echo "ADMIN_USER_USERNAME=dwengo"
-echo "ADMIN_USER_PASSWORD='$1'"  # Admin password is supplied at deploy time
+echo "ADMIN_USER_USERNAME=dwengo" >> .env
+echo "ADMIN_USER_PASSWORD='$1'" >> .env  # Admin password is supplied at deploy time
 
 
 # Install dependancies
