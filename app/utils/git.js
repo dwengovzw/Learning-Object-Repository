@@ -132,6 +132,7 @@ let checkDirRec2 = async (dir) => {
         let files = getSubDirFiles(dir)
         let [metadata, indexfile, markdown] = learningObjectController.extractMetadata(files, dir)
         let lastFileChangeInFolder = findLastFileUpdateInDirectoryStructureMs(files)
+        console.log(`Processing learning object with hruid: ${metadata.hruid}`)
         let previousProcessingTimeForLearningObject = await ProcessingHistory.getLastProcessedTime(metadata.hruid, metadata.version, metadata.language)
         // If learning object has changed files update it
         if (lastFileChangeInFolder >= previousProcessingTimeForLearningObject){
@@ -141,6 +142,7 @@ let checkDirRec2 = async (dir) => {
                 `Processing directory '${dir}' as learning object...`)
             await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
         } else {
+            console.log(`Skipping learning object with hruid: ${metadata.hruid}`)
             // No changes to this learning object, keep log data from previous processing step.
             await ProcessingHistory.markAsNew(metadata.hruid, metadata.version, metadata.language)
         }
@@ -188,8 +190,9 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
         await ProcessingHistory.markAllAsOld()
 
     } catch (e) {
-        console.log(e)
+        console.log(`Error during processing: ${e}`)
     }
+    console.log("finished processing learning object repository.")
 }
 
 export { pullAndProcessRepository }

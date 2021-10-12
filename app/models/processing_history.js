@@ -42,23 +42,14 @@ processingHistorySchema.statics.info = async function(hruid, version, language, 
         if (previousEntry && !previousEntry.wasUpdated){
             await this.updateOne({hruid: hruid, version: version, language: language},
                 {infoList: [], errorList: []},
-                {upsert: true}/*, (err, doc) =>{
-                    if (err){
-                        console.log(err)
-                    }
-                }*/)
+                {upsert: true})
         }
 
         message = (new Date()).toISOString() + " [INFO]: " + (title ? title + "\n" : "") + message + "\n"
                 + (message.charAt(message.length - 1) == "\n" ? "" : "\n");
         await this.findOneAndUpdate({hruid: hruid, version: version, language: language},
             {$push: { infoList: message }, wasUpdated: true}, 
-            {upsert: true}/*, 
-            (err, doc) =>{
-                if (err){
-                    console.log(err)
-                }
-            }*/
+            {upsert: true}
         )
     })
     session.endSession();
@@ -71,23 +62,14 @@ processingHistorySchema.statics.error = async function(hruid, version, language,
         if (previousEntry && !previousEntry.wasUpdated){
             await this.updateOne({hruid: hruid, version: version, language: language},
                 {errorList: [], infoList: []},
-                {upsert: true}/*, (err, doc) =>{
-                    if (err){
-                        console.log(err)
-                    }
-                }*/)
+                {upsert: true})
         }
 
         message = (new Date()).toISOString() + " [ERROR]: " + (title ? title + "\n" : "") + message + "\n"
                 + (message.charAt(message.length - 1) == "\n" ? "" : "\n");
         await this.findOneAndUpdate({hruid: hruid, version: version, language: language},
             {$push: { errorList: message }, wasUpdated: true}, 
-            {upsert: true}/*, 
-            (err, doc) =>{
-                if (err){
-                    console.log(err)
-                }
-            }*/
+            {upsert: true}
         )
     })
     session.endSession();
@@ -102,28 +84,16 @@ processingHistorySchema.statics.markAsNew = async function(hruid, version, langu
             wasUpdated: true 
         }, {
             upsert: true
-        }/*, (err, doc) =>{
-            if (err){
-                console.log(err)
-            }
-        }*/
+        }
     )
 }
 
 processingHistorySchema.statics.removeOldEntries = async function(){
-    return await this.deleteOne({wasUpdated: false}/*, (err, doc) =>{
-        if (err){
-            console.log(err)
-        }
-    }*/)
+    return await this.deleteOne({wasUpdated: false})
 }
 
 processingHistorySchema.statics.markAllAsOld = async function(){
-    let res = await this.updateMany({wasUpdated: true}, {wasUpdated: false}/*, (err, doc) =>{
-        if (err){
-            console.log(err)
-        }
-    }*/)
+    let res = await this.updateMany({wasUpdated: true}, {wasUpdated: false})
 }
 
 processingHistorySchema.statics.getLastProcessedTime = async function(hruid, version, language){

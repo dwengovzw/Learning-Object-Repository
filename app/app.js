@@ -10,7 +10,7 @@ import { urlReplaceInStaticFiles } from './utils/utils.js'
 import passport from "passport"
 import passportLocal from "passport-local"
 import cookieParser from "cookie-parser"
-import session from "express-session"
+import session from "cookie-session"
 import bodyParser from "body-parser"
 import User from "./models/user.js"
 
