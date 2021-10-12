@@ -75,15 +75,18 @@ managementController.getLogLines = async () => {
     return lines
 }
 
-/*managementController.getLogLines = async () => { 
+managementController.getLiveLogLines = async (req, res) => { 
     let logLines = await managementController.readLogFileIntoList();
     // Replace \n with <br>
     logLines.forEach((element, index, inputarray) => {
         inputarray[index] = element.replace(/(?:\r\n|\r|\n)/g, '<br>')
     })
     logLines.reverse() //Reverse array to show latest errors first
-    return logLines
-}*/
+
+    res.set('Content-Type', 'text/plain; charset=utf-8')
+    res.write(JSON.stringify(logLines));
+    res.end();
+}
 
 managementController.readLogFileIntoList = async () => {
     let file = path.resolve("user.log")

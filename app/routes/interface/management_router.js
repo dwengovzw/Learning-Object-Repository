@@ -14,6 +14,15 @@ managementRouter.route("/logs").get((req, res) => {
     
 })
 
+managementRouter.route("/livelogs").get((req, res) => {
+    if (req.user && req.user.approved){
+        managementController.getLiveLogLines(req, res);
+    }else{
+        res.redirect("/user/login")
+    }
+    
+})
+
 managementRouter.route("/forceProcess").get((req, res) => {
     if (req.user && req.user.approved){
         managementController.forceProcess(req, res);

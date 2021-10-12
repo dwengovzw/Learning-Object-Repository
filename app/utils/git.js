@@ -5,6 +5,7 @@ import simpleGit from 'simple-git';
 import Logger from '../logger.js';
 import learningPathApiController from '../controllers/api/learing_path_api_controller.js';
 import ProcessingHistory from "../models/processing_history.js"
+import UserLogger from "../utils/user_logger.js"
 
 let logger = Logger.getLogger();
 
@@ -125,6 +126,7 @@ let checkDirRec2 = async (dir) => {
                 await learningPathApiController.saveLearningPath({ originalname: f, buffer: fs.readFileSync(path.join(dir, f)) });
             }
         }
+        UserLogger.info("Done processing learning paths")
         console.log("Done processing learning paths")
     }
     if (dirCont.some(f => /.*index.md|.*metadata.(md|yaml)/.test(f))) {
@@ -136,6 +138,7 @@ let checkDirRec2 = async (dir) => {
         let previousProcessingTimeForLearningObject = await ProcessingHistory.getLastProcessedTime(metadata.hruid, metadata.version, metadata.language)
         // If learning object has changed files update it
         if (lastFileChangeInFolder >= previousProcessingTimeForLearningObject){
+            UserLogger.info(`------------->>>>Processing learning object with hruid: ${metadata.hruid}`)
             console.log(`------------->>>>Processing learning object with hruid: ${metadata.hruid}`)
             await ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, 
                 `The learning object with hruid: ${metadata.hruid}, version: ${metadata.version}, and language: ${metadata.language} has changed since last time the processor was run`)
@@ -143,6 +146,7 @@ let checkDirRec2 = async (dir) => {
                 `Processing directory '${dir}' as learning object...`)
             await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
         } else {
+            UserLogger.info(`Skipping learning object with hruid: ${metadata.hruid}`)
             console.log(`Skipping learning object with hruid: ${metadata.hruid}`)
             // No changes to this learning object, keep log data from previous processing step.
             await ProcessingHistory.markAsNew(metadata.hruid, metadata.version, metadata.language)
@@ -166,6 +170,7 @@ let checkDirRec2 = async (dir) => {
  * @param {string} branch - the branch in the remote repository (default is 'main')
  */
 let pullAndProcessRepository = async function (destination, branch = "main") {    
+    UserLogger.clear();
     let repository = process.env.LEARNING_OBJECTS_GIT_REPOSITORY
     // Pull Git repos
 
@@ -191,8 +196,10 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
         await ProcessingHistory.markAllAsOld()
 
     } catch (e) {
+        UserLogger.info(`Error during processing: ${e}`)
         console.log(`Error during processing: ${e}`)
     }
+    UserLogger.info("finished processing learning object repository.")
     console.log("finished processing learning object repository.")
 }
 
