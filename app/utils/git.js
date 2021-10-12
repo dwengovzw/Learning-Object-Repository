@@ -132,10 +132,11 @@ let checkDirRec2 = async (dir) => {
         let files = getSubDirFiles(dir)
         let [metadata, indexfile, markdown] = learningObjectController.extractMetadata(files, dir)
         let lastFileChangeInFolder = findLastFileUpdateInDirectoryStructureMs(files)
-        console.log(`Processing learning object with hruid: ${metadata.hruid}`)
+        
         let previousProcessingTimeForLearningObject = await ProcessingHistory.getLastProcessedTime(metadata.hruid, metadata.version, metadata.language)
         // If learning object has changed files update it
         if (lastFileChangeInFolder >= previousProcessingTimeForLearningObject){
+            console.log(`------------->>>>Processing learning object with hruid: ${metadata.hruid}`)
             await ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, 
                 `The learning object with hruid: ${metadata.hruid}, version: ${metadata.version}, and language: ${metadata.language} has changed since last time the processor was run`)
             await ProcessingHistory.info(metadata.hruid, metadata.version, metadata.language, 
