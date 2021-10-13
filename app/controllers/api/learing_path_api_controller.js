@@ -6,6 +6,7 @@ import { readFileSync } from "fs";
 import LearningPath from "../../models/learning_path.js";
 import learningObjectApiController from "./learing_object_api_controller.js";
 import ProcessingHistory from "../../models/processing_history.js";
+import UserLogger from "../../utils/user_logger.js";
 
 let logger = Logger.getLogger()
 
@@ -69,6 +70,7 @@ learningPathApiController.saveLearningPath = async (file) => {
 learningPathApiController.validateObjectReferencesInPath = async (path) => {
     let errors = "";
     if (path.nodes) {
+        let nodeids = path.nodes.map(node =>`${node.learningobject_hruid}-${node.version}-${node.language}`)
         for (let i = 0; i < path.nodes.length; i++) {
             const node = path.nodes[i];
             let query = { hruid: node.learningobject_hruid, language: node.language, version: node.version };
@@ -77,8 +79,15 @@ learningPathApiController.validateObjectReferencesInPath = async (path) => {
                 errors += `\n\t- A learning object with hruid: ${query.hruid}, language: ${query.language}, version: ${query.version}, doesn't exist.`
             }
             // Check if each transition node is in the list of nodes of the learning path
-            //node.transitions.every(val => path.nodes.includes(val))
-            if (node.transitions) {
+            
+            if (!node.transitions.map(transition => `${transition.next.hruid}-${transition.next.version}-${transition.next.language}`).every(
+                val => nodeids.includes(val))){
+                UserLogger.error(`Not all transitions in learning path with hruid: ${path.hruid} are nodes in the learning path.`)
+            }
+
+            // This code checks each transition if it exists. This is slow and since transitions have to be part of the 
+            // learning path definition, these checks are done in the previous step.
+            /*if (node.transitions) {
                 for (let j = 0; j < node.transitions.length; j++) {
                     const trans = node.transitions[j];
                     let query = { hruid: trans.next.hruid, language: trans.next.language, version: trans.next.version };
@@ -87,7 +96,7 @@ learningPathApiController.validateObjectReferencesInPath = async (path) => {
                         errors += `\n\t- A learning object with hruid: ${query.hruid}, language: ${query.language}, version: ${query.version}, doesn't exist.`
                     }
                 }
-            }
+            }*/
         }
     }
     return errors;
@@ -185,7 +194,6 @@ learningPathApiController.removeLearningPaths = async () => {
 
 // TODO: make this faster!!!
 learningPathApiController.getLearningPaths = async (req, res) => {
-    let start = new Date();
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();
     let language = query.language ? query.language : /.*/;
@@ -200,9 +208,6 @@ learningPathApiController.getLearningPaths = async (req, res) => {
         }
     }
 
-    console.info('Execution time 1: %dms', new Date() - start)
-    start = new Date()
-
     let queryList = []
     for (const [key, value] of Object.entries(query)) {
         let obj = {};
@@ -210,14 +215,6 @@ learningPathApiController.getLearningPaths = async (req, res) => {
         queryList.push(obj);
         loginfo += key + ": " + value + ", "
     }
-
-    console.info('Execution time 2: %dms', new Date() - start)
-    start = new Date()
-
-    //logger.info(loginfo.slice(0, -2) + "}")
-
-    console.info('Execution time 3: %dms', new Date() - start)
-    start = new Date()
 
     query = { $and: [{ $or: queryList }, { language: language }] }
 
@@ -232,20 +229,12 @@ learningPathApiController.getLearningPaths = async (req, res) => {
         })
     });
 
-    console.info('Execution time 4: %dms', new Date() - start)
-    start = new Date()
-
-
     if (paths) {
         let resPaths = [];
         // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
         for (let i = 0; i < paths.length; i++) {
             const p = paths[i];
-            console.info('Execution time 7: %dms', new Date() - start)
-                start = new Date()
             let error = await learningPathApiController.validateObjectReferencesInPath(p)
-            console.info('Execution time 8: %dms', new Date() - start)
-                start = new Date()
             if (!error) {
                 resPaths.push({
                     _id: p._id,
@@ -260,26 +249,14 @@ learningPathApiController.getLearningPaths = async (req, res) => {
                     updatedAt: p.updatedAt,
                     __v: p.__v
                 })
-                console.info('Execution time 5: %dms', new Date() - start)
-                start = new Date()
             } else {
                 await ProcessingHistory.error(p.hruid, 1, p.language, 
-                    `The learning path (hruid: ${p.hruid}, language: ${p.language}) has invalid references to learning-objects:${error}`)
-                    
-                    console.info('Execution time 6: %dms', new Date() - start)
-                    start = new Date()    
+                    `The learning path (hruid: ${p.hruid}, language: ${p.language}) has invalid references to learning-objects:${error}`)   
             }
         }
         return res.json(resPaths);
     }
-
-    console.info('Execution time7: %dms', new Date() - start)
-    start = new Date()
-
     return res.send("Could not retrieve learning paths from database.");
-
-    console.info('Execution time8: %dms', new Date() - start)
-    start = new Date()
 };
 
 
