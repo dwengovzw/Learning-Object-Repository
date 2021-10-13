@@ -180,6 +180,8 @@ learningPathApiController.removeLearningPaths = async () => {
  * @param {object} res
  * @returns list of learning-paths
  */
+
+// TODO: make this faster!!!
 learningPathApiController.getLearningPaths = async (req, res) => {
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();

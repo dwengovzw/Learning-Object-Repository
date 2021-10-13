@@ -81,7 +81,7 @@ managementController.getLiveLogLines = async (req, res) => {
     logLines.forEach((element, index, inputarray) => {
         inputarray[index] = element.replace(/(?:\r\n|\r|\n)/g, '<br>')
     })
-    logLines.reverse() //Reverse array to show latest errors first
+    //logLines.reverse() //Reverse array to show latest errors first
 
     res.set('Content-Type', 'text/plain; charset=utf-8')
     res.write(JSON.stringify(logLines));

@@ -59,6 +59,7 @@
 </style>
 
 <script>
+    let previousLogLines = []
     let basePath = "<%= basePath %>"
     function filterLog() {
       // Declare variables
@@ -78,17 +79,23 @@
         }
       }
     }
-
+ 
     function updateLiveLog(){
-        $("#liveLog").empty()
         $.ajax({
             type: "GET",
             url: basePath + '/api/manage/livelogs',
             success: (data) => {
                 // When processing is done, the server sends a response
                 let lines = JSON.parse(data);
-                lines.forEach(line => $("#liveLog").append($("<div>").html(line)))
-                setTimeout(() => {updateLiveLog()}, 1000)
+                lines.forEach(line => {
+                        if (!previousLogLines.includes(line)){
+                            previousLogLines.push(line);
+                            $("#liveLog").append($("<div>").html(line))
+                            let elem = document.getElementById("liveLog")
+                            elem.scrollTop = elem.scrollHeight;
+                        }
+                    })
+                setTimeout(() => {updateLiveLog()}, 500)
             },
             error: (err) => {console.log("An error occured during processing")}
         })
@@ -132,6 +139,8 @@
     }
 
     function process(){
+        previousLogLines = []
+        $("#liveLog").empty()
         // Send a request to the server to start processing
         $.ajax({
             type: "GET",

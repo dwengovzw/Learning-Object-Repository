@@ -1,13 +1,73 @@
+<%- include("./../../shared/header.ejs") %>
+
 <!-- Here I would put the url to the new website once it's online (if that's allowed by iLearn for example) -->
-<a href="https://scholen.dwengo.org/">
-  <img id="dwengo_logo" src="<%= basePath %>/static/img/dwengo-groen-zwart.svg" alt="Dwengo Logo" title="Dwengo">
-</a>
+
 
 <div id="content" class="container">
-  <%- content %>
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a class ="navbar-brand" href="https://dwengo.org/">
+      <img id="dwengo_logo" src="<%= basePath %>/static/img/dwengo-groen-zwart.svg" alt="Dwengo Logo" title="Dwengo">
+    </a>
+   
+  </nav>
+  <section class="learning-object-content">
+    <%- content %>
+  </section>
+  
 </div>
 
 <style>
+
+.iframe-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.iframe-16-9 {
+  /* 16:9 aspect ratio */
+  padding-top: 56.25%;
+}
+
+.iframe-1-1 {
+  padding-top: 100%;
+}
+
+.iframe-1-2 {
+  padding-top: 200%;
+}
+
+.iframe-container iframe {
+   border: 0;
+   height: 100%;
+   left: 0;
+   position: absolute;
+   top: 0;
+   width: 100%;
+}
+  
+  img {
+    max-width: 100%;
+  }
+  .learning-object-content{
+    padding-top: 1em;
+  }
+  .navbar {
+    border-bottom: solid gray 1px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+  .navbar .navbar-brand {
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+  .container {
+    box-sizing: border-box;
+    max-width: calc(100ch - (15px * 2));
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
   @font-face {
     font-family: roboto;
     src: url(<%= basePath %>/static/fonts/Roboto/Roboto-Regular.ttf);
@@ -93,3 +153,5 @@
     min-width: 150px;
   }
 </style>
+
+<%- include("./../../shared/footer.ejs") %>
