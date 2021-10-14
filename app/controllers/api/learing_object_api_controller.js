@@ -139,6 +139,80 @@ learningObjectApiController.constructSearchQuery = async (query) => {
     }
     return search_query
 }
+/*
+
+TODO: use the following query to get the age ranges and keywords from all learning objects in the learning path:
+
+// Query to merge learning paths with learning objects and selecting all learning objects for a certain learning path afterwards mering keywords and target_ages for all learning objects in learning path.
+ 
+ 
+ db.learningpaths.aggregate([
+    {$unwind:{ path: "$nodes", "preserveNullAndEmptyArrays": true}}, 
+    {$lookup: 
+        {
+            from: "learningobjects",
+            let: 
+                {
+                    hruid: "$nodes.learningobject_hruid",
+                    version: "$nodes.version",
+                    language: "$nodes.language"
+                },
+            pipeline: [
+                {
+                    $match: {
+                        $expr: {
+                            $and: [{$eq: ["$$version", "$version"]}, {$eq: ["$$hruid", "$hruid"]}, {$eq: ["$$language", "$language"]}]
+                        }
+                    }
+                }
+            ],
+            as: "result"
+        }
+    }, {
+        $replaceRoot: {
+            newRoot: {
+                $mergeObjects: [
+                    {
+                        $arrayElemAt: [
+                            "$result", 0
+                        ]
+                    },{
+                        lphruid: "$$ROOT.hruid",
+                        lplanguage: "$$ROOT.language",
+                        lptitle: "$$ROOT.title",
+                        lpdescription: "$$ROOT.description"
+                    }
+                ]
+            }
+        }
+    }, {
+        $match: {
+            "lphruid": "test-v1",
+            "lplanguage": "nl"
+        }
+    }, {
+        $group: 
+            {
+                _id: { lphruid: "$lphruid", lplanguage: "$lplanguage"},
+                keywords: {$accumulator: {
+                        init: function(){return new Array()}, 
+                        accumulate: function(state, value){return [...new Set(state.concat(value)) ]}, 
+                        accumulateArgs: ["$keywords"], 
+                        merge: function(state1, state2){return [...new Set(state1.concat(state2)) ]}, 
+                        lang: "js"}},
+                target_ages: {$accumulator: {
+                        init: function(){return new Array()}, 
+                        accumulate: function(state, value){return [...new Set(state.concat(value)) ]}, 
+                        accumulateArgs: ["$target_ages"], 
+                        merge: function(state1, state2){return [...new Set(state1.concat(state2)) ]}, 
+                        lang: "js"}},
+            }
+    }
+              
+])
+
+
+*/
 
 learningObjectApiController.search = async (req, res) => {
     let query = req.query ? req.query : {}
