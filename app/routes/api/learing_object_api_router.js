@@ -24,4 +24,8 @@ learningObjectApiRouter.route('/search').get((req, res) => {
     learningObjectApiController.search(req, res);
 })
 
+learningObjectApiRouter.route('/getFrequentKeywords').get((req, res) => {
+    learningObjectApiController.getFrequentKeywords(req, res);
+})
+
 export default learningObjectApiRouter;

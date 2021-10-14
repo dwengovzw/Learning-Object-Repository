@@ -3,10 +3,36 @@ import path from "path"
 import LearningObjectRepository from "../../repository/learning_object_repository.js";
 import fs from "fs";
 import { ProcessorContentType } from "../../processors/content_type.js";
+import LearningObject from "../../models/learning_object.js"
 
 let logger = Logger.getLogger()
 
 let learningObjectApiController = {}
+
+
+learningObjectApiController.getFrequentKeywords = async (req, res) => {
+    try {
+        let topFiveKeywords = await LearningObject.aggregate([
+            {$match: {teacher_exclusive: false, available: true}},  // Only search through available content for learners
+            {$group: 
+                {_id: null, keywords:                               // Accumulate keywords into one array
+                    {$accumulator: {
+                        init: function(){return new Array()}, 
+                        accumulate: function(state, value){return state.concat(value)}, 
+                        accumulateArgs: ["$keywords"], 
+                        merge: function(state1, state2){return state1.concat(state2)}, 
+                        lang: "js"}}}}, 
+            {$unwind: "$keywords"},                                 // Split array into fields
+            {$group: {_id: "$keywords", freq: {$sum: 1}}},          // Group keywords and count frequencies
+            {$sort: {freq: -1}},                                    // Sort in reverse order
+            {$limit: 5},                                            // Take first five
+            {$group: {_id: null, keywords: {$push: "$_id"}}}
+        ])
+        return res.json(topFiveKeywords[0].keywords)
+    } catch (err){
+        return res.json([]);    // if error don't return keywords
+    }
+}
 
 /**
  * Filter the query object so only attributes that are searchable in the database are left.
