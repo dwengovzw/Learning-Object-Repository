@@ -168,7 +168,8 @@ TODO: use the following query to get the age ranges and keywords from all learni
             ],
             as: "result"
         }
-    }, {
+    }, 
+    {
         $replaceRoot: {
             newRoot: {
                 $mergeObjects: [
@@ -177,6 +178,9 @@ TODO: use the following query to get the age ranges and keywords from all learni
                             "$result", 0
                         ]
                     },{
+                        lp_id: "$$ROOT._id",
+                        lpnodes: "$$ROOT.nodes",
+                        lpimage: "$$ROOT.image",
                         lphruid: "$$ROOT.hruid",
                         lplanguage: "$$ROOT.language",
                         lptitle: "$$ROOT.title",
@@ -193,7 +197,13 @@ TODO: use the following query to get the age ranges and keywords from all learni
     }, {
         $group: 
             {
-                _id: { lphruid: "$lphruid", lplanguage: "$lplanguage"},
+                _id: "$lp_id",
+                language: {$first: "$lplanguage"},
+                hruid: {$first: "$lphruid"},
+                title: {$first: "$lptitle"},
+                image: {$first: "$lpimage"},
+                description: {$first: "$lpdescription"},
+                nodes: {$push: "$lpnodes"},
                 keywords: {$accumulator: {
                         init: function(){return new Array()}, 
                         accumulate: function(state, value){return [...new Set(state.concat(value)) ]}, 
@@ -207,6 +217,52 @@ TODO: use the following query to get the age ranges and keywords from all learni
                         merge: function(state1, state2){return [...new Set(state1.concat(state2)) ]}, 
                         lang: "js"}},
             }
+    },{
+        $addFields: {
+            "keywords": {
+                $reduce :{
+                    input: "$keywords",
+                    initialValue: "",
+                    in: {
+                        $concat: [
+                            "$$value",
+                            {
+                                "$cond": {
+                                    "if": {
+                                        "$eq": [
+                                            "$$value", ""
+                                        ]
+                                    },
+                                    "then": "",
+                                    "else": " "
+                                }
+                            },
+                            "$$this"
+                        ]
+                    }
+                }
+            },
+            "min_age": {
+                $min: "$target_ages"
+            },
+            "max_age": {
+                $max: "$target_ages"
+            }
+        }
+    }, {
+        $match: { $and: [ 
+        { language: 'nl' }, 
+        { $or: 
+            [{$and:[
+                {min_age: {$lt: 0}}, {max_age: {$gt: 0}}]  // minimum age in the search query is between min and max age in the database
+            }, 
+            {$and: [
+                {min_age: {$lt: 25}}, {max_age: {$gt: 25}}    // maximum age in the search query is between min and max age in the database
+            ]}, 
+            {$and: [
+                {min_age: {$gt: 0}}, {max_age: {$lt: 25}}    // minimum age in the query is below minimum age in the database and maximum age in the search query is above maximum age in the database
+            ]}]}
+        ]}
     }
               
 ])

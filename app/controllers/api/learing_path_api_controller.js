@@ -197,6 +197,8 @@ learningPathApiController.getLearningPaths = async (req, res) => {
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();
     let language = query.language ? query.language : /.*/;
+    let minimum_age = query.min_age ? parseInt(query.min_age) : 0;
+    let maximum_age = query.max_age ? parseInt(query.max_age) : 25;
 
     let loginfo = "Requested learning path with query: {language: " + language + ", ";
 
@@ -204,7 +206,8 @@ learningPathApiController.getLearningPaths = async (req, res) => {
         query = {
             title: query.all,
             description: query.all,
-            hruid: query.all
+            hruid: query.all,
+            keywords: query.all
         }
     }
 
@@ -216,10 +219,23 @@ learningPathApiController.getLearningPaths = async (req, res) => {
         loginfo += key + ": " + value + ", "
     }
 
-    query = { $and: [{ $or: queryList }, { language: language }] }
+    query = { $and: [{ $or: queryList }, 
+        { language: language }, 
+        { $or: 
+            [{$and:[
+                {min_age: {$lte: minimum_age}}, {max_age: {$gte: minimum_age}}]  // minimum age in the search query is between min and max age in the database
+            }, 
+            {$and: [
+                {min_age: {$lte: maximum_age}}, {max_age: {$gte: maximum_age}}    // maximum age in the search query is between min and max age in the database
+            ]}, 
+            {$and: [
+                {min_age: {$gte: minimum_age}}, {max_age: {$lte: maximum_age}}    // minimum age in the query is below minimum age in the database and maximum age in the search query is above maximum age in the database
+            ]}]}
+        ]}
+
 
     let paths;
-    await new Promise((resolve) => {
+    /*await new Promise((resolve) => {
         repos.find(query, (err, res) => {
             if (err) {
                 logger.error("Could not retrieve learning paths from database: " + err.message);
@@ -227,7 +243,9 @@ learningPathApiController.getLearningPaths = async (req, res) => {
             paths = res;
             resolve();
         })
-    });
+    });*/
+
+    paths = await learningPathApiController.searchAllLearningPathsWitchMeetCondition(query);
 
     if (paths) {
         let resPaths = [];
@@ -258,6 +276,114 @@ learningPathApiController.getLearningPaths = async (req, res) => {
     }
     return res.send("Could not retrieve learning paths from database.");
 };
+
+
+learningPathApiController.searchAllLearningPathsWitchMeetCondition = async function(query){
+    let aggregation =  [
+        {$unwind:{ path: "$nodes", "preserveNullAndEmptyArrays": true}}, // Unwind learning paths so there is an entry for each combination of learning path info and node
+        {$lookup: // Join learning objects into learning path nodes based on hruid, version, and language
+            {
+                from: "learningobjects",
+                let: 
+                    {
+                        hruid: "$nodes.learningobject_hruid",
+                        version: "$nodes.version",
+                        language: "$nodes.language"
+                    },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [{$eq: ["$$version", "$version"]}, {$eq: ["$$hruid", "$hruid"]}, {$eq: ["$$language", "$language"]}]
+                            }
+                        }
+                    }
+                ],
+                as: "result"
+            }
+        }, {
+            $replaceRoot: { // Take result of merge as base and add information of learning path
+                newRoot: {
+                    $mergeObjects: [
+                        {
+                            $arrayElemAt: [
+                                "$result", 0
+                            ]
+                        },{
+                            lp_id: "$$ROOT._id",
+                            lpnodes: "$$ROOT.nodes",
+                            lpimage: "$$ROOT.image",
+                            lphruid: "$$ROOT.hruid",
+                            lplanguage: "$$ROOT.language",
+                            lptitle: "$$ROOT.title",
+                            lpdescription: "$$ROOT.description"
+                        }
+                    ]
+                }
+            }
+        }, {
+            $group: // reverse unwind by grouping on _id and at the same time accumulate keywords and target ages from learning objects
+                {
+                    _id: "$lp_id",
+                    language: {$first: "$lplanguage"},
+                    hruid: {$first: "$lphruid"},
+                    title: {$first: "$lptitle"},
+                    description: {$first: "$lpdescription"},
+                    image: {$first: "$lpimage"},
+                    nodes: {$push: "$lpnodes"},
+                    keywords: {$accumulator: {
+                            init: function(){return new Array()}, 
+                            accumulate: function(state, value){return [...new Set(state.concat(value)) ]}, 
+                            accumulateArgs: ["$keywords"], 
+                            merge: function(state1, state2){return [...new Set(state1.concat(state2)) ]}, 
+                            lang: "js"}},
+                    target_ages: {$accumulator: {
+                            init: function(){return new Array()}, 
+                            accumulate: function(state, value){return [...new Set(state.concat(value)) ]}, 
+                            accumulateArgs: ["$target_ages"], 
+                            merge: function(state1, state2){return [...new Set(state1.concat(state2)) ]}, 
+                            lang: "js"}},
+                }
+        },{
+            $addFields: {   // Convert keyword array into string separated by spaces + calculate min and max age
+                "keywords": {
+                    $reduce :{
+                        input: "$keywords",
+                        initialValue: "",
+                        in: {
+                            $concat: [
+                                "$$value",
+                                {
+                                    "$cond": {
+                                        "if": {
+                                            "$eq": [
+                                                "$$value", ""
+                                            ]
+                                        },
+                                        "then": "",
+                                        "else": " "
+                                    }
+                                },
+                                "$$this"
+                            ]
+                        }
+                    }
+                },
+                "min_age": {
+                    $min: "$target_ages"
+                },
+                "max_age": {
+                    $max: "$target_ages"
+                }
+            }
+        }, {
+            $match: query       // select learning path based on query criteria.
+        }
+                  
+    ]
+
+    return LearningPath.aggregate(aggregation)
+}
 
 
 
