@@ -265,6 +265,9 @@ learningPathApiController.getLearningPaths = async (req, res) => {
                     uuid: p.uuid,
                     created_at: p.created_at,
                     updatedAt: p.updatedAt,
+                    min_age: p.min_age,
+                    max_age: p.max_age,
+                    keywords: p.keywords,
                     __v: p.__v
                 })
             } else {
