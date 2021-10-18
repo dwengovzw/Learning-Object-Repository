@@ -14,4 +14,8 @@ learningPathApiRouter.route("/:id").get((req, res) => {
     learningPathApiController.getLearningPathFromId(req, res);
 });
 
+learningPathApiRouter.route("/:hruid/:language").get((req, res) => {
+    learningPathApiController.getLearningPathFromHruidLang(req, res);
+})
+
 export default learningPathApiRouter;

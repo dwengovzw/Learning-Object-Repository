@@ -132,6 +132,19 @@ learningPathApiController.getLanguages = async (req, res) => {
     return res.json(languages);
 }
 
+
+
+learningPathApiController.getLearningPathFromHruidLang = async (req, res) => {
+    try {
+        let query = {hruid: req.params.hruid, language: req.params.language}
+        let path = await LearningPath.findOne(query)
+        path.image = path.image.toString('base64');
+        return res.json(path);
+    } catch (err) {
+        return res.send("Could not retrieve learning path from database.");
+    }
+}
+
 /**
  * request learning-path from database based on unique id
  * @param {object} req 
@@ -235,54 +248,24 @@ learningPathApiController.getLearningPaths = async (req, res) => {
 
 
     let paths;
-    /*await new Promise((resolve) => {
-        repos.find(query, (err, res) => {
-            if (err) {
-                logger.error("Could not retrieve learning paths from database: " + err.message);
-            }
-            paths = res;
-            resolve();
+    try{
+        paths = await learningPathApiController.searchAllValidLearningPathsWhichMeetCondition(query);
+        paths = paths.map((path) => {
+            path.image = path.image.toString("base64")
+            return path
         })
-    });*/
-
-    paths = await learningPathApiController.searchAllLearningPathsWitchMeetCondition(query);
-
-    if (paths) {
-        let resPaths = [];
-        // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
-        for (let i = 0; i < paths.length; i++) {
-            const p = paths[i];
-            let error = await learningPathApiController.validateObjectReferencesInPath(p)
-            if (!error) {
-                resPaths.push({
-                    _id: p._id,
-                    hruid: p.hruid,
-                    language: p.language,
-                    title: p.title,
-                    description: p.description,
-                    image: p.image.toString('base64'),
-                    nodes: p.nodes,
-                    uuid: p.uuid,
-                    created_at: p.created_at,
-                    updatedAt: p.updatedAt,
-                    min_age: p.min_age,
-                    max_age: p.max_age,
-                    keywords: p.keywords,
-                    __v: p.__v
-                })
-            } else {
-                await ProcessingHistory.error(p.hruid, 1, p.language, 
-                    `The learning path (hruid: ${p.hruid}, language: ${p.language}) has invalid references to learning-objects:${error}`)   
-            }
-        }
-        return res.json(resPaths);
-    }
-    return res.send("Could not retrieve learning paths from database.");
+        return res.json(paths);
+    }catch(error){
+        return res.send("Could not retrieve learning paths from database.");
+    }    
 };
 
 
-learningPathApiController.searchAllLearningPathsWitchMeetCondition = async function(query){
+learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async function(query){
     let aggregation =  [
+        {$addFields: 
+            {"num_nodes": { $size: "$nodes" }}   // Count the number of node references and save them, later we use this to filter out learning paths with nonexisting references.
+        },
         {$unwind:{ path: "$nodes", "preserveNullAndEmptyArrays": true}}, // Unwind learning paths so there is an entry for each combination of learning path info and node
         {$lookup: // Join learning objects into learning path nodes based on hruid, version, and language
             {
@@ -304,6 +287,8 @@ learningPathApiController.searchAllLearningPathsWitchMeetCondition = async funct
                 ],
                 as: "result"
             }
+        },{
+            $match: {"result": {"$ne": []}}  // Perform inner join (only keep learning path elements with refernces to existing learning objects)
         }, {
             $replaceRoot: { // Take result of merge as base and add information of learning path
                 newRoot: {
@@ -319,7 +304,8 @@ learningPathApiController.searchAllLearningPathsWitchMeetCondition = async funct
                             lphruid: "$$ROOT.hruid",
                             lplanguage: "$$ROOT.language",
                             lptitle: "$$ROOT.title",
-                            lpdescription: "$$ROOT.description"
+                            lpdescription: "$$ROOT.description",
+                            lpnum_nodes: "$$ROOT.num_nodes"
                         }
                     ]
                 }
@@ -333,6 +319,8 @@ learningPathApiController.searchAllLearningPathsWitchMeetCondition = async funct
                     title: {$first: "$lptitle"},
                     description: {$first: "$lpdescription"},
                     image: {$first: "$lpimage"},
+                    num_nodes: {$first: "$lpnum_nodes"},
+                    num_nodes_left: {$sum: 1},
                     nodes: {$push: "$lpnodes"},
                     keywords: {$accumulator: {
                             init: function(){return new Array()}, 
@@ -347,6 +335,8 @@ learningPathApiController.searchAllLearningPathsWitchMeetCondition = async funct
                             merge: function(state1, state2){return [...new Set(state1.concat(state2)) ]}, 
                             lang: "js"}},
                 }
+        },{
+            $match: {$expr: {$eq: ["$num_nodes", "$num_nodes_left"]}}  // Remove learning paths that contained references to non existing nodes.
         },{
             $addFields: {   // Convert keyword array into string separated by spaces + calculate min and max age
                 "keywords": {
