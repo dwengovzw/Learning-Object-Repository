@@ -227,7 +227,7 @@ learningPathApiController.getLearningPaths = async (req, res) => {
     let queryList = []
     for (const [key, value] of Object.entries(query)) {
         let obj = {};
-        obj[key] = new RegExp(".*" + value + ".*");
+        obj[key] = new RegExp(".*" + value + ".*", 'i');
         queryList.push(obj);
         loginfo += key + ": " + value + ", "
     }
