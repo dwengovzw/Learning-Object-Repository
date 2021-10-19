@@ -25,6 +25,7 @@ echo "I_LEARN_TOOL_LAUNCH_URI = 'https://staging.dwengo.org/'" >> .env
 echo "I_LEARN_REDIRECT_URI = 'https://staging.dwengo.org/backend/api/learningObject/getWrapped'" >> .env
 echo "ADMIN_USER_USERNAME=dwengo" >> .env
 echo "ADMIN_USER_PASSWORD='$1'" >> .env  # Admin password is supplied at deploy time
+echo "CACHE_TIME_SECONDS=5" >> .env # cache time set to five seconds for staging server
 
 
 # Install dependancies

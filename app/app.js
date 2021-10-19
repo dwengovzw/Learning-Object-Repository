@@ -58,7 +58,25 @@ passport.use(new passportLocal.Strategy((username, password, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+// end setup authentication middleware
 
+// setup cashing header
+let setCache = function (req, res, next) {
+    const period = process.env.CACHE_TIME_SECONDS // period in seconds
+    // you only want to cache for GET requests
+    if (req.method == 'GET') {
+      res.set('Cache-control', `public, max-age=${period}`)
+    } else {
+      // for the other requests set strict no caching parameters
+      res.set('Cache-control', `no-store`)
+    }
+    next()
+  }
+  app.use(setCache)
+
+
+
+// setup json parsing middleware
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
