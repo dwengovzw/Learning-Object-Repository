@@ -95,9 +95,13 @@ ltiController.authorize = async (req, res) => {
             res.sendStatus(500) // Unable to retrieve the key: Internal server error
             return
         }
+        console.log(`id_token: ${id_token}\ni_learn_key_pem: ${i_learn_key_pem}\ni_learn_key_alg: ${i_learn_key.alg}`)
         let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: process.env.I_LEARN_ISSUER_ID })  // Verify token with i-learn public key
+        console.log(`Decoded payload: ${decoded_payload}`)
         let valid_nonce = await ltiController.validate_nonce_for_user_id(decoded_payload.sub, decoded_payload.nonce);  // Validate nonce for user_id
+        console.log(`Valid nonce: ${valid_nonce}`)
         if (!valid_nonce){
+            console.log(`Nonce not valid`)
             res.sendStatus(401) // unauthorized
         }else{
             let resource_id = payload["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
