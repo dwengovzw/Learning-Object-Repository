@@ -97,7 +97,7 @@ ltiController.authorize = async (req, res) => {
         }
         console.log(`id_token: ${id_token}\ni_learn_key_pem: ${i_learn_key_pem}\ni_learn_key_alg: ${i_learn_key.alg}`)
         let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: process.env.I_LEARN_ISSUER_ID })  // Verify token with i-learn public key
-        console.log(`Decoded payload: ${decoded_payload}`)
+        console.log(`Decoded payload: ${JSON.stringify(decoded_payload)}`)
         let valid_nonce = await ltiController.validate_nonce_for_user_id(decoded_payload.sub, decoded_payload.nonce);  // Validate nonce for user_id
         console.log(`Valid nonce: ${valid_nonce}`)
         if (!valid_nonce){
@@ -169,10 +169,12 @@ ltiController.generate_nonce_for_user_id = async (user_id) => {
     // Generate save the userid to the nonce store. This automatically generates the nonce and a timestamp
     let nonce = new NonceStore({user_id: user_id});
     let saved_nonce = await nonce.save();
+    console.log(`Generating nonce for user: ${user_id} -> ${saved_nonce}`)
     return saved_nonce.nonce
 };
 
 ltiController.validate_nonce_for_user_id = async (user_id, nonce) => {
+    console.log(`Checking nonce for user: ${user_id} -> ${nonce}`)
     let nonce_store = await NonceStore.findOne({
         user_id: user_id,
         nonce: nonce
