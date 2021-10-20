@@ -95,7 +95,7 @@ ltiController.authorize = async (req, res) => {
             res.sendStatus(500) // Unable to retrieve the key: Internal server error
             return
         }
-        let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: "https://saltire.lti.app/platform" })  // Verify token with i-learn public key
+        let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: process.env.I_LEARN_ISSUER_ID })  // Verify token with i-learn public key
         let valid_nonce = await ltiController.validate_nonce_for_user_id(decoded_payload.sub, decoded_payload.nonce);  // Validate nonce for user_id
         if (!valid_nonce){
             res.sendStatus(401) // unauthorized
