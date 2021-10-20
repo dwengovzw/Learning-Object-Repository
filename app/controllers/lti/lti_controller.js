@@ -91,6 +91,7 @@ ltiController.authorize = async (req, res) => {
             i_learn_key = ltiController.select_key(header, keys);        // Select correct key for this token
             i_learn_key_pem = jwkToPem(i_learn_key);
         } catch (err) {
+            console.log(`Error retrieving keys: ${err}`)
             res.sendStatus(500) // Unable to retrieve the key: Internal server error
             return
         }
@@ -105,6 +106,7 @@ ltiController.authorize = async (req, res) => {
         }
         return
     } catch (err) {
+        console.log(`Error in authorization process: ${err}`)
         res.sendStatus(401) // unauthorized
     }
 }
