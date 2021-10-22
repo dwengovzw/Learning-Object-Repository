@@ -66,9 +66,11 @@ let setCache = function (req, res, next) {
     // you only want to cache for GET requests
     if (req.method == 'GET' && !req.originalUrl.includes("/lti/")) {
       res.set('Cache-control', `public, max-age=${period}`)
+      console.log("Setting caching for request")
     } else {
       // for the other requests set strict no caching parameters
       res.set('Cache-control', `no-store`)
+      console.log("No caching for request")
     }
     next()
   }
