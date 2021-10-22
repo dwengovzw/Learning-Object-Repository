@@ -98,15 +98,21 @@ ltiController.authorize = async (req, res) => {
         console.log(`id_token: ${id_token}\ni_learn_key_pem: ${i_learn_key_pem}\ni_learn_key_alg: ${i_learn_key.alg}`)
         let decoded_payload = jwt.verify(id_token, i_learn_key_pem, {algorithms: i_learn_key.alg, audience: process.env.I_LEARN_DWENGO_CLIENT_ID, issuer: process.env.I_LEARN_ISSUER_ID })  // Verify token with i-learn public key
         console.log(`Decoded payload: ${JSON.stringify(decoded_payload)}`)
+        // Stupid check because i-Learn does not implement the standard correctly :-(
+        let i_learn_id = decoded_payload["https://claims.i-learn.be/i-learn-id"]
+        if (i_learn_id){
+            decoded_payload.sub = i_learn_id;   
+        }
+        // End of stupid check because i-Learn does not implement the standard correctly :-(
         let valid_nonce = await ltiController.validate_nonce_for_user_id(decoded_payload.sub, decoded_payload.nonce);  // Validate nonce for user_id
         console.log(`Valid nonce: ${valid_nonce}`)
         if (!valid_nonce){
             console.log(`Nonce not valid`)
             res.sendStatus(401) // unauthorized
         }else{
-            let resource_id = payload["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
             // TODO: Check if the resource exists and redirect to either dwengo hosted content or extenal link.
-            res.redirect(302, `${process.env.I_LEARN_REDIRECT_URI}?_id=${resource_id}`)  // Redirect to requested content
+            res.redirect(302, payload["https://purl.imsglobal.org/spec/lti/claim/target_link_uri"])  // Redirect to requested content
+            //res.redirect(302, `${process.env.I_LEARN_REDIRECT_URI}?_id=${resource_id}`)  // Redirect to requested content
         }
         return
     } catch (err) {
@@ -114,6 +120,7 @@ ltiController.authorize = async (req, res) => {
         res.sendStatus(401) // unauthorized
     }
 }
+
 
 /**
  * Select the correct key for verifying the id_token based on the algorithm information in the header of the id_token
