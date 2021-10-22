@@ -64,7 +64,7 @@ app.use(passport.session());
 let setCache = function (req, res, next) {
     const period = process.env.CACHE_TIME_SECONDS // period in seconds
     // you only want to cache for GET requests
-    if (req.method == 'GET') {
+    if (req.method == 'GET' && !req.originalUrl.includes("/lti/")) {
       res.set('Cache-control', `public, max-age=${period}`)
     } else {
       // for the other requests set strict no caching parameters

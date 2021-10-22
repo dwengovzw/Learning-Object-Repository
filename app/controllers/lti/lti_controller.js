@@ -34,6 +34,7 @@ let dwengo_base_uri = process.env.DOMAIN_URL
  * @param {*} res 
  */
 ltiController.initiate_login = async (req, res) => {
+    console.log(req.originalUrl)
     let params = req.data;
     console.log(`initiate login params: ${params}`);
     let nonce
