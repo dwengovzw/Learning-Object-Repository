@@ -76,48 +76,8 @@ let findLastFileUpdateInDirectoryStructureMs = (file_list) => {
     return lastUpdate
 }
 
-let findOverlap = function(a, b) {
-    if (b.length === 0) {
-      return "";
-    }
-    if (a.endsWith(b)) {
-      return b;
-    }
-    if (a.indexOf(b) >= 0) {
-      return b;
-    }
-    return findOverlap(a, b.substring(0, b.length - 1));
-  }
-
-/**
- * 
- * @param {*} directory the directory containing a learning object file (index.md/metadata.md/metadata.yaml)
- * @param {*} changedFiles the list of files changed since last commit
- * @returns true if the learning object directory contains changed files else false
- */
-let changedFilesInThisDirectory = (directory, changedFiles) => {
-    let stripToRelativeRegex = /^(.*)\/repos\/(.*)$/;
-    directory = directory.match(stripToRelativeRegex)[2];
-    let changes = false;
-    // If any of the changed files has the current directory as a parent the directory has changes
-    changedFiles.forEach((elem) => {
-        if (elem.startsWith(".../")){
-            elem = elem.substring(4, elem.length);
-            if (findOverlap(directory, elem).length > 0){
-                changes = true;
-            }
-        }
-        else if (elem.startsWith(directory)){
-            changes = true;
-        }
-    })
-    console.log(`----------Changes in the learning object directory? ${changes} -------------------`)
-    return changes
-}
-
-
 // Check directory recursively for learning-object root-directories + extract learning paths
-let checkDirRec2 = async (dir) => {
+let checkDirRec = async (dir) => {
     let dirCont = fs.readdirSync(dir);
     if (dir.match(/.*learning.paths?.*/)) {
         // Process learning paths
@@ -156,7 +116,7 @@ let checkDirRec2 = async (dir) => {
         // Check subdirectories
         for await (let f of dirCont){
             if (fs.lstatSync(path.join(dir, f)).isDirectory()) {
-                await checkDirRec2(path.join(dir, f));
+                await checkDirRec(path.join(dir, f));
             }
         }
     }
@@ -189,7 +149,7 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
         // Remove existing learning paths (only keep the ones currently in the repo)
         let result = await learningPathApiController.removeLearningPaths();
         // Start recursion by checking the root directory.
-        await checkDirRec2(destination);
+        await checkDirRec(destination);
         // Remove all log entries for learning objects without files in the last processing step
         await ProcessingHistory.removeOldEntries()
         // Mark all entries as old for the next time processing starts
@@ -203,4 +163,4 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
     console.log("finished processing learning object repository.")
 }
 
-export { pullAndProcessRepository }
+export { pullAndProcessRepository, getSubDirFiles }

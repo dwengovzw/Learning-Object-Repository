@@ -8,7 +8,7 @@ let connect = async () => {
     const uri = mongod.getUri();
     const mongooseOpts = {
         useNewUrlParser: true,
-        useUnifiedTopology: true, 
+        useUnifiedTopology: false, 
         pooSize: 10
     };
     await mongoose.connect(uri, mongooseOpts);

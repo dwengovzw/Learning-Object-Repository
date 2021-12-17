@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node --input-type module --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
     "start-production": "babel-node -r dotenv/config app/index.js",
-    "start": "nodemon --exec babel-node -r dotenv/config app/index.js"
+    "start": "nodemon --exec babel-node -r dotenv/config app/index.js",
+    "test-backend": "mocha --recursive './tests/mocha/**/*.js'"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "ajv": "^8.6.2",
     "body-parser": "^1.19.0",
     "bootstrap": "^5.0.2",
+    "colors": "^1.4.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
@@ -72,7 +74,7 @@
       "<rootDir>/tests/e2e/**/*.test.js"
     ],
     "transform": {},
-    "testEnvironment": "jest-environment-node",
-    "verbose": false
+    "testEnvironment": "node",
+    "verbose": true
   }
 }

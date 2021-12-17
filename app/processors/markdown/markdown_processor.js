@@ -7,14 +7,13 @@ import Logger from '../../logger.js';
 import Processor from '../processor.js';
 import InvalidArgumentError from "../../utils/invalid_argument_error.js"
 import ProcessingHistory from '../../models/processing_history.js';
+import path from "path"
 
 class MarkdownProcessor extends Processor {
     logger = Logger.getLogger();
     constructor(args = { files: [], metadata: {} }) {
         super();
-        // A bit stupid but marked does not work with an instance of a class only with plain object
-        const renderer = new ObjectConverter().toJSON(new LearningObjectMarkdownRenderer(args));
-        marked.use({ renderer });
+        
 
     }
 
@@ -67,6 +66,36 @@ class MarkdownProcessor extends Processor {
             metadata: metadata,
             markdown: mdText
         }
+    }
+
+    processFiles(files, metadata){
+        let resfiles = [];
+        let inputString = "";
+        let file  = files.find((f) => {
+            let ext = path.extname(f.originalname);
+            if (ext == ".md"){
+                inputString = f.buffer.toString('utf8');
+                resfiles = files;
+                return true;
+            }else{
+                return false;
+            }
+        });
+
+        // Remove index.md file to create a list of files for checking during rendering process
+        let filtered = files.filter((f) => {
+            let ignoreregex = /(.*index\.md)|(^\..*)$/;
+            return !f["originalname"].match(ignoreregex);
+        })
+
+        // Strip metadata from content
+        let splitdata = MarkdownProcessor.stripYAMLMetaData(inputString)
+
+        // A bit stupid but marked does not work with an instance of a class only with plain object
+        const renderer = new ObjectConverter().toJSON(new LearningObjectMarkdownRenderer({ files: filtered, metadata: metadata }));
+        marked.use({ renderer });
+
+        return [this.render(splitdata.markdown), resfiles]
     }
 }
 

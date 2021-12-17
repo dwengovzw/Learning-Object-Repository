@@ -92,6 +92,23 @@ class BlocklyProcessor extends Processor {
         `
         return html; //TODO is not sanitized using DOMPurify.sanitize (problems with script tags)
     }
+
+    processFiles(files, metadata){
+        let args = {}
+        let inputString = "";
+        let file  = files.find((f) => {
+            let ext = path.extname(f.originalname);
+            if (ext == ".xml") {
+                inputString = f.buffer.toString('utf8');
+                args.language = metadata.language;
+                args.id = metadata._id;
+                return true;
+            }else{
+                return false;
+            }
+        });
+        return [this.render(inputString, args), files]
+    }
 }
 
 export default BlocklyProcessor;

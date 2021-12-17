@@ -4,6 +4,8 @@ import { findFile } from '../../utils/file_io.js'
 import InvalidArgumentError from '../../utils/invalid_argument_error.js'
 import DOMPurify from 'isomorphic-dompurify';
 import ProcessingHistory from "../../models/processing_history.js";
+import path from "path"
+import fs from "fs"
 
 class AudioProcessor extends Processor {
 
@@ -53,6 +55,24 @@ class AudioProcessor extends Processor {
                 Your browser does not support the audio element.
                 </audio>`);
 
+    }
+
+    processFiles(files, metadata){
+        let args = {}
+        let inputString = "";
+        let file  = files.find((f) => {
+            let ext = path.extname(f.originalname);
+            if (ext == ".mp3") {
+                inputString = f["originalname"]
+                // add files to args to check if file exists
+                args.files = files;
+                args.metadata = metadata
+                return true;
+            }else{
+                return false;
+            }
+        });
+        return [this.render(inputString, args), files]
     }
 }
 

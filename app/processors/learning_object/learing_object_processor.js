@@ -1,9 +1,4 @@
 import Processor from "../processor.js";
-import ProcessingProxy from "../processing_proxy.js"
-import { ProcessorContentType } from "../content_type.js";
-import fs from "fs"
-import path from "path"
-import LearningObjectRepository from "../../repository/learning_object_repository.js";
 
 
 

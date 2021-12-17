@@ -1,5 +1,6 @@
 import InlineImageProcessor from "./inline_image_processor.js"
 import DOMPurify from 'isomorphic-dompurify';
+import path from 'path'
 
 class BlockImageProcessor extends InlineImageProcessor{
     constructor(){
@@ -16,6 +17,7 @@ class BlockImageProcessor extends InlineImageProcessor{
         let inlineHtml = super.render(imageUrl, args);
         return DOMPurify.sanitize(`<div>${inlineHtml}</div>`);
     }
+
 }
 
 export default BlockImageProcessor;

@@ -4,7 +4,7 @@ import { findFile } from '../../utils/file_io.js'
 import InvalidArgumentError from '../../utils/invalid_argument_error.js'
 import DOMPurify from 'isomorphic-dompurify';
 import ProcessingHistory from "../../models/processing_history.js";
-
+import path from "path"
 
 class PdfProcessor extends Processor {
     constructor() {
@@ -38,6 +38,25 @@ class PdfProcessor extends Processor {
 
         return DOMPurify.sanitize(`<embed src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${args.metadata._id}/${pdfUrl}" type="application/pdf" width="100%" height="800px"/>`, { ADD_TAGS: ["embed"] })
 
+    }
+
+
+    processFiles(files, metadata){
+        let args = {}
+        let inputString = "";
+        let file  = files.find((f) => {
+            let ext = path.extname(f.originalname);
+            if (ext == ".pdf") {
+                inputString = f["originalname"]
+                // add files to args to check if file exists
+                args.files = files;
+                args.metadata = metadata
+                return true;
+            }else{
+                return false;
+            }
+        });
+        return [this.render(inputString, args), files]
     }
 }
 

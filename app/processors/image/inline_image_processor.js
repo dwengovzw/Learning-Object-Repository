@@ -3,6 +3,7 @@ import { isValidHttpUrl } from '../../utils/utils.js'
 import InvalidArgumentError from '../../utils/invalid_argument_error.js'
 import DOMPurify from 'isomorphic-dompurify';
 import ProcessingHistory from "../../models/processing_history.js";
+import path from "path"
 
 class InlineImageProcessor extends Processor {
     constructor() {
@@ -39,6 +40,22 @@ class InlineImageProcessor extends Processor {
             throw new InvalidArgumentError("The metadata for for the object which uses the file '" + imageUrl + "' is not loaded in the processor.");
         }
         return DOMPurify.sanitize(`<img src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${args.metadata._id}/${imageUrl}" alt="${args.altText}">`);
+    }
+
+    processFiles(files, metadata){
+        let args = {};
+        let inputString = "";
+        let file  = files.find((f) => {
+            let ext = path.extname(f.originalname);
+            if (ext.match(/\.(jpe?g)|(png)|(svg)$/)){
+                inputString = f["originalname"];
+                args.metadata = metadata
+                return true;
+            }else{
+                return false;
+            }
+        });
+        return [this.render(inputString, args), files]
     }
 }
 

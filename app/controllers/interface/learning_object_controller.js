@@ -99,107 +99,6 @@ learningObjectController.findMetadataFile = (files) => {
 
 }
 
-
-/**
- * Process the correct file given the content type if a metadata.md or metadata.yaml file is used.
- * If a index.md file is used, the content type should be text/markdown and this function shouldn't be called,
- * because no other file needs to be processed other than index.md.
- * @param {array} files 
- * @param {string} contentType 
- * @returns name and content for the new html file together with the source files that need to be saved.
- */
-learningObjectController.processFiles = (files, metadata = {}) => {
-    logger.info("Find file for type: " + metadata.content_type);
-    // Filter metadata files or hidden files (like .DS_Store on macOS)
-    let filtered = files.filter((f) => {
-        let ignoreregex = /(.*metadata\.((md)|(yaml)))|(^\..*)$/;
-        return !f["originalname"].match(ignoreregex);
-    })
-    let inputString = "";
-    let resFiles = [];
-    let args = {};
-    let constrArgs = {};
-    // Find the first file with the correct content type (+ define the inputstring)
-    let file = filtered.find((f) => {
-        let ext = path.extname(f.originalname);
-        switch (metadata.content_type) {
-            case ProcessorContentType.IMAGE_INLINE: case ProcessorContentType.IMAGE_BLOCK:
-                // Find image file
-                if (ext.match(/\.(jpe?g)|(png)|(svg)$/)) {
-                    inputString = f["originalname"]
-                    args.metadata = metadata
-
-                    resFiles.push(f);
-                    return true;
-                }
-                break;
-            case ProcessorContentType.TEXT_MARKDOWN:
-                // Find markdown file
-                if (ext == ".md") {
-                    inputString = f.buffer.toString('utf8');
-                    // add files to contstructor args (passed to renderer to check if referenced files exist)
-                    constrArgs.files = filtered;
-                    constrArgs.metadata = metadata;
-                    resFiles = files;
-                    return true;
-                }
-                break;
-            case ProcessorContentType.TEXT_PLAIN:
-                // Find text file
-                if (ext == ".txt") {
-                    inputString = f.buffer.toString('utf8');
-                    resFiles.push(f);
-                    return true;
-                }
-                break;
-            case ProcessorContentType.AUDIO_MPEG:
-                // Find audio file
-                if (ext == ".mp3") {
-                    inputString = f["originalname"]
-                    // add files to args to check if file exists
-                    args.files = filtered;
-                    args.metadata = metadata
-
-                    resFiles.push(f);
-                    return true;
-                }
-                break;
-            case ProcessorContentType.APPLICATION_PDF:
-                // Find pdf file
-                if (ext == ".pdf") {
-                    inputString = f["originalname"]
-                    // add files to args to check if file exists
-                    args.files = filtered;
-                    args.metadata = metadata
-
-                    resFiles.push(f);
-                    return true;
-                }
-                break;
-            case ProcessorContentType.BLOCKLY:
-                // Find xml file
-                if (ext == ".xml") {
-                    inputString = f.buffer.toString('utf8');
-                    args.language = metadata.language;
-                    args.id = metadata._id;
-                    resFiles.push(f);
-                    return true;
-                }
-                break;
-            case ProcessorContentType.EXTERN:
-                //External content does not have dependend files since content is hosted externally
-                break
-            default:
-                //Not supposed to happen
-                logger.error("Coudn't process this content type: " + metadata.content_type);
-                break;
-        }
-        return false
-    });
-    let proc = new ProcessingProxy(constrArgs);
-    return [proc.render(metadata.content_type, inputString, args), resFiles];
-};
-
 /**
  * 
  * @param {string} md - markdown that needs to be processed (from index.md)
@@ -324,6 +223,7 @@ learningObjectController.createLearningObject = async (req, res) => {
             throw new InvalidArgumentError("The metadata is not correctly formatted. See user.log for more info.")
         }
         logger.info("Correct metadata for learning object with hruid '" + metadata.hruid + "' found in '" + metadataFile.originalname + "'");
+
         let id;
         let repos = new LearningObjectRepository();
         let dbError = false;
@@ -367,11 +267,14 @@ learningObjectController.createLearningObject = async (req, res) => {
             let destination = path.join(path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION), id); // Use unique learning object id to define storage location
             let resFiles;
             let htmlString
-            if (metadataFile.originalname.includes("metadata.")) {
+            if (metadataFile.originalname.includes("metadata.") || metadataFile.originalname.includes("index.md")) {
+                let proc = new ProcessingProxy();
+                if (!Object.values(ProcessorContentType).includes(metadata.content_type)){
+                    throw new Error(`Content type ${metadata.content_type} can not be processed.`);
+                }
                 if (metadata.content_type == ProcessorContentType.EXTERN){
                     // Extern content is not contained in the learning object folder so no files have to be processed
                     // The only thing that has to be saved is the content rendered within an iframe
-                    let proc = new ProcessingProxy();
                     resFiles = [] // No resource files, content is extern
                     let ar = 'iframe-1-1'
                     if (metadata.aspect_ratio){
@@ -383,16 +286,14 @@ learningObjectController.createLearningObject = async (req, res) => {
                     // If the metadata comes from a metadata.md or metadata.yaml file the correct content file needs to be processed
                     // This is how we get the html filename and html string.
                     // It also returns the nescessary files that need to be saved.
-                    [htmlString, resFiles] = learningObjectController.processFiles(req.files, metadata);
+                    [htmlString, resFiles] = proc.processFiles(metadata.content_type, req.files, metadata);
                 }
                 
 
             } else {
-                // If a index.md file is used, all other files need to be stored aswell because they can be used in the markdown
-                htmlString = learningObjectController.processMarkdown(markdown, req.files, metadata);
-
-                resFiles = req.files.filter((f) => !f.originalname.match(/.*(index\.md|metadata\.(md|yaml))$/));
+                throw new Error(`Learning object with hruid: ${medatada.hruid} has an invalid file structure`);
             }
+            
 
             // Write html file
             learningObjectController.writeHtmlFile(destination, "index.html", htmlString);
