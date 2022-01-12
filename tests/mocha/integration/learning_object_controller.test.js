@@ -33,33 +33,52 @@ describe("LearningObjectController", function(){
 
     
     describe("#createLearningObject({ files: files, filelocation: dir }, {})", async function() {
+
+        let folder_proc_integration_test = async function(hruid, input_folder_path, message, expected_filenames, expected_nr_files){
+            console.log(colors.blue(message));
+            let dir = path.resolve(input_folder_path)
+            let files = getSubDirFiles(dir)
+            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {});
+            // Find the uuid of the newly created learning object
+            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
+            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
+            let c = 1;
+
+            console.log(colors.blue(`CASE ${c}: folder with uuid exists?`));
+            let directoryForLO = fs.existsSync(resultDir);
+            assert(directoryForLO, "Folder with uuid does not exist.")
+            c+=1;
+
+            console.log(colors.blue(`CASE ${c}: contains index.html?`));
+            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
+            assert(indexFile, "index.html does not exist")
+            c+=1;
+
+            if (expected_nr_files > 0){
+                console.log(colors.blue(`CASE ${c}: contains only ${expected_nr_files} files?`));
+                let filecount = fs.readdirSync(resultDir).length;
+                assert(filecount == expected_nr_files, "There are more files than there shoud be.")
+                c+=1;
+            }
+
+            expected_filenames.forEach(filename => {
+                console.log(colors.blue(`CASE ${c}: contains ${filename}?`));
+                let originalFile = fs.existsSync(path.resolve(resultDir, filename));
+                assert(originalFile, `${filename} does not exist`)
+                c+=1;
+            })
+            
+        }
         /*
         hruid: e2e_test_processing_markdown_sample
         version: 1
         language: nl
         */
         it(colors.blue("Process sample markdown learning object correctly and create the right files"), async function(){
-            let hruid = "e2e_test_processing_markdown_sample";
-            console.log(colors.blue("TEST: Creating markdown learning object"));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/md_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains index.md?"));
-            let originalFile = fs.existsSync(path.resolve(resultDir, "index.md"));
-            assert(originalFile, "index.md does not exist")
-                        
+            folder_proc_integration_test("e2e_test_processing_markdown_sample"
+                    , "tests/integration/learning_object_controller/learning_object_samples/md_sample"
+                    , "TEST: Creating markdown learning object"
+                    , [ "index.md" ], 2);                        
         });
 
 
@@ -69,35 +88,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample markdown learning object correctly and create the right files"), async function(){
-            let hruid = "e2e_test_processing_markdown_sample_with_files";
-            console.log(colors.blue("TEST: Creating markdown learning object with extra files."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/md_sample_with_files")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains index.md?"));
-            let originalFile = fs.existsSync(path.resolve(resultDir, "index.md"));
-            assert(originalFile, "index.md does not exist")
-
-            console.log(colors.blue("CASE 4: contains test.txt?"));
-            let extraFile = fs.existsSync(path.resolve(resultDir, "test.txt"));
-            assert(extraFile, "test.txt does not exist")
-
-            console.log(colors.blue("CASE 5: contains only two files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 3, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("e2e_test_processing_markdown_sample_with_files"
+                    , "tests/integration/learning_object_controller/learning_object_samples/md_sample_with_files"
+                    , "TEST: Creating markdown learning object with extra files."
+                    , [ "index.md", "test.txt" ], 3);                        
         });
 
         /*
@@ -106,31 +100,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample audio learning object correctly and create the right files"), async function(){
-            let hruid = "test-audio";
-            console.log(colors.blue("TEST: Creating audio learning object."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/audio_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains momo.mp3?"));
-            let extraFile = fs.existsSync(path.resolve(resultDir, "momo.mp3"));
-            assert(extraFile, "momo.mp3 does not exist")
-
-            console.log(colors.blue("CASE 4: contains only two files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 2, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("test-audio"
+                    , "tests/integration/learning_object_controller/learning_object_samples/audio_sample"
+                    , "TEST: Creating audio learning object."
+                    , [ "momo.mp3" ], 2);                           
         });
 
 
@@ -140,31 +113,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample blockly learning object correctly and create the right files"), async function(){
-            let hruid = "test-blockly";
-            console.log(colors.blue("TEST: Creating blockly learning object."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/blockly_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains blocks.xml?"));
-            let extraFile = fs.existsSync(path.resolve(resultDir, "blocks.xml"));
-            assert(extraFile, "blocks.xml does not exist")
-
-            console.log(colors.blue("CASE 4: contains only two files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 2, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("test-blockly"
+                    , "tests/integration/learning_object_controller/learning_object_samples/blockly_sample"
+                    , "TEST: Creating blockly learning object."
+                    , [ "blocks.xml" ], 2);                         
         });
 
 
@@ -174,31 +126,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample image learning object correctly and create the right files"), async function(){
-            let hruid = "image-test";
-            console.log(colors.blue("TEST: Creating image learning object."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/image_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains image1.png?"));
-            let extraFile = fs.existsSync(path.resolve(resultDir, "image1.png"));
-            assert(extraFile, "image1.png does not exist")
-
-            console.log(colors.blue("CASE 4: contains only two files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 2, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("image-test"
+                    , "tests/integration/learning_object_controller/learning_object_samples/image_sample"
+                    , "TEST: Creating image learning object."
+                    , [ "image1.png" ], 2);                           
         });
 
 
@@ -208,31 +139,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample pdf learning object correctly and create the right files"), async function(){
-            let hruid = "test-pdf-as-lo";
-            console.log(colors.blue("TEST: Creating pdf learning object."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/pdf_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains vergadering.pdf?"));
-            let extraFile = fs.existsSync(path.resolve(resultDir, "vergadering.pdf"));
-            assert(extraFile, "vergadering.pdf does not exist")
-
-            console.log(colors.blue("CASE 4: contains only two files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 2, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("test-pdf-as-lo"
+                    , "tests/integration/learning_object_controller/learning_object_samples/pdf_sample"
+                    , "TEST: Creating pdf learning object."
+                    , [ "vergadering.pdf" ], 2);                             
         });
 
 
@@ -242,27 +152,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample extern learning object correctly and create the right files"), async function(){
-            let hruid = "extern_test";
-            console.log(colors.blue("TEST: Creating extern learning object."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/extern_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains only one files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 1, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("extern_test"
+                    , "tests/integration/learning_object_controller/learning_object_samples/extern_sample"
+                    , "TEST: Creating extern learning object."
+                    , [ ], 1);                         
         });
 
 
@@ -273,31 +166,10 @@ describe("LearningObjectController", function(){
         language: nl
         */
         it(colors.blue("Process sample pain text learning object correctly and create the right files"), async function(){
-            let hruid = "test-plain-text";
-            console.log(colors.blue("TEST: Creating extern learning object."));
-            let dir = path.resolve("tests/integration/learning_object_controller/learning_object_samples/text_sample")
-            let files = getSubDirFiles(dir)
-            await learningObjectController.createLearningObject({ files: files, filelocation: dir }, {})
-            // Find the uuid of the newly created learning object
-            let lo = await LearningObject.findOne({hruid: hruid, version: 1, language: "nl"}).exec();
-            let resultDir = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, lo.id);
-
-            console.log(colors.blue("CASE 1: folder with uuid exists?"));
-            let directoryForLO = fs.existsSync(resultDir);
-            assert(directoryForLO, "Folder with uuid does not exist.")
-
-            console.log(colors.blue("CASE 2: contains index.html?"));
-            let indexFile = fs.existsSync(path.resolve(resultDir, "index.html"));
-            assert(indexFile, "index.html does not exist")
-
-            console.log(colors.blue("CASE 3: contains test.txt?"));
-            let extraFile = fs.existsSync(path.resolve(resultDir, "test.txt"));
-            assert(extraFile, "test.txt does not exist")
-
-            console.log(colors.blue("CASE 4: contains only two files?"));
-            let filecount = fs.readdirSync(resultDir).length;
-            assert(filecount == 2, "There are more files than there shoud be.")
-                        
+            folder_proc_integration_test("test-plain-text"
+                    , "tests/integration/learning_object_controller/learning_object_samples/text_sample"
+                    , "TEST: Creating text learning object."
+                    , [ "test.txt" ], 2);                           
         });
     }); 
 })

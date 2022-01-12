@@ -7,6 +7,7 @@ import AudioProcessor from "./audio/audio_processor.js";
 import PdfProcessor from "./pdf/pdf_processor.js";
 import ExternProcessor from "./extern/extern_processor.js";
 import BlocklyProcessor from "./blockly/blockly_processor.js";
+import GiftProcessor from "./gift/gift_processor.js"
 
 
 class ProcessingProxy {
@@ -20,6 +21,7 @@ class ProcessingProxy {
         this.processors[ProcessorContentType.APPLICATION_PDF] = new PdfProcessor();
         this.processors[ProcessorContentType.EXTERN] = new ExternProcessor();
         this.processors[ProcessorContentType.BLOCKLY] = new BlocklyProcessor();
+        this.processors[ProcessorContentType.GIFT] = new GiftProcessor();
     }
 
     /**

@@ -8,6 +8,7 @@ const ProcessorContentType = {
 
     EXTERN: "extern",
     BLOCKLY: "blockly",
+    GIFT: "text/gift"
 }
 
 export { ProcessorContentType }
