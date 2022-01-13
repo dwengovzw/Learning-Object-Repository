@@ -180,7 +180,7 @@ var output_rgbled_select_json = {
     },
     {
       "type": "field_image",
-       "src": settings.basepath + "DwenguinoIDE/img/socialrobot/rgb_led.svg",
+       "src": settings.basepath + "/static/img/socialrobot/rgb_led.svg",
        "width": 30,
        "height": 30,
        "alt":  "rgbled"
@@ -218,7 +218,7 @@ var output_rgbled_select_json = {
    "args0": [
      {
        "type": "field_image",
-       "src": settings.basepath + "DwenguinoIDE/img/socialrobot/rgb_led.svg",
+       "src": settings.basepath + "/static/img/socialrobot/rgb_led.svg",
        "width": 30,
        "height": 30,
        "alt":  "rgbled"
@@ -273,7 +273,7 @@ var output_rgbled_select_json = {
     },
     {
       "type": "field_image",
-       "src": settings.basepath + "DwenguinoIDE/img/socialrobot/rgb_led.svg",
+       "src": settings.basepath + "/static/img/socialrobot/rgb_led.svg",
        "width": 30,
        "height": 30,
        "alt":  "rgbled"
@@ -430,7 +430,7 @@ var output_rgbled_select_json = {
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "DwenguinoIDE/img/servo.png",
+      "src": settings.basepath + "/static/img/servo.png",
       "width": 100,
       "height": 100,
       "alt": "*"
@@ -494,7 +494,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "DwenguinoIDE/img/servo.png",
+       "src": settings.basepath + "/static/img/servo.png",
        "width": 100,
        "height": 100,
        "alt": "*"
@@ -534,7 +534,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
        },
        {
          "type": "field_image",
-         "src": settings.basepath + "DwenguinoIDE/img/socialrobot/arms_down.png",
+         "src": settings.basepath + "/static/img/socialrobot/arms_down.png",
          "width": 177,
          "height": 147,
          "alt": "*"
@@ -588,7 +588,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
        },
        {
          "type": "field_image",
-         "src": settings.basepath + "DwenguinoIDE/img/socialrobot/arms_up.png",
+         "src": settings.basepath + "/static/img/socialrobot/arms_up.png",
          "width": 177,
          "height": 147,
          "alt": "*"
@@ -688,7 +688,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
          },
          {
            "type": "field_image",
-           "src": settings.basepath + "DwenguinoIDE/img/socialrobot/turn_eyes_left.png",
+           "src": settings.basepath + "/static/img/socialrobot/turn_eyes_left.png",
            "width": 150,
            "height": 65,
            "alt": "*"
@@ -741,7 +741,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
          },
          {
            "type": "field_image",
-           "src": settings.basepath + "DwenguinoIDE/img/socialrobot/turn_eyes_right.png",
+           "src": settings.basepath + "/static/img/socialrobot/turn_eyes_right.png",
            "width": 150,
            "height": 65,
            "alt": "*"

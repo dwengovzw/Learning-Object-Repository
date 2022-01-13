@@ -1,3 +1,3 @@
 let settings = {
-    basepath: ""
+    basepath: "staging.dwengo.org/backend"
 }
