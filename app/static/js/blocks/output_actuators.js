@@ -26,7 +26,7 @@
  
  var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
  
- Blockly.Blocks.output.HUE = 315;
+ //Blockly.Blocks.output.HUE = 315;
  
  var ledmatrixDropdown = [
    ["1", "0"],
