@@ -20,9 +20,9 @@
  */
  'use strict';
 
- goog.provide('Blockly.Blocks.output');
+ //goog.provide('Blockly.Blocks.output');
  
- goog.require('Blockly.Blocks');
+ //goog.require('Blockly.Blocks');
  
  var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
  

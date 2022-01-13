@@ -26,41 +26,24 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.variables');  // Deprecated.
-goog.provide('Blockly.Constants.Variables');
+// goog.provide('Blockly.Blocks.variables');  // Deprecated.
+// goog.provide('Blockly.Constants.Variables');
 
-goog.require('Blockly');
-goog.require('Blockly.Blocks');
-goog.require('Blockly.FieldLabel');
-goog.require('Blockly.FieldVariable');
+// goog.require('Blockly');
+// goog.require('Blockly.Blocks');
+// goog.require('Blockly.FieldLabel');
+// goog.require('Blockly.FieldVariable');
 
 
 /**
  * Unused constant for the common HSV hue for all blocks in this category.
  * @deprecated Use Blockly.Msg['VARIABLES_HUE']. (2018 April 5)
  */
-Blockly.Blocks.variables.HUE = 90;
-Blockly.Blocks.variables.HUE_INT = 65;
-Blockly.Blocks.variables.HUE_STR = 160;
+// Blockly.Blocks.variables.HUE = 90;
+// Blockly.Blocks.variables.HUE_INT = 65;
+// Blockly.Blocks.variables.HUE_STR = 160;
 
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
-  // Block for variable getter.
-  {
-    "type": "variables_get",
-    "message0": "%1",
-    "args0": [
-      {
-        "type": "field_variable",
-        "name": "VAR",
-        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}",
-      }
-    ],
-    "colour": Blockly.Msg['VARIABLES_HUE'],
-    "output": "",
-    "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
-    "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
-    "extensions": ["contextMenu_variableSetterGetter"]
-  },
   // Block for variable getter.
   {
     "type": "variables_get_int",
@@ -75,7 +58,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "check": "Number",
       }
     ],
-    "colour": Blockly.Msg['MATH_HUE'],
+    "colour": 65,
     "output": "Number",
     "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
     "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
@@ -84,7 +67,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for variable setter.
   {
     "type": "variables_declare_set_int",
-    "message0": "%{BKY_VARIABLES_SET_INT}",
+    "message0": Blockly.Msg.variablesDeclareSetInt,
     "args0": [
       {
         "type": "field_variable",
@@ -99,13 +82,13 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "check": ['Number'],
       }
     ],
-    "colour": Blockly.Msg['MATH_HUE'],
+    "colour": 65,
     "previousStatement": null,
     "nextStatement": null,
     "tooltip": "%{BKY_VARIABLES_SET_TOOLTIP}",
     "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
     "extensions": ["contextMenu_variableSetterGetter"]
-  }, 
+  },
   {
     "type": "variables_get_string",
     "message0": "%1",
@@ -119,7 +102,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "check": "String",
       }
     ],
-    "colour": Blockly.Msg['TEXTS_HUE'],
+    "colour": 160,
     "output": "String",
     "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
     "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
@@ -128,7 +111,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for variable setter.
   {
     "type": "variables_declare_set_string",
-    "message0": "%{BKY_VARIABLES_SET_STRING}",
+    "message0": "set %1 to string %2",
     "args0": [
       {
         "type": "field_variable",
@@ -143,14 +126,14 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "check": ['String'],
       }
     ],
-    "colour": Blockly.Msg['TEXTS_HUE'],
+    "colour": 160,
     "previousStatement": null,
     "nextStatement": null,
     "tooltip": "%{BKY_VARIABLES_SET_TOOLTIP}",
     "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
     "extensions": ["contextMenu_variableSetterGetter"]
-  }, 
-  
+  },
+
 ]);  // END JSON EXTRACT (Do not delete this comment.)
 
 /**
@@ -168,7 +151,7 @@ Blockly.Constants.Variables.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN = {
    * @param {!Array} options List of menu options to add to.
    * @this {Blockly.Block}
    */
-  customContextMenu: function(options) {
+  customContextMenu: function (options) {
     if (!this.isInFlyout) {
       // Getter blocks have the option to create a setter block, and vice versa.
       if (this.type == 'variables_get') {
@@ -179,7 +162,7 @@ Blockly.Constants.Variables.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN = {
         var contextMenuMsg = Blockly.Msg['VARIABLES_SET_CREATE_GET'];
       }
 
-      var option = {enabled: this.workspace.remainingCapacity() > 0};
+      var option = { enabled: this.workspace.remainingCapacity() > 0 };
       var name = this.getField('VAR').getText();
       option.text = contextMenuMsg.replace('%1', name);
       var xmlField = Blockly.utils.xml.createElement('field');
@@ -217,28 +200,10 @@ Blockly.Constants.Variables.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN = {
   * @param {!Blockly.Block} block The block with the variable to rename.
   * @return {!function()} A function that renames the variable.
   */
-Blockly.Constants.Variables.RENAME_OPTION_CALLBACK_FACTORY = function(block) {
-  return function() {
+Blockly.Constants.Variables.RENAME_OPTION_CALLBACK_FACTORY = function (block) {
+  return function () {
     var workspace = block.workspace;
     var variable = block.getField('VAR').getVariable();
     Blockly.Variables.renameVariable(workspace, variable);
   };
 };
-
-/**
- * Callback for delete variable dropdown menu option associated with a
- * variable getter block.
- * @param {!Blockly.Block} block The block with the variable to delete.
- * @return {!function()} A function that deletes the variable.
- */
-Blockly.Constants.Variables.DELETE_OPTION_CALLBACK_FACTORY = function(block) {
-  return function() {
-    var workspace = block.workspace;
-    var variable = block.getField('VAR').getVariable();
-    workspace.deleteVariableById(variable.getId());
-    workspace.refreshToolboxSelection();
-  };
-};
-
-Blockly.Extensions.registerMixin('contextMenu_variableSetterGetter',
-    Blockly.Constants.Variables.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN);

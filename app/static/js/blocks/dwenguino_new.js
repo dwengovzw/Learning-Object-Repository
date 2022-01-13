@@ -20,18 +20,18 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.dwenguino');
+// goog.provide('Blockly.Blocks.dwenguino');
 
-goog.require('Blockly.Blocks');
+// goog.require('Blockly.Blocks');
 
 
 var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
 
-Blockly.Blocks.dwenguino.HUE = 315;
+// Blockly.Blocks.dwenguino.HUE = 315;
 
 var setup_loop_json = {
   "type": "setup_loop_structure",
-  "message0":  DwenguinoBlocklyLanguageSettings.translate(['setup']) + " %1 %2 " + DwenguinoBlocklyLanguageSettings.translate(['loop']) +  "%3 %4",
+  "message0": MSG.setup + " %1 %2 " + MSG.loop + "%3 %4",
   "args0": [
     {
       "type": "input_dummy"
@@ -48,87 +48,87 @@ var setup_loop_json = {
       "name": "LOOP"
     }
   ],
-  "colour": Blockly.Msg.DWENGUINO_HUE,
-  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguino_main_program_structure']),
+  "colour": 315,
+  "tooltip": MSG.dwenguino_main_program_structure,
   "helpUrl": DwenguinoHelpUrl,
   "data": "testdatastring"
 };
 
 Blockly.Blocks['setup_loop_structure'] = {
-    init: function(){
-        this.jsonInit(setup_loop_json);
-    }
+  init: function () {
+    this.jsonInit(setup_loop_json);
+  }
 };
 
 
 Blockly.Blocks['dwenguino_delay'] = {
-  init: function() {
+  init: function () {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+    this.setColour(315);
     this.appendValueInput("DELAY_TIME", 'Number')
-        .appendField(DwenguinoBlocklyLanguageSettings.translate(['delay']))
-        .setCheck('Number');
+      .appendField(MSG.delay)
+      .setCheck('Number');
     this.appendDummyInput()
-        .appendField(DwenguinoBlocklyLanguageSettings.translate(['miliseconds']));
+      .appendField(MSG.miliseconds);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['delay_help']));
+    this.setTooltip(MSG.delay_help);
   }
 };
 
 var dwenguino_wait_for_switch = {
-    "id": "dwenguino_wait_for_switch",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['waitForSwitch']),
-    "args0": [
-        {
-            "type": "field_dropdown",
-            "name": "SWITCH",
-            "check": "Number",
-            "options": [[DwenguinoBlocklyLanguageSettings.translate(['north']), "SW_N"], [DwenguinoBlocklyLanguageSettings.translate(['east']), "SW_E"], [DwenguinoBlocklyLanguageSettings.translate(['south']), "SW_S"], [DwenguinoBlocklyLanguageSettings.translate(['west']), "SW_W"], [DwenguinoBlocklyLanguageSettings.translate(['center']), "SW_C"]]
+  "id": "dwenguino_wait_for_switch",
+  "message0": MSG.waitForSwitch,
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "SWITCH",
+      "check": "Number",
+      "options": [[MSG.north, "SW_N"], [MSG.east, "SW_E"], [MSG.south, "SW_S"], [MSG.west, "SW_W"], [MSG.center, "SW_C"]]
 
-        }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['digitalReadSwitchTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 315,
+  "tooltip": MSG.digitalReadSwitchTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_wait_for_switch'] = {
-    init: function(){
-        this.jsonInit(dwenguino_wait_for_switch);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_wait_for_switch);
+  }
 };
 
 var clear_lcd_json = {
   "id": "clear_lcd",
-  "message0": DwenguinoBlocklyLanguageSettings.translate(['clearLCD']),
+  "message0": MSG.clearLCD,
   "args0": [],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Msg.DWENGUINO_HUE,
+  "colour": 315,
   "tooltip": "",
   "helpUrl": DwenguinoHelpUrl
 };
 
 Blockly.Blocks['clear_lcd'] = {
-  init: function() {
+  init: function () {
     this.jsonInit(clear_lcd_json);
   }
 };
 
 var dwenguino_lcd_json = {
   "id": "dwenguino_lcd",
-  "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoLCD']),
+  "message0": MSG.dwenguinoLCD,
   "args0": [
     {
       "type": "input_dummy"
     },
     {
       "type": "field_image",
-      "src": settings.basepath +  "DwenguinoIDE/img/dwenguino light.jpg",
+      "src": "http://localhost:8085/static/img/dwenguino light.jpg",
       "width": 150,
       "height": 63,
       "alt": "*"
@@ -154,24 +154,25 @@ var dwenguino_lcd_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Msg.DWENGUINO_HUE,
+  "colour": 315,
   "tooltip": "",
   "helpUrl": DwenguinoHelpUrl
 };
 
 Blockly.Blocks['dwenguino_lcd'] = {
-  init: function() {
+  init: function () {
     this.jsonInit(dwenguino_lcd_json);
   }
 };
 
 Blockly.Blocks['dwenguino_pins'] = {
   helpUrl: 'DwenguinoHelpUrl',
-  init: function() {
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+  init: function () {
+    this.setColour(315);
     this.appendDummyInput()
-        .appendField(DwenguinoBlocklyLanguageSettings.translate(['pin']))
-        .appendField(new Blockly.FieldDropdown(profile.dwenguino.digital), 'PIN')
+      .appendField(MSG.pin)
+      .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13'], ['15', '15'], ['16', '16'], ['17', '17'], ['18', '18'], ['19', '19'], ['20', '20'], ['21', '21'], ['22', '22'], ['23', '23'], ['A0', 'A0'], ['A1', 'A1'], ['A2', 'A2'], ['A3', 'A3'], ['A4', 'A4'], ['A5', 'A5'], ['SW_N', 'SW_N'], ['SW_E', 'SW_E'], ['SW_S', 'SW_S'], ['SW_W', 'SW_W'], ['SW_C', 'SW_C'], ['BUZZER', 'BUZZER']]), 'PIN')
+
     this.setOutput(true, 'Number');
     this.setTooltip('');
   }
@@ -179,67 +180,67 @@ Blockly.Blocks['dwenguino_pins'] = {
 
 Blockly.Blocks['dwenguino_tone_on_pin'] = {
   helpUrl: 'DwenguinoHelpUrl',
-  init: function() {
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+  init: function () {
+    this.setColour(315);
     this.appendValueInput("PIN", "Pin")
-        .appendField(DwenguinoBlocklyLanguageSettings.translate(['toneOnPin']))
-        .setCheck("Number");
+      .appendField(MSG.toneOnPin)
+      .setCheck("Number");
     this.appendValueInput("NUM", "Number")
-        .appendField(DwenguinoBlocklyLanguageSettings.translate(['frequency']))
-        .setCheck("Number");
+      .appendField(MSG.frequency)
+      .setCheck("Number");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['toneOnPinTooltip']));
+    this.setTooltip(MSG.toneOnPinTooltip);
   }
 };
 
 Blockly.Blocks['dwenguino_no_tone_on_pin'] = {
-  init: function() {
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+  init: function () {
+    this.setColour(315);
     this.appendValueInput("PIN", "Pin")
-        .appendField(DwenguinoBlocklyLanguageSettings.translate(['noToneOnPin']))
-        .setCheck("Number");
+      .appendField(MSG.noToneOnPin)
+      .setCheck("Number");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['noToneOnPinTooltip']));
+    this.setTooltip(MSG.noToneOnPinTooltip);
   }
 };
 
 var char_type_json = {
-    "id": "char_type",
-    "message0": "%1",
-    "args0": [
-        {
-            "type": "field_input",
-            "name": "BITMASK",
-            "text": "0b10101010"
-        }
-    ],
-    "inputsInline": true,
-    "output": "Number",
-    "colour": Blockly.Msg.MATH_HUE,
-    "tooltip": "",
-    "helpUrl": DwenguinoHelpUrl
+  "id": "char_type",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "BITMASK",
+      "text": "0b10101010"
+    }
+  ],
+  "inputsInline": true,
+  "output": "Number",
+  "colour": Blockly.Msg.MATH_HUE,
+  "tooltip": "",
+  "helpUrl": DwenguinoHelpUrl
 };
 Blockly.Blocks['char_type'] = {
-    init: function () {
-        this.jsonInit(char_type_json);
-    }
+  init: function () {
+    this.jsonInit(char_type_json);
+  }
 };
 
 
 var sonar_sensor_json = {
   "id": "sonar_sensor",
-  "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoSonarBlock']),
+  "message0": MSG.dwenguinoSonarBlock,
   "args0": [
     {
       "type": "input_dummy"
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "DwenguinoIDE/img/sonar.png",
+      "src": "http://localhost:8085/static/img/sonar.png",
       "width": 150,
       "height": 87,
       "alt": "*"
@@ -259,104 +260,104 @@ var sonar_sensor_json = {
     }
   ],
   "output": "Number",
-  "colour": Blockly.Msg.DWENGUINO_HUE,
-  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['sonarTooltip']),
+  "colour": 315,
+  "tooltip": MSG.sonarTooltip,
   "helpUrl": DwenguinoHelpUrl
 };
 
 Blockly.Blocks['sonar_sensor'] = {
-  init: function() {
+  init: function () {
     this.jsonInit(sonar_sensor_json);
   }
 };
 
 
 Blockly.Blocks['dwenguino_digital_read'] = {
-  init: function() {
+  init: function () {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+    this.setColour(315);
     this.appendValueInput('PIN', 'PIN')
-            .appendField(DwenguinoBlocklyLanguageSettings.translate(['digitalRead']))
-            .setCheck("Number");
+      .appendField(MSG.digitalRead)
+      .setCheck("Number");
     this.setOutput(true, 'Number');
-    this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['digitalReadTooltip']));
+    this.setTooltip(MSG.digitalReadTooltip);
   }
 };
 
 var dwenguino_digital_read_switch = {
-    "id": "dwenguino_digital_read_switch",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['digitalReadSwitch']),
-    "args0": [
-        {
-            "type": "field_dropdown",
-            "name": "SWITCH",
-            "check": "Number",
-            "options": [[DwenguinoBlocklyLanguageSettings.translate(['north']), "SW_N"], [DwenguinoBlocklyLanguageSettings.translate(['east']), "SW_E"], [DwenguinoBlocklyLanguageSettings.translate(['south']), "SW_S"], [DwenguinoBlocklyLanguageSettings.translate(['west']), "SW_W"], [DwenguinoBlocklyLanguageSettings.translate(['center']), "SW_C"]]
+  "id": "dwenguino_digital_read_switch",
+  "message0": MSG.digitalReadSwitch,
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "SWITCH",
+      "check": "Number",
+      "options": [[MSG.north, "SW_N"], [MSG.east, "SW_E"], [MSG.south, "SW_S"], [MSG.west, "SW_W"], [MSG.center, "SW_C"]]
 
-        }
-    ],
-    "output": "Number",
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['digitalReadSwitchTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+    }
+  ],
+  "output": "Number",
+  "colour": 315,
+  "tooltip": MSG.digitalReadSwitchTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_digital_read_switch'] = {
-    init: function(){
-        this.jsonInit(dwenguino_digital_read_switch);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_digital_read_switch);
+  }
 };
 
 
 Blockly.Blocks['dwenguino_digital_write'] = {
-    init: function(){
-        this.setHelpUrl(DwenguinoHelpUrl);
-        this.setColour(Blockly.Msg.DWENGUINO_HUE);
-        this.appendValueInput('PIN', 'PIN')
-            .appendField(DwenguinoBlocklyLanguageSettings.translate(['digitalWriteToPin']))
-            .setCheck("Number");
-        this.appendValueInput("NUM", "Number")
-            .appendField(DwenguinoBlocklyLanguageSettings.translate(['digitalWriteValue']))
-            .setCheck("Number");
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['digitalWriteTooltip']));
-    }
+  init: function () {
+    this.setHelpUrl(DwenguinoHelpUrl);
+    this.setColour(315);
+    this.appendValueInput('PIN', 'PIN')
+      .appendField(MSG.digitalWriteToPin)
+      .setCheck("Number");
+    this.appendValueInput("NUM", "Number")
+      .appendField(MSG.digitalWriteValue)
+      .setCheck("Number");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip(MSG.digitalWriteTooltip);
+  }
 };
 
 Blockly.Blocks['dwenguino_highlow'] = {
-  init: function() {
+  init: function () {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+    this.setColour(315);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([[DwenguinoBlocklyLanguageSettings.translate(['high']), "HIGH"], [DwenguinoBlocklyLanguageSettings.translate(['low']), "LOW"]]), 'BOOL')
+      .appendField(new Blockly.FieldDropdown([[MSG.high, "HIGH"], [MSG.low, "LOW"]]), 'BOOL')
     this.setOutput(true, 'Number');
-    this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['highLowTooltip']));
+    this.setTooltip(MSG.highLowTooltip);
   }
 };
 
 Blockly.Blocks['dwenguino_pressed'] = {
-  init: function() {
+  init: function () {
     this.setHelpUrl(DwenguinoHelpUrl);
-    this.setColour(Blockly.Msg.DWENGUINO_HUE);
+    this.setColour(315);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([[DwenguinoBlocklyLanguageSettings.translate(['pressed']), "PRESSED"], [DwenguinoBlocklyLanguageSettings.translate(['notPressed']), "NOT_PRESSED"]]), 'BOOL')
+      .appendField(new Blockly.FieldDropdown([[MSG.pressed, "PRESSED"], [MSG.notPressed, "NOT_PRESSED"]]), 'BOOL')
     this.setOutput(true, 'Number');
-    this.setTooltip(DwenguinoBlocklyLanguageSettings.translate(['pressedTooltip']));
+    this.setTooltip(MSG.pressedTooltip);
   }
 };
 
 var dc_motor_json = {
   "id": "dc_motor",
-  "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoDCMotorBlock']),
+  "message0": MSG.dwenguinoDCMotorBlock,
   "args0": [
     {
       "type": "input_dummy"
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "DwenguinoIDE/img/dc.png",
+      "src": "http://localhost:8085/static/img/dc.png",
       "width": 150,
       "height": 90,
       "alt": "Image Dc motor"
@@ -377,21 +378,21 @@ var dc_motor_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Msg.DWENGUINO_HUE,
-  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoDCMotorBlockTooltip']),
+  "colour": 315,
+  "tooltip": MSG.dwenguinoDCMotorBlockTooltip,
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 var dwenguino_servo_json = {
   "id": "dwenguino_servo",
-  "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoServoBlock']),
+  "message0": MSG.dwenguinoServoBlock,
   "args0": [
     {
       "type": "input_dummy"
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "DwenguinoIDE/img/servo.png",
+      "src": "http://localhost:8085/static/img/servo.png",
       "width": 100,
       "height": 100,
       "alt": "*"
@@ -412,193 +413,194 @@ var dwenguino_servo_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Msg.DWENGUINO_HUE,
-  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoServoBlockTooltip']),
+  "colour": 315,
+  "tooltip": MSG.dwenguinoServoBlockTooltip,
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 
 Blockly.Blocks['dwenguino_servo'] = {
-  init: function() {
+  init: function () {
     this.jsonInit(dwenguino_servo_json);
   }
 };
 
 var dwenguino_servo_dropdown = {
   "id": "dwenguino_servo_dropdown",
-  "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoServoDropdownBlock']),
+  "message0": MSG.dwenguinoServoDropdownBlock,
   "args0": [
     {
       "type": "field_dropdown",
       "name": "SERVO_DROPDOWN",
       "check": "Number",
-      "options": [['1', 'SERVO1'], ['2', 'SERVO2']]
+      "options": [[MSG.dwenguinoServoOne, 'SERVO1'], [MSG.dwenguinoServoTwo, 'SERVO2']]
     }
   ],
   "output": "Number",
-  "colour": Blockly.Msg.DWENGUINO_HUE,
-  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoServoDropdownTooltip']),
+  "colour": 315,
+  "tooltip": MSG.dwenguinoServoDropdownTooltip,
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_servo_dropdown'] = {
-  init: function(){
-      this.jsonInit(dwenguino_servo_dropdown);
+  init: function () {
+    this.jsonInit(dwenguino_servo_dropdown);
   }
 };
 
 
 Blockly.Blocks['dc_motor'] = {
-  init: function() {
+  init: function () {
     this.jsonInit(dc_motor_json);
   }
 };
 
 var dwenguino_set_led = {
-    "id": "dwenguin_set_led",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['setLedState']),
-    "args0": [
-      {
-        "type": "input_value",
-        "name": "LED",
-        "check": "Number"
-      },
-      {
-        "type": "input_value",
-        "name": "LED_STATE",
-        "check": "Number"
-      }
-    ],
-    "inputsInline": true,
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['setLedStateTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+  "id": "dwenguin_set_led",
+  "message0": MSG.setLedState,
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "LED",
+      "check": "Number"
+    },
+    {
+      "type": "input_value",
+      "name": "LED_STATE",
+      "check": "Number"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 315,
+  "tooltip": MSG.setLedStateTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_set_led'] = {
-    init: function(){
-        this.jsonInit(dwenguino_set_led);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_set_led);
+  }
 };
 
 var dwenguino_led_pins = {
-    "id": "dwenguino_led_pins",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoLedBlock']) + " %1 ",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "LED_NUMBER",
-        "options": profile.dwenguino.leds
-      }
-    ],
-    "output": "Number",
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['ledPinsTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+  "id": "dwenguino_led_pins",
+  "message0": MSG.dwenguinoLedBlock + " %1 ",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "LED_NUMBER",
+      "options": [['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['13', '13']]
+
+    }
+  ],
+  "output": "Number",
+  "colour": 315,
+  "tooltip": MSG.ledPinsTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_led_pins'] = {
-    init: function(){
-        this.jsonInit(dwenguino_led_pins);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_led_pins);
+  }
 };
 
 var dwenguino_on_off = {
-    "id": "dwenguino_on_off",
-    "message0": "%1",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "LED_ON_OFF",
-        "check": "Number",
-        "options": [[DwenguinoBlocklyLanguageSettings.translate(['dwenguinoOn']), 'ON'], [DwenguinoBlocklyLanguageSettings.translate(['dwenguinoOff']), 'OFF']]
-      }
-    ],
-    "output": "Number",
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoOnOffTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+  "id": "dwenguino_on_off",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "LED_ON_OFF",
+      "check": "Number",
+      "options": [[MSG.dwenguinoOn, 'ON'], [MSG.dwenguinoOff, 'OFF']]
+    }
+  ],
+  "output": "Number",
+  "colour": 315,
+  "tooltip": MSG.dwenguinoOnOffTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_on_off'] = {
-    init: function(){
-        this.jsonInit(dwenguino_on_off);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_on_off);
+  }
 };
 
 var dwenguino_analog_write = {
-    "id": "dwenguino_analog_wirte",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoAnalogWrite']),
-    "args0":[
-        {
-            "type": "input_value",
-            "name": "PIN",
-            "check": "Number"
-        },
-        {
-            "type": "input_value",
-            "name": "VAL",
-            "check": "Number"
-        }
-    ],
-    "inputsInline": true,
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoAnalogWriteTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+  "id": "dwenguino_analog_wirte",
+  "message0": MSG.dwenguinoAnalogWrite,
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "PIN",
+      "check": "Number"
+    },
+    {
+      "type": "input_value",
+      "name": "VAL",
+      "check": "Number"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 315,
+  "tooltip": MSG.dwenguinoAnalogWriteTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_analog_write'] = {
-    init: function(){
-        this.jsonInit(dwenguino_analog_write);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_analog_write);
+  }
 };
 
 var dwenguino_analog_read = {
-    "id": "dwenguino_analog_read",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoAnalogRead']),
-    "args0": [
-        {
-            "type": "input_value",
-            "name": "PIN",
-            "check": "Number"
-        }
-    ],
-    "output": "Number",
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoAnalogWriteTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+  "id": "dwenguino_analog_read",
+  "message0": MSG.dwenguinoAnalogRead,
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "PIN",
+      "check": "Number"
+    }
+  ],
+  "output": "Number",
+  "colour": 315,
+  "tooltip": MSG.dwenguinoAnalogWriteTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 Blockly.Blocks['dwenguino_analog_read'] = {
-    init: function(){
-        this.jsonInit(dwenguino_analog_read);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_analog_read);
+  }
 };
 
 var dwenguino_leds_reg = {
-    "id": "dwenguino_leds_reg",
-    "message0": DwenguinoBlocklyLanguageSettings.translate(['ledsReg']) + " %1",
-    "args0":[
-        {
-            "type": "input_value",
-            "name": "MASK",
-            "check": "Number"
-        }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": Blockly.Msg.DWENGUINO_HUE,
-    "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoLedsRegTooltip']),
-    "helpUrl": "http://www.dwengo.org/tutorials"
+  "id": "dwenguino_leds_reg",
+  "message0": MSG.ledsReg + " %1",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "MASK",
+      "check": "Number"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 315,
+  "tooltip": MSG.dwenguinoLedsRegTooltip,
+  "helpUrl": "http://www.dwengo.org/tutorials"
 };
 
 Blockly.Blocks['dwenguino_leds_reg'] = {
-    init: function(){
-        this.jsonInit(dwenguino_leds_reg);
-    }
+  init: function () {
+    this.jsonInit(dwenguino_leds_reg);
+  }
 };
 
 
