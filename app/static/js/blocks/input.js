@@ -45,7 +45,7 @@
       },
       {
         "type": "field_image",
-        "src": settings.basepath + "/img/sonar.png",
+        "src": settings.basepath + "/static/img/sonar.png",
         "width": 150,
         "height": 87,
         "alt": "*"
@@ -85,7 +85,7 @@
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "/img/socialrobot/sound_sensor.png",
+      "src": settings.basepath + "/static/img/socialrobot/sound_sensor.png",
       "width": 80,
       "height": 34,
       "alt": "*"
@@ -121,7 +121,7 @@
       },
       {
         "type": "field_image",
-        "src": settings.basepath + "/img/socialrobot/sound_sensor.png",
+        "src": settings.basepath + "/static/img/socialrobot/sound_sensor.png",
         "width": 80,
         "height": 34,
         "alt": "*"
@@ -156,7 +156,7 @@
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "/img/pir.png",
+       "src": settings.basepath + "/static/img/pir.png",
        "width": 150,
        "height": 87,
        "alt": "*"
@@ -191,7 +191,7 @@
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "/img/socialrobot/touch_sensor.png",
+       "src": settings.basepath + "/static/img/socialrobot/touch_sensor.png",
        "width": 50,
        "height": 50,
        "alt": "*"
@@ -226,7 +226,7 @@
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "/img/socialrobot/button.svg",
+       "src": settings.basepath + "/static/img/socialrobot/button.svg",
        "width": 50,
        "height": 50,
        "alt": "*"
