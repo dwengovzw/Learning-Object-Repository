@@ -20,17 +20,17 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.arduino');
+// goog.provide('Blockly.Blocks.arduino');
 
-goog.require('Blockly.Blocks');
+// goog.require('Blockly.Blocks');
 
 var ArduinoHelpUrl = "http://www.arduino.cc";
 
-Blockly.Blocks.arduino.HUE = 100;
+// Blockly.Blocks.arduino.HUE = 100;
 
 var setup_loop_arduino_json = {
   "type": "setup_loop_structure_arduino",
-  "message0":  DwenguinoBlocklyLanguageSettings.translate(['setup']) + " %1 %2 " + DwenguinoBlocklyLanguageSettings.translate(['loop']) +  "%3 %4",
+  "message0": MSG.setup + " %1 %2 " + MSG.loop + "%3 %4",
   "args0": [
     {
       "type": "input_dummy"
@@ -47,25 +47,25 @@ var setup_loop_arduino_json = {
       "name": "LOOP"
     }
   ],
-  "colour": Blockly.Blocks.arduino.HUE,
-  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguino_main_program_structure']),
+  "colour": 100,
+  "tooltip": MSG.dwenguino_main_program_structure,
   "helpUrl": ArduinoHelpUrl,
   "data": "testdatastring"
 };
 
 Blockly.Blocks['setup_loop_structure_arduino'] = {
-    init: function(){
-        this.jsonInit(setup_loop_arduino_json);
-    }
+  init: function () {
+    this.jsonInit(setup_loop_arduino_json);
+  }
 };
 
 Blockly.Blocks['inout_digital_read'] = {
   helpUrl: 'http://arduino.cc/en/Reference/DigitalRead',
-  init: function() {
+  init: function () {
     this.setColour(230);
     this.appendDummyInput()
-	      .appendField("DigitalRead PIN#")
-	      .appendField(new Blockly.FieldDropdown(profile.default.digital), "PIN");
+      .appendField("DigitalRead PIN#")
+      .appendField(new Blockly.FieldDropdown(profile.default.digital), "PIN");
     this.setOutput(true, 'Number');
     this.setTooltip('');
   }
@@ -73,13 +73,13 @@ Blockly.Blocks['inout_digital_read'] = {
 
 Blockly.Blocks['inout_digital_write'] = {
   helpUrl: 'http://arduino.cc/en/Reference/DigitalWrite',
-  init: function() {
+  init: function () {
     this.setColour(230);
     this.appendDummyInput()
-	      .appendField("DigitalWrite PIN#")
-	      .appendField(new Blockly.FieldDropdown(profile.default.digital), "PIN")
-      	.appendField("Stat")
-      	.appendField(new Blockly.FieldDropdown([["HIGH", "HIGH"], ["LOW", "LOW"]]), "STAT");
+      .appendField("DigitalWrite PIN#")
+      .appendField(new Blockly.FieldDropdown(profile.default.digital), "PIN")
+      .appendField("Stat")
+      .appendField(new Blockly.FieldDropdown([["HIGH", "HIGH"], ["LOW", "LOW"]]), "STAT");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setTooltip('Write digital value to a specific Port');

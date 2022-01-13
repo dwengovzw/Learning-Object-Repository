@@ -20,24 +20,24 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.comments');
+// goog.provide('Blockly.Blocks.comments');
 
-goog.require('Blockly.Blocks');
+// goog.require('Blockly.Blocks');
 
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
-    // Block for text value
-    {
-      "type": "line_comment",
-      "message0": "// %1",
-      "args0": [{
-        "type": "field_input",
-        "name": "TEXT",
-        "text": ""
-      }],
-      "colour": Blockly.Msg.COMMENTS_HUE,
-      "previousStatement": null,
-      "nextStatement": null,
-      "helpUrl": "",
-      "tooltip": "",
-    },
+  // Block for text value
+  {
+    "type": "line_comment",
+    "message0": "// %1",
+    "args0": [{
+      "type": "field_input",
+      "name": "TEXT",
+      "text": ""
+    }],
+    "colour": 10,
+    "previousStatement": null,
+    "nextStatement": null,
+    "helpUrl": "",
+    "tooltip": "",
+  },
 ]);
