@@ -27,6 +27,7 @@
  var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
  
  //Blockly.Blocks.output.HUE = 315;
+ let outputHue = 315;
  
  var ledmatrixDropdown = [
    ["1", "0"],
@@ -91,7 +92,7 @@
 
 Blockly.Blocks['output_show_ledmatrix_image'] = {
   init: function () {
-      this.setColour(Blockly.Blocks.output.HUE);
+      this.setColour(outputHue);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.appendDummyInput()
@@ -112,7 +113,7 @@ Blockly.Blocks['output_show_ledmatrix_image'] = {
 
 Blockly.Blocks['output_show_ledmatrix_eye_pattern'] = {
   init: function() {
-    this.setColour(Blockly.Blocks.output.HUE);
+    this.setColour();
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.appendDummyInput()
@@ -127,7 +128,7 @@ Blockly.Blocks['output_show_ledmatrix_eye_pattern'] = {
 
 Blockly.Blocks['output_clear_ledmatrix_segment'] = {
   init: function() {
-    this.setColour(Blockly.Blocks.output.HUE);
+    this.setColour(outputHue);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.appendDummyInput()
@@ -139,7 +140,7 @@ Blockly.Blocks['output_clear_ledmatrix_segment'] = {
 
 Blockly.Blocks['output_clear_ledmatrix'] = {
   init: function() {
-    this.setColour(Blockly.Blocks.output.HUE);
+    this.setColour(outputHue);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.appendDummyInput()
@@ -200,7 +201,7 @@ var output_rgbled_select_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.output.HUE,
+  "colour": outputHue,
   "tooltip": DwenguinoBlocklyLanguageSettings.translate(['outputRgbLedSelectBlockTooltip']),
   "helpUrl": DwenguinoHelpUrl
   };
@@ -251,7 +252,7 @@ var output_rgbled_select_json = {
    ],
    "previousStatement": null,
    "nextStatement": null,
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "",
    "helpUrl": "http://www.dwengo.org/tutorials"
    
@@ -288,7 +289,7 @@ var output_rgbled_select_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.output.HUE,
+  "colour": outputHue,
   "tooltip": DwenguinoBlocklyLanguageSettings.translate(['outputRgbLedSelectOffBlockTooltip']),
   "helpUrl": DwenguinoHelpUrl
   };
@@ -322,7 +323,7 @@ var output_rgbled_select_json = {
    "inputsInline": true,
    "previousStatement": null,
    "nextStatement": null,
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "",
    "helpUrl": "http://www.dwengo.org/tutorials"
    
@@ -365,7 +366,7 @@ var output_rgbled_select_json = {
      }
    ],
    "output": "Color",
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "",
    "helpUrl": "http://www.dwengo.org/tutorials"
  };
@@ -409,7 +410,7 @@ var output_rgbled_select_json = {
    ],
    "inputsInline": true,
    "output": "Color",
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "",
    "helpUrl": "http://www.dwengo.org/tutorials"
  };
@@ -450,7 +451,7 @@ var output_rgbled_select_json = {
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": Blockly.Blocks.output.HUE,
+  "colour": outputHue,
   "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoServoBlockTooltip']),
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -474,7 +475,7 @@ var output_servo_dropdown = {
     }
   ],
   "output": "Number",
-  "colour": Blockly.Blocks.output.HUE,
+  "colour": outputHue,
   "tooltip": DwenguinoBlocklyLanguageSettings.translate(['dwenguinoServoDropdownTooltip']),
   "helpUrl": "http://www.dwengo.org/tutorials"
 };
@@ -513,7 +514,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
    ],
    "previousStatement": null,
    "nextStatement": null,
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "Put arms down",
    "helpUrl": "http://www.dwengo.org/tutorials"
  };
@@ -566,7 +567,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
    ],
    "previousStatement": null,
    "nextStatement": null,
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "Put arms down",
    "helpUrl": "http://www.dwengo.org/tutorials"
  };
@@ -620,7 +621,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
    ],
    "previousStatement": null,
    "nextStatement": null,
-   "colour": Blockly.Blocks.output.HUE,
+   "colour": outputHue,
    "tooltip": "Put arms up",
    "helpUrl": "http://www.dwengo.org/tutorials"
  };
@@ -666,7 +667,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
      ],
      "previousStatement": null,
      "nextStatement": null,
-     "colour": Blockly.Blocks.output.HUE,
+     "colour": outputHue,
      "tooltip": "Wave arms",
      "helpUrl": "http://www.dwengo.org/tutorials"
    };
@@ -720,7 +721,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
      ],
      "previousStatement": null,
      "nextStatement": null,
-     "colour": Blockly.Blocks.output.HUE,
+     "colour": outputHue,
      "tooltip": "Turn eyes left",
      "helpUrl": "http://www.dwengo.org/tutorials"
    };
@@ -773,7 +774,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
      ],
      "previousStatement": null,
      "nextStatement": null,
-     "colour": Blockly.Blocks.output.HUE,
+     "colour": outputHue,
      "tooltip": "Turn eyes right",
      "helpUrl": "http://www.dwengo.org/tutorials"
    };
@@ -803,7 +804,7 @@ Blockly.Blocks['output_servo_dropdown'] = {
      "inputsInline": true,
      "previousStatement": null,
      "nextStatement": null,
-     "colour": Blockly.Blocks.output.HUE,
+     "colour": outputHue,
      "tooltip": "Set pin",
      "helpUrl": "http://www.dwengo.org/tutorials"
  };
