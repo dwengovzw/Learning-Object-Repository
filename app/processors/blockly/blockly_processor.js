@@ -59,7 +59,7 @@ class BlocklyProcessor extends Processor {
             }
 
             function loadScript${args.id}(index) {
-                let scripts = ["blockly_compressed.js", "msg/${args.language}.js", "msg2/${args.language}.js", "language_select.js", "blocks_compressed.js",
+                let scripts = ["blockly_compressed.js", "msg/${args.language}.js", "msg2/${args.language}.js", "msg2/fallback.js", "language_select.js", "blocks_compressed.js",
                 "blocks/arduino.js", "blocks/comments.js", "blocks/conveyor.js", "blocks/drawingrobot.js", "blocks/dwenguino_new.js",
                 "blocks/lists.js", "blocks/procedures.js", "blocks/socialrobot.js", "blocks/variables_dynamic.js", "blocks/variables.js"]
                 
