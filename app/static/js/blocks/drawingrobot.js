@@ -39,7 +39,7 @@ var drawingrobot_stepper_motor_json = {
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "/static/img/dc.png",
+      "src": "http://localhost:8085/static/img/dc.png",
       "width": 150,
       "height": 90,
       "alt": "Image Dc motor"

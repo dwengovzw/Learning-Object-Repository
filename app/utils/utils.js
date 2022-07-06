@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+let fs_async = fs.promises;
+
 /**
  * 
  * @param {string} urlString 
@@ -40,6 +42,13 @@ let urlReplaceInStaticFiles = async function () {
     });
 }
 
+let cleanDirectory = async function (directory) {
+    try {
+        await fs_async.readdir(directory).then((files) => Promise.all(files.map(file => fs_async.unlink(`${directory}/${file}`))));
+    } catch(err) {
+        console.log(err);
+    }
+}
 
-export { isValidHttpUrl, urlReplaceInStaticFiles }
+export { isValidHttpUrl, urlReplaceInStaticFiles, cleanDirectory }
 

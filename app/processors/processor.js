@@ -17,6 +17,18 @@ class Processor {
     render(stringToRender, args = {}){
         return "";
     }
+
+    /**
+     * Process the correct file given the content type if a metadata.md or metadata.yaml file is used.
+     * If a index.md file is used, the content type should be text/markdown and this function shouldn't be called,
+     * because no other file needs to be processed other than index.md.
+     * @param {array} files The files should be filtered
+     * @param {string} contentType 
+     * @returns name and content for the new html file together with the source files that need to be saved.
+     */
+    processFiles(files, metadata){
+        return null;
+    }
 }
 
 export default Processor;

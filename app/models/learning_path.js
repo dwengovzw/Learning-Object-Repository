@@ -49,4 +49,5 @@ learningPathSchema.index({ hruid: 1, language: 1 }, { unique: true });
 
 const LearningPath = mongoose.model('LearningPath', learningPathSchema);
 
+
 export default LearningPath

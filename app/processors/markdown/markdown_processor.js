@@ -1,4 +1,4 @@
-import marked from 'marked'
+import { marked } from 'marked'
 import DOMPurify from 'isomorphic-dompurify';
 import LearningObjectMarkdownRenderer from './learing_object_markdown_renderer.js';
 import ObjectConverter from '../../utils/object_converter.js';

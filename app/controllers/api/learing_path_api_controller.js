@@ -137,13 +137,115 @@ learningPathApiController.getLanguages = async (req, res) => {
 learningPathApiController.getLearningPathFromHruidLang = async (req, res) => {
     try {
         let query = {hruid: req.params.hruid, language: req.params.language}
-        let path = await LearningPath.findOne(query)
+        let paths = await learningObjectApiController.findOneWithCorrespondingLearningObjects(query);
+        let path = paths[0]
+        //let path = await LearningPath.findOne(query)
         path.image = path.image.toString('base64');
         return res.json(path);
     } catch (err) {
         return res.send("Could not retrieve learning path from database.");
     }
 }
+
+learningObjectApiController.findOneWithCorrespondingLearningObjects = (query, teacher_exclusive=true) => {
+    let aggregation =  [
+        {
+            "$match": query
+        },
+        {$addFields: 
+            {"num_nodes": { $size: "$nodes" }}   // Count the number of node references and save them, later we use this to filter out learning paths with nonexisting references.
+        },
+        {$unwind:{ path: "$nodes", "preserveNullAndEmptyArrays": true}}, // Unwind learning paths so there is an entry for each combination of learning path info and node
+        {$lookup: // Join learning objects into learning path nodes based on hruid, version, and language
+            {
+                from: "learningobjects",
+                let: 
+                    {
+                        hruid: "$nodes.learningobject_hruid",
+                        version: "$nodes.version",
+                        language: "$nodes.language",
+                    },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [{$eq: ["$$version", "$version"]}, {$eq: ["$$hruid", "$hruid"]}, {$eq: ["$$language", "$language"]}]
+                            }
+                        }
+                    }
+                ],
+                as: "result"
+            }
+        },{
+            $match: {"result": {"$ne": []}}  // Perform inner join (only keep learning path elements with refernces to existing learning objects)
+        }, {
+            $replaceRoot: { // Take result of merge as base and add information of learning path
+                newRoot: {
+                    $mergeObjects: [
+                        {
+                            $arrayElemAt: [
+                                "$result", 0
+                            ]
+                        },{
+                            lp_id: "$$ROOT._id",
+                            lpnodes: "$$ROOT.nodes",
+                            lpimage: "$$ROOT.image",
+                            lphruid: "$$ROOT.hruid",
+                            lplanguage: "$$ROOT.language",
+                            lptitle: "$$ROOT.title",
+                            lpdescription: "$$ROOT.description",
+                            lpnum_nodes: "$$ROOT.num_nodes"
+                        }
+                    ]
+                }
+            }
+        }, {
+            $group: // reverse unwind by grouping on _id and at the same time combine the learning object attributes from both the learning path and learning object and push them to the nodes list
+                {
+                    _id: "$lp_id",
+                    language: {$first: "$lplanguage"},
+                    hruid: {$first: "$lphruid"},
+                    title: {$first: "$lptitle"},
+                    description: {$first: "$lpdescription"},
+                    image: {$first: "$lpimage"},
+                    num_nodes: {$first: "$lpnum_nodes"},
+                    num_nodes_left: {$sum: 1},
+                    nodes: {$push: {
+                            _id: "$_id", 
+                            start_node: "$lpnodes.start_node",
+                            transitions: "$lpnodes.transitions",
+                            aspect_ratio: "$aspect_ratio", 
+                            teacher_exclusive: "$teacher_exclusive",
+                            available: "$available",
+                            content_type: "$content_type",
+                            copyright: "$copyright",
+                            created_at: "$created_at",
+                            description: "$description",
+                            difficulty: "$difficulty",
+                            educational_goals: "$educational_goals", 
+                            estimated_time: "$estimated_time",
+                            learningobject_hruid: "$hruid",
+                            keywords: "$keywords",
+                            language: "$language",
+                            licence: "$licence",
+                            return_value: "$return_value",
+                            skos_concepts: "$skos_concepts",
+                            target_ages: "$target_ages",
+                            title: "$title",
+                            updatedAt: "$updatedAt",
+                            uuid: "$uuid",
+                            version: "$version",
+                            __v: "$__v"
+                        }
+                    }
+                }
+        }
+                  
+    ]
+    return LearningPath.aggregate(aggregation)
+}
+
+
 
 /**
  * request learning-path from database based on unique id
