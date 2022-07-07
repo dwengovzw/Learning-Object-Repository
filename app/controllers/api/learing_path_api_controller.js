@@ -7,6 +7,7 @@ import LearningPath from "../../models/learning_path.js";
 import learningObjectApiController from "./learing_object_api_controller.js";
 import ProcessingHistory from "../../models/processing_history.js";
 import UserLogger from "../../utils/user_logger.js";
+import mongoose from "mongoose"
 
 let logger = Logger.getLogger()
 
@@ -135,16 +136,28 @@ learningPathApiController.getLanguages = async (req, res) => {
 
 
 learningPathApiController.getLearningPathFromHruidLang = async (req, res) => {
-    try {
+    try{
         let query = {hruid: req.params.hruid, language: req.params.language}
-        let paths = await learningObjectApiController.findOneWithCorrespondingLearningObjects(query);
-        let path = paths[0]
-        //let path = await LearningPath.findOne(query)
-        path.image = path.image.toString('base64');
+        let path = await learningPathApiController.getLearningPathForQuery(query)
         return res.json(path);
-    } catch (err) {
+    }catch(err){
         return res.send("Could not retrieve learning path from database.");
     }
+}
+
+/**
+ * 
+ * @param {Object} query a mongodb query object to filter the learning paths based on specific parameters
+ * @returns The first matched learning path with all its metadata and the metadata of the contained learning objects.
+ */
+learningPathApiController.getLearningPathForQuery = async (query) => {
+    let paths = await learningObjectApiController.findOneWithCorrespondingLearningObjects(query);
+    if (paths.length == 0){
+        throw Error("No learning paths found");
+    }
+    let path = paths[0]
+    path.image = path.image.toString('base64');
+    return path
 }
 
 learningObjectApiController.findOneWithCorrespondingLearningObjects = (query, teacher_exclusive=true) => {
@@ -254,7 +267,15 @@ learningObjectApiController.findOneWithCorrespondingLearningObjects = (query, te
  * @returns learning-path
  */
 learningPathApiController.getLearningPathFromId = async (req, res) => {
-    let path;
+    try{
+        let query = {_id: mongoose.Types.ObjectId(req.params.id)}
+        let path = await learningPathApiController.getLearningPathForQuery(query)
+        return res.json(path);
+    }catch(err){
+        return res.send("Could not retrieve learning path from database.");
+    }
+
+    /*let path;
     let repos = new LearningPathRepository();
     logger.info("Requested learning path with id: " + req.params.id);
     await new Promise((resolve) => {
@@ -288,7 +309,7 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
             return res.json(resPath);
         }
     }
-    return res.send("Could not retrieve learning path from database.");
+    return res.send("Could not retrieve learning path from database.");*/
 
 }
 
