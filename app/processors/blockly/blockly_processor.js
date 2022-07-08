@@ -9,6 +9,7 @@ let logger = Logger.getLogger()
 class BlocklyProcessor extends Processor {
     constructor() {
         super();
+        this.blockly_base_url  = process.env.SIMULATOR_BASE_PATH;
     }
 
     /**
@@ -34,6 +35,12 @@ class BlocklyProcessor extends Processor {
 
         let html = `
         <div id="blocklyDiv_${args.id}" class="blocklyDiv" style="height: 480px; "></div>
+        <div id="simulator_link">
+            <form formtarget="_blank" method="post" action="${this.blockly_base_url}">
+                <input type="hidden" name="xml" value="${encodeURIComponent(blocklyXml)}" /> 
+                <a target="_blank" onclick="this.parentNode.submit();">Simulator</a>
+            </form>
+        </div>
 
         <script>
 

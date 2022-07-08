@@ -83,7 +83,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.use('/', appRouter);
-app.use('/storage', express.static(path.join(path.resolve(), "storage")))
+app.use(`/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}`, express.static(path.join(path.resolve(), process.env.LEARNING_OBJECT_STORAGE_LOCATION)))
 app.use('/css', express.static(path.join(path.resolve(), 'node_modules/bootstrap/dist/css')));
 app.use('/css', express.static(path.join(path.resolve(), 'app/static/css')));
 app.use('/css', express.static(path.join(path.resolve(), 'node_modules/@fortawesome/fontawesome-free/css')));
@@ -94,6 +94,8 @@ app.use('/js', express.static(path.join(path.resolve(), 'app/static/js')));
 app.use('/static', express.static(path.join(path.resolve(), 'app/static')));
 app.set('views', path.join(path.resolve(), 'app', 'views'));
 app.set('view engine', 'ejs');
+
+
 
 
 

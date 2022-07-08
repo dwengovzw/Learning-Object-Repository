@@ -3,7 +3,11 @@ import learningPathApiController from "../../controllers/api/learing_path_api_co
 let learningPathApiRouter = express.Router({ mergeParams: true });
 
 learningPathApiRouter.route("/search").get((req, res) => {
-    learningPathApiController.getLearningPaths(req, res);
+    learningPathApiController.searchLearningPaths(req, res);
+});
+
+learningPathApiRouter.route("/getPathsFromIdList").get((req, res) => {
+    learningPathApiController.getLearningPathsFromIdList(req, res);
 });
 
 learningPathApiRouter.route("/languages").get((req, res) => {

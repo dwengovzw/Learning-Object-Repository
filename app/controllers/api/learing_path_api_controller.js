@@ -274,43 +274,6 @@ learningPathApiController.getLearningPathFromId = async (req, res) => {
     }catch(err){
         return res.send("Could not retrieve learning path from database.");
     }
-
-    /*let path;
-    let repos = new LearningPathRepository();
-    logger.info("Requested learning path with id: " + req.params.id);
-    await new Promise((resolve) => {
-        repos.findById(req.params.id, (err, res) => {
-            if (err) {
-                logger.error("Could not retrieve learning path from database: " + err.message);
-            } else {
-                path = res;
-            }
-            resolve();
-        })
-    });
-    if (path) {
-        let errors = await learningPathApiController.validateObjectReferencesInPath(path);
-        if (errors) {
-            ProcessingHistory.error(path.hruid, 1, path.language, `The learning path (hruid: ${path.hruid}, language: ${path.language}) has invalid references to learning-objects:${errors}`)
-        } else {
-            // Yes, this is ugly, I'd rather do this with .map or just changing the image key in the path object, but it doesn't work and this was the only way out after all this time searching.
-            let resPath = {
-                _id: path._id,
-                hruid: path.hruid,
-                title: path.title,
-                description: path.description,
-                image: path.image.toString('base64'),
-                nodes: path.nodes,
-                uuid: path.uuid,
-                created_at: path.created_at,
-                updatedAt: path.updatedAt,
-                __v: path.__v
-            }
-            return res.json(resPath);
-        }
-    }
-    return res.send("Could not retrieve learning path from database.");*/
-
 }
 
 /**
@@ -321,6 +284,19 @@ learningPathApiController.removeLearningPaths = async () => {
     return repos.removeAll();
 };
 
+learningPathApiController.getLearningPathsFromIdList = async (req, res) => {
+    let idList = req.query ? JSON.parse(req.query.pathIdList) : {};
+    let language = req.query ? req.query.language : "nl";
+    let queryList = []
+    for (let hruid of idList.hruids){
+        queryList.push({ "$and": [{"hruid": {$eq: hruid}}, {"language": {$eq: language}}] })
+    }
+    let query = {
+        "$or": queryList
+    }
+    learningPathApiController.performQueryAndMapImage(req, res, query, idList.hruids);
+}
+
 /**
  * request learning-paths from database based on query
  * @param {object} req
@@ -329,7 +305,7 @@ learningPathApiController.removeLearningPaths = async () => {
  */
 
 // TODO: make this faster!!!
-learningPathApiController.getLearningPaths = async (req, res) => {
+learningPathApiController.searchLearningPaths = async (req, res) => {
     let query = req.query ? req.query : {};
     let repos = new LearningPathRepository();
     let language = query.language ? query.language : /.*/;
@@ -369,10 +345,14 @@ learningPathApiController.getLearningPaths = async (req, res) => {
             ]}]}
         ]}
 
+        learningPathApiController.performQueryAndMapImage(req, res, query);
+      
+};
 
+learningPathApiController.performQueryAndMapImage = async function(req, res, query, queryOrderList){
     let paths;
     try{
-        paths = await learningPathApiController.searchAllValidLearningPathsWhichMeetCondition(query);
+        paths = await learningPathApiController.searchAllValidLearningPathsWhichMeetCondition(query, queryOrderList);
         paths = paths.map((path) => {
             path.image = path.image.toString("base64")
             return path
@@ -380,11 +360,11 @@ learningPathApiController.getLearningPaths = async (req, res) => {
         return res.json(paths);
     }catch(error){
         return res.send("Could not retrieve learning paths from database.");
-    }    
-};
+    }  
+}
 
 
-learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async function(query){
+learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async function(query, queryOrderList = []){   
     let aggregation =  [
         {$addFields: 
             {"num_nodes": { $size: "$nodes" }}   // Count the number of node references and save them, later we use this to filter out learning paths with nonexisting references.
@@ -497,6 +477,13 @@ learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async 
         }
                   
     ]
+
+    if (queryOrderList.length > 0){
+        let addOrderField = { "$addFields" : { "__order" : { "$indexOfArray" : [ queryOrderList, "$hruid" ] } } };
+        let sort = { "$sort" : { "__order" : 1 } };
+        aggregation.push(addOrderField);
+        aggregation.push(sort)
+    }
 
     return LearningPath.aggregate(aggregation)
 }
