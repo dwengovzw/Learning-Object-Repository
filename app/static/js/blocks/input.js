@@ -19,15 +19,10 @@
  * @author zimcke.vandestaey@ugent.be
  */
  'use strict';
-
- //goog.provide('Blockly.Blocks.input');
- 
- //goog.require('Blockly.Blocks'); 
  
  var DwenguinoHelpUrl = "http://www.dwengo.org/blockly";
  
- //Blockly.Blocks.input.HUE = 315;
- var blockHue = 315;
+ let blockHue = 315;
 
   // Sonar sensor
 
@@ -45,7 +40,7 @@
       },
       {
         "type": "field_image",
-        "src": settings.basepath + "/static/img/sonar.png",
+        "src": settings.basepath + "DwenguinoIDE/img/sonar.png",
         "width": 150,
         "height": 87,
         "alt": "*"
@@ -85,7 +80,7 @@
     },
     {
       "type": "field_image",
-      "src": settings.basepath + "/static/img/socialrobot/sound_sensor.png",
+      "src": settings.basepath + "DwenguinoIDE/img/socialrobot/sound_sensor.png",
       "width": 80,
       "height": 34,
       "alt": "*"
@@ -121,7 +116,7 @@
       },
       {
         "type": "field_image",
-        "src": settings.basepath + "/static/img/socialrobot/sound_sensor.png",
+        "src": settings.basepath + "DwenguinoIDE/img/socialrobot/sound_sensor.png",
         "width": 80,
         "height": 34,
         "alt": "*"
@@ -156,7 +151,7 @@
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "/static/img/pir.png",
+       "src": settings.basepath + "DwenguinoIDE/img/pir.png",
        "width": 150,
        "height": 87,
        "alt": "*"
@@ -191,7 +186,7 @@
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "/static/img/socialrobot/touch_sensor.png",
+       "src": settings.basepath + "DwenguinoIDE/img/socialrobot/touch_sensor.png",
        "width": 50,
        "height": 50,
        "alt": "*"
@@ -226,7 +221,7 @@
      },
      {
        "type": "field_image",
-       "src": settings.basepath + "/static/img/socialrobot/button.svg",
+       "src": settings.basepath + "DwenguinoIDE/img/socialrobot/button.svg",
        "width": 50,
        "height": 50,
        "alt": "*"
@@ -276,4 +271,40 @@
          this.jsonInit(input_read_pin_json);
      }
  };
+
+
+ var input_light_sensor_json = {
+  "id": "input_light_sensor",
+  "message0": DwenguinoBlocklyLanguageSettings.translate(['inputLightSensorBlock']),
+  "args0": [
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "field_image",
+      "src": settings.basepath + "DwenguinoIDE/img/socialrobot/light_sensor.png",
+      "width": 50,
+      "height": 50,
+      "alt": "*"
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "pin",
+      "check": "Number"
+    }
+  ],
+  "output": "Number",
+  "colour": blockHue,
+  "tooltip": DwenguinoBlocklyLanguageSettings.translate(['inputLightSensorBlockTooltip']),
+  "helpUrl": DwenguinoHelpUrl
+};
+
+Blockly.Blocks['input_light_sensor'] = {
+  init: function() {
+    this.jsonInit(input_light_sensor_json);
+  }
+};
  
