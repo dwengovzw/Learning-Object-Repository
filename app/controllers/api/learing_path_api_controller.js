@@ -86,18 +86,6 @@ learningPathApiController.validateObjectReferencesInPath = async (path) => {
                 UserLogger.error(`Not all transitions in learning path with hruid: ${path.hruid} are nodes in the learning path.`)
             }
 
-            // This code checks each transition if it exists. This is slow and since transitions have to be part of the 
-            // learning path definition, these checks are done in the previous step.
-            /*if (node.transitions) {
-                for (let j = 0; j < node.transitions.length; j++) {
-                    const trans = node.transitions[j];
-                    let query = { hruid: trans.next.hruid, language: trans.next.language, version: trans.next.version };
-                    let metadata = await learningObjectApiController.getMetadata(query);
-                    if (!metadata) {
-                        errors += `\n\t- A learning object with hruid: ${query.hruid}, language: ${query.language}, version: ${query.version}, doesn't exist.`
-                    }
-                }
-            }*/
         }
     }
     return errors;

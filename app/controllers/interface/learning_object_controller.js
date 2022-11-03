@@ -1,7 +1,7 @@
 import Logger from "../../logger.js"
 import multer from "multer"
 import { uploadFilesMiddleware } from "../../utils/upload.js"
-import MarkdownProcessor from '../../processors/markdown/markdown_processor.js'
+import { MarkdownProcessor } from '../../processors/markdown/markdown_processor.js'
 import LearningObject from "../../models/learning_object.js"
 import fs from "fs"
 import path from "path"

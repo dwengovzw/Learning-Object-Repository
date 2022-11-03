@@ -1,8 +1,4 @@
-import { ProcessorContentType } from "../content_type.js";
 import LearningObjectProcessor from "../learning_object/learing_object_processor.js";
-import ProcessingProxy from "../processing_proxy.js";
-import fs from "fs"
-import path from "path"
 import PdfProcessor from "../pdf/pdf_processor.js";
 import AudioProcessor from "../audio/audio_processor.js";
 import ExternProcessor from "../extern/extern_processor.js";
@@ -10,8 +6,6 @@ import BlocklyProcessor from "../blockly/blockly_processor.js";
 import { findFile } from "../../utils/file_io.js";
 import InlineImageProcessor from "../image/inline_image_processor.js";
 import { isValidHttpUrl } from "../../utils/utils.js";
-import LearningObjectRepository from "../../repository/learning_object_repository.js";
-import learningObjectApiController from "../../controllers/api/learing_object_api_controller.js";
 import ProcessingHistory from "../../models/processing_history.js";
 
 class LearningObjectMarkdownRenderer {

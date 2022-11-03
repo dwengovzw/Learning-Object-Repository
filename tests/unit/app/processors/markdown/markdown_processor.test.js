@@ -1,5 +1,5 @@
-import { expect, test } from "@jest/globals"
-import MarkdownProcessor from "../../../../../app/processors/markdown/markdown_processor.js"
+import { expect, test } from "@jest/globals";
+import { MarkdownProcessor } from "../../../../../app/processors/markdown/markdown_processor.js";
 
 
 test("Test if metadata en markdown are correctly split into distinct parts.", () => {

@@ -5,9 +5,9 @@ import ObjectConverter from '../../utils/object_converter.js';
 import yaml from "js-yaml"
 import Logger from '../../logger.js';
 import Processor from '../processor.js';
-import InvalidArgumentError from "../../utils/invalid_argument_error.js"
+import InvalidArgumentError from "../../utils/invalid_argument_error.js";
 import ProcessingHistory from '../../models/processing_history.js';
-import path from "path"
+import path from "path";
 
 class MarkdownProcessor extends Processor {
     logger = Logger.getLogger();
@@ -99,4 +99,4 @@ class MarkdownProcessor extends Processor {
     }
 }
 
-export default MarkdownProcessor;
+export { MarkdownProcessor };

@@ -36,9 +36,9 @@ class BlocklyProcessor extends Processor {
         let html = `
         <div id="blocklyDiv_${args.id}" class="blocklyDiv" style="height: 480px; "></div>
         <div id="simulator_link">
-            <form formtarget="_blank" method="post" action="${this.blockly_base_url}">
+            <form formtarget="_blank" target="_blank" method="post" action="${this.blockly_base_url}" target="_blank">
                 <input type="hidden" name="xml" value="${encodeURIComponent(blocklyXml)}" /> 
-                <a target="_blank" onclick="this.parentNode.submit();">Simulator</a>
+                <a target="_blank" class="btn simulator" role="button" aria-disabled="true" onclick="this.parentNode.submit();" style="margin-top:5px">Simulator</a>
             </form>
         </div>
 

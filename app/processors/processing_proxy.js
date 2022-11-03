@@ -1,13 +1,15 @@
 import BlockImageProcessor from "./image/block_image_processor.js";
 import InlineImageProcessor from "./image/inline_image_processor.js";
-import MarkdownProcessor from "./markdown/markdown_processor.js";
+import { CTSchemaProcessor } from "./ct_schema/ct_schema_processor.js";
+import { MarkdownProcessor } from "./markdown/markdown_processor.js";
 import TextProcessor from "./text/text_processor.js";
 import { ProcessorContentType } from "./content_type.js"
 import AudioProcessor from "./audio/audio_processor.js";
 import PdfProcessor from "./pdf/pdf_processor.js";
 import ExternProcessor from "./extern/extern_processor.js";
 import BlocklyProcessor from "./blockly/blockly_processor.js";
-import GiftProcessor from "./gift/gift_processor.js"
+import GiftProcessor from "./gift/gift_processor.js";
+
 
 
 class ProcessingProxy {
@@ -22,6 +24,7 @@ class ProcessingProxy {
         this.processors[ProcessorContentType.EXTERN] = new ExternProcessor();
         this.processors[ProcessorContentType.BLOCKLY] = new BlocklyProcessor();
         this.processors[ProcessorContentType.GIFT] = new GiftProcessor();
+        this.processors[ProcessorContentType.CT_SCHEMA] = new CTSchemaProcessor();
     }
 
     /**
@@ -48,6 +51,10 @@ class ProcessingProxy {
             let ignoreregex = /(.*metadata\.((md)|(yaml)))|(^\..*)$/; ///(.*metadata\.((md)|(yaml)))|(^\..*)$/;
             return !f["originalname"].match(ignoreregex);
         })
+        if (contentType == ProcessorContentType.CT_SCHEMA){
+            console.log("yes!!!!!!!!!!!!!!!!!")
+        }
+        console.log(contentType);
         return this.processors[contentType].processFiles(filtered, metadata);
     }
 }

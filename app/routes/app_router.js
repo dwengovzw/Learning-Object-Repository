@@ -32,7 +32,16 @@ appRouter.get('/log', function (req, res) {
 
 });
 
-appRouter.use("/interface/learningObject", learningObjectRouter);
+/*
+    The application has two entpoints for interacting with the repostitory.
+    The /interface/learningObject endpoint is designed to CRUD learning objects. 
+    For now, this endpoint is only accessed through our own application by the git_processor.
+    The /api/learningObject an /api/learningPath endpoints are used by external websites to access the learning objects and paths.
+    These support the getRaw, getMetadata, and getWrapped functions for getting learning objects and the search functions for learning paths.
+    The /api/manage endpoint supplies repository editors with and interface for processing the content in the git repository.
+    The /lti endpoint translates lti calls to static page requests.
+*/
+appRouter.use("/interface/learningObject", learningObjectRouter);  
 appRouter.use("/api/learningObject", learningObjectApiRouter);
 appRouter.use("/api/learningPath", learningPathApiRouter);
 appRouter.use("/api/manage", managementRouter);
