@@ -15,8 +15,8 @@ echo 'LEARNING_OBJECTS_GIT_REPOSITORY=https://github.com/dwengovzw/learning_cont
 echo 'DOMAIN_URL=https://staging.dwengo.org/backend' >> .env
 echo "LEARNING_OBJECT_LOADING_SCHEDULE = '0 0 * * *'" >> .env # Each day at midnight
 echo "LEARNING_OBJECT_REPOSITORY_LOCATION = '/home/ubuntu/dwengo-deploy/learning_object_backend/repos'" >> .env
-echo "SIMULATOR_BASE_PATH=https://blockly.dwengo.org"
-echo 'STATIC_BASE_PATH="/static"'
+echo "SIMULATOR_BASE_PATH=https://blockly.dwengo.org"  >> .env
+echo 'STATIC_BASE_PATH="/static"'  >> .env
 
 
 # TODO update this for use with i-learn
