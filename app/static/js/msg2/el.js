@@ -114,13 +114,14 @@ var MSG = {
   socialRobotPinGreen: "pin green",
   socialRobotPinBlue: "pin blue",
   socialRobotRgbLedOffBlock: "Turn the RGB LED off with",
-  socialRobotRgbColorBlock: "RGB color",
+  socialRobotRgbColor: "red %1 green %2 blue %3",
+  socialRobotRgbColorBlock: "RGB color %1",
   socialRobotPirBlock: "PIR %1 %2 %3 trig pin number %4",
   socialRobotSoundSensorBlock: "Sound sensor %1 %2 %3 pin %4",
   socialRobotSoundSensorBlockTooltip: "",
   socialRobotTouchSensorBlock: "Touch sensor %1 %2 %3 pin %4",
   socialRobotTouchSensorBlockTooltip: "",
-  socialRobotButtonSensorBlock: "Button %1 %2 %3 pin %4",
+  socialRobotButtonBlock: "Button %1 %2 %3 pin %4",
   socialRobotButtonBlockTooltip: "",
   socialrobotSetPinState: "Set %1 %2",
   socialrobotServoBlock: "Σερβοκινητήρας %1 %2 %3  κανάλι %4 Ακροδέκτης %5",
@@ -183,6 +184,8 @@ var MSG = {
   stepperMotorTooltip: "Επίλεξε ποιον stepper κινητήρα του robot εκτυπωτή θες να χρησιμοποιήσεις.",
   clear: "Καθαρισμός",
   save: "Αποθήκευση",
+  triggerPin: "Trigger pin",
+  echoPin: "Echo pin",
 };
 
 MSG.cookieConsent = {
@@ -534,5 +537,3 @@ MSG.validator = {
   errGender: "Επίλεξε το φύλο σου.",
   errActivityId: "Ο τίτλος της εργασίας σου δε μπορεί να είναι κενός."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

@@ -16,6 +16,7 @@ echo 'DOMAIN_URL=https://www.dwengo.org/backend' >> .env
 echo "LEARNING_OBJECT_LOADING_SCHEDULE = '0 0 * * *'" >> .env # Each day at midnight
 echo "LEARNING_OBJECT_REPOSITORY_LOCATION = '/home/ubuntu/dwengo-deploy/learning_object_backend/repos'" >> .env
 echo "SIMULATOR_BASE_PATH=https://blockly.dwengo.org"  >> .env
+echo "SIMULATOR_READONLY_BASE_PATH=https://blockly.dwengo.org/readonly" >> .env
 echo 'STATIC_BASE_PATH="/static"'  >> .env
 
 

@@ -9,6 +9,9 @@ var MSG = {
   loadBlocksFileTooltip: "Load a blocks file you saved before",
   saveBlocksFileTooltip: "Save the blocks to a local file",
   toggleSimulator: "Toggle simulator view.",
+  compileAndDownload: "Compile and download the code to transfer it to the Dwenguino.",
+  compileEmptyProgram: "Download an empty program.",
+  openTutorials: "Open tutorials",
   badCode: "Program error:\n%1",
   timeout: "Maximum execution iterations exceeded.",
   trashTooltip: "Discard all blocks.",
@@ -23,10 +26,14 @@ var MSG = {
   catFunctions: "Functions",
   catDwenguino: "Dwenguino",
   catSocialRobot: "Social robot",
+  catInput: "Input",
+  catOutput: "Output",
   catConveyor: "Conveyor",
   catComments: "Comments",
   catBoardIO: "IO",
+  copy: "Copy",
   createVar: "Create variable",
+  examples: "Examples",
   listVariable: "list",
   textVariable: "text",
   httpRequestError: "There was a problem with the request.",
@@ -98,7 +105,7 @@ var MSG = {
   digitalReadSwitchTooltip: "Read value from one of the Dwenguino switches",
   waitForSwitch: "wait until button %1 is pressed",
   north: "North",
-  east: "East",
+  east:"East",
   south: "South",
   west: "West",
   center: "Center",
@@ -149,6 +156,7 @@ var MSG = {
   soundButtonLabel: "Sound button",
   touchButtonLabel: "Touch button",
   lightSensorSliderLabel: "Light sensor slider",
+  options: "Options",
   servoCostume: "Costume",
   servoOptions: "Servo motor options",
   sonarOptions: "Sonar sensor options",
@@ -163,6 +171,7 @@ var MSG = {
   ledOptions: "LED options",
   pinOptions: "Pin",
   colorOptions: "Color",
+  downloadError: "<h3>Sorry, I was unable to download your code</h3>",
   runError: "<h3>Sorry, I was unable to upload the code to the board</h3>",
   uploadError: "Follow these steps to restart the Dwenguino board: \n    1. Disconnect the USB cable \n    2. Connect the computer and Dwenguino board with the USB cable \n    3. Simultaneously press the RESET and the SOUTH button of the Dwenguino board \n    4. Then first release the RESET button \n    5. Then release the SOUTH button \n    6. Upload the program again via the <span id='db_menu_item_run' class='fas fa-play-circle' alt='Upload code to Dwenguino board'></span> button in the main menu",
   cleanError: "The previous code could not be removed.\nPlease check if another application is using any .cpp files.\n Close the application.",
@@ -172,32 +181,44 @@ var MSG = {
   delete: "Delete",
   restore: "Restore",
   open: "Open",
-  variablesDeclareSetInt: "set %1 to number %2",
+  confirm_close: "Are you sure you want to leave the page?\nYour current program will be lost.",
 
   // TODO: Translate:
   dwenguinoStepperMotorBlock: "stepper-motor %1 %2 %3 nummer %4 aantal stappen %5",
   dwenguinoStepperMotorBlockTooltip: "TODO",
-  drawingrobotMove: "Verplaats de stift onder een van hoek %1 graden met %2 stappen",
-  drawingrobotMoveXY: "Verplaats de stift %1 naar rechts en %2 naar links",
-  drawingrobotLine: "Teken een lijn naar x: %1 y: %2",
-  drawingrobotCircle: "Teken een cirkel met straal: %1",
-  drawingrobotRectangle: "Teken een rechthoek met breedte: %1 en hoogte: %2",
+  drawingrobotMove:"Verplaats de stift onder een van hoek %1 graden met %2 stappen",
+  drawingrobotMoveXY:"Verplaats de stift %1 naar rechts en %2 naar links",
+  drawingrobotLine:"Teken een lijn naar x: %1 y: %2",
+  drawingrobotCircle:"Teken een cirkel met straal: %1",
+  drawingrobotRectangle:"Teken een rechthoek met breedte: %1 en hoogte: %2",
   drawingrobotLiftStylus: "Stift opheffen",
   drawingrobotLowerStylus: "Stift neerzetten",
   drawingrobotChangeColor: "Kleur %1",
-  up: "omhoog",
-  down: "omlaag",
-  left: "links",
-  right: "rechts",
-  bounds: "Opgelet\nJe probeert buiten het papier te tekenen",
+  up:"omhoog",
+  down:"omlaag",
+  left:"links",
+  right:"rechts",
+  bounds:"Opgelet\nJe probeert buiten het papier te tekenen",
   drawingrobotgrid: "raster",
-  colorpicker: "Kleur",
-  drawingrobotSaveImage: "Tekening opslaan",
-  drawingrobotDrawing: "Tekening",
-  stepperMotorOne: "STEPPER1",
+  colorpicker:"Kleur",
+  drawingrobotSaveImage:"Tekening opslaan",
+  drawingrobotDrawing:"Tekening",
+  stepperMotorOne: "STEPPER1", 
   stepperMotorTwo: "STEPPER2",
-  stepperMotorTooltip: "Select which stepper motor from the plotter robot you want to use."
-
+  stepperMotorTooltip: "Select which stepper motor from the plotter robot you want to use.",
+  triggerPin: "Trigger pin",
+  echoPin: "Echo pin",
+  defaultTabTitle: "New tab",
+  connect: "Connect",
+  disConnect: "Disconnect",
+  send: "Send",
+  serial_monitor: "Serial monitor",
+  serial_not_supported: "Your browser does not support the WebSerial API. Choose another browser to use this feature (https://developer.mozilla.org/en-US/docs/Web/API/Serial#browser_compatibility).",
+  serial_monitor_data_type_setting: "Data type:",
+  serial_monitor_data_display_setting: "Display type:",
+  serial_monitor_baud_rate_setting: "Baud rate:",
+  serial_monitor_send_field_placeholder: "Enter the data you want to send to the µC",
+  change_to_textual_programming_info: "When changing to the textual editor, you are no longer able to simulate your robot. You can only run your code on the Dwenguino",
 };
 
 MSG.cookieConsent = {
@@ -234,7 +255,7 @@ MSG.dropzone = {
 };
 
 MSG.ledmatrix = {
-  restPosition: 'Rest position',
+  restPosition: 'Rest position', 
   blink1: 'Blink 1',
   blink2: 'Blink 2',
   blink3: 'Blink 3',
@@ -311,7 +332,7 @@ MSG.simulator = {
   scenario_default: "Normal board",
   scenario_moving: "Moving robot",
   scenario_wall: "Moving robot with wall",
-  scenario_socialrobot: "Social robot",
+  scenario_socialrobot:"Social robot",
   code: "Code",
   pir: "PIR sensor",
   pirDescription: "A passif infrared (PIR) sensor allows you to <b>sense motion</b>, because it detects changes of infrared radiation in its environment. In the simulator you will find a button to simulate these changes of infrared radiation. By pushing the button, you simulate that there is movement, so the PIR sensor will receive the value 1. By releasing the button, the PIR sensor will receive its default value 0.",
@@ -635,6 +656,16 @@ MSG.validator = {
   errRoleInvalid: "Your selected role is invalid."
 };
 
+MSG.pinNames = {
+  digitalPin: "digital pin",
+  analogPin: "analog pin",
+  redPin: "red pin",
+  greenPin: "green pin",
+  bluePin: "blue pin",
+  triggerPin: "trigger pin",
+  echoPin: "echo pin",
+}
+
 MSG.conveyor = {
   chooseImage: "Choose image",
   importImage: "Import image",
@@ -679,5 +710,3 @@ MSG.conveyor = {
   isSimilar: "is similar to",
   withDifference: "with a range of %3"
 }
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

@@ -31,7 +31,6 @@ var MSG = {
   hashError: "Przepraszamy, \"%1\" nie odpowiada żadnemu zapisanemu programowi.",
   xmlError: "Nie można załadować zapisanego pliku. Być może został utworzony za pomocą innej wersji Blockly?",
   badXml: "Błąd parsowania XML : \n%1\n\nZaznacz \"OK\" aby odrzucić twoje zmiany lub \"Cancel\", żeby w przyszłości edytować XML.",
-  pressed: WCIŚNIĘTY,
   setup: "konfiguracja",
   loop: "powtórz",
   dwenguino_main_program_structure: "Pierwszy fragment kodu jest wykonywany tylko jeden raz przy starcie programu. Kod w powtórzenie będzie powtarzany w kółko aż do zatrzymania programu (np. po odłączeniu wtyczki).",
@@ -106,8 +105,8 @@ var MSG = {
   digitalReadSwitchTooltip: "odczytaj wartość jednego z przycisków dwenguino",
   waitForSwitch: "czekaj aż zostanie naciśnięty przycisk %1",
   north: "PÓŁNOC",
-  east: "WSCHÓD",
-  south: "POŁUDNIE",
+  east:"WSCHÓD",
+  south:"POŁUDNIE",
   west: "ZACHÓD",
   center: "CENTER",
   ledsReg: "LED",
@@ -135,8 +134,8 @@ var MSG = {
   socialRobotLedmatrixClearSegmentBlockTooltip: "Opróżnij wybrany segment matrycy led.",
   socialRobotLedmatrixClearDisplayBlock: "Opróżnij matrycę led",
   socialRobotLedmatrixClearDisplayBlockTooltip: "Opróżnij całą matrycę ledową.",
-  next: "Następny",
-  previous: "Poprzedni",
+  next:"Następny",
+  previous:"Poprzedni",
   socialRobotPirBlock: "czujnik zbliżeniowy %1 %2 %3 trig numer kołka %4",
   socialRobotSoundSensorBlock: "czujnik dźwięku %1 %2 %3 kołek %4",
   socialRobotSoundSensorBlockTooltip: "",
@@ -173,7 +172,7 @@ var MSG = {
   pinOptions: "Kołek",
   colorOptions: "Kolor",
   runError: "<h3>Przepraszamy, nie udało nam się wgrać kodu na płytę</h3>",
-  uploadError: "Wykonaj poniższe kroki aby zrestartować płytkę Dwenguino: \n    1. Odłącz kabel USB.\n  2. Połączyć komputer i płytkę Dwenguino za pomocą kabla USB.\n   3. Wcisnąć jednocześnie przycisk RESET i przycisk południe na płytce Dwenguino.\n   4. Następnie najpierw zwolnić przycisk RESET\n  5. Potem zwolnij przycisk południe\n  6. Wgraj program ponownie używając przycisku <span id='db_menu_item_run' class='fas fa-play-circle' alt='Wgraj kod na płytkę Dwenguino'></span> w menu głównym",
+  uploadError: "Wykonaj poniższe kroki aby zrestartować płytkę Dwenguino: \n    1. Odłącz kabel USB.\n  2. Połączyć komputer i płytkę Dwenguino za pomocą kabla USB.\n   3. Wcisnąć jednocześnie przycisk RESET i przycisk południe na płytce Dwenguino.\n   4. Następnie najpierw zwolnić przycisk RESET\n  5. Potem zwolnij przycisk południe\n  6. Wgraj program ponownie używając przycisku <span id='db_menu_item_run' class='fas fa-play-circle' alt='Wgraj kod na płytkę Dwenguino'></span> w menu głównym", 
   cleanError: "Kod z poprzedniego programu nie mógł zostać usunięty.\nSprawdź czy jakiś inny program używa pliku .cpp i zamknij ten program.",
   cleanError: "The previous code could not be removed.\nPlease check if another application is using any .cpp files.\n Close the application.",
   compileError: "Nie udało się skompilować kodu.\nSprawdź czy jest jakiś błąd w twoim programie, czy brakuje gdzieś jakiegoś bloku?",
@@ -185,22 +184,24 @@ var MSG = {
   drawingrobotMoveXY: "przesuń rysik %1 w prawo i %2 w lewo",
   drawingrobotLine: "narysuj linię do x: %1 y: %2",
   drawingrobotCircle: "narysuj okrąg o promieniu: %1",
-  drawingrobotRectangle: "Narysuj prostokąt o szerokości: %1 i wysokości: %2",
+  drawingrobotRectangle:"Narysuj prostokąt o szerokości: %1 i wysokości: %2",
   drawingrobotLiftStylus: "podnieś rysik",
   drawingrobotLowerStylus: "upuść rysik",
   drawingrobotChangeColor: "Kolor %1",
-  up: "w górę",
-  down: "w dół",
-  left: "w lewo",
-  right: "w prawo",
-  bounds: "Uwaga\nPróbujesz rysować poza papierem",
+  up:"w górę",
+  down:"w dół",
+  left:"w lewo",
+  right:"w prawo",
+  bounds:"Uwaga\nPróbujesz rysować poza papierem",
   drawingrobotgrid: "kratka",
   colorpicker: "Kolor",
   drawingrobotSaveImage: "Zapisz rysunek",
   drawingrobotDrawing: "Rysunek",
-  stepperMotorOne: "SILNIK KROKOWY 1",
+  stepperMotorOne: "SILNIK KROKOWY 1", 
   stepperMotorTwo: "SILNIK KROKOWY 2",
-  stepperMotorTooltip: "Wybierz, który z dwóch silników rysującego robota chcesz kontrolować."
+  stepperMotorTooltip: "Wybierz, który z dwóch silników rysującego robota chcesz kontrolować.",
+  triggerPin: "Trigger pin",
+  echoPin: "Echo pin",
 };
 
 MSG.cookieConsent = {
@@ -237,7 +238,7 @@ MSG.dropzone = {
 };
 
 MSG.ledmatrix = {
-  restPosition: 'Pozycja spoczynkowa',
+  restPosition: 'Pozycja spoczynkowa', 
   blink1: 'Migacz 1',
   blink2: 'Migacz 2',
   blink3: 'Migacz 3',
@@ -313,7 +314,7 @@ MSG.simulator = {
   scenario_default: "Normalna płytka",
   scenario_moving: "Robot ruchomy",
   scenario_wall: "Robot ruchomy ze ścianą",
-  scenario_socialrobot: "Robot społeczny",
+  scenario_socialrobot:"Robot społeczny",
   code: "Kod",
   pir: "czujnik zbliżeniowy",
   pirDescription: "Użyj tego czujnika do wykrywania ruchu. W symulatorze znajduje się przycisk umożliwiający symulację ruchu przez naciśnięcie przycisku. W przypadku wykrycia czujnik zwraca 1, w przeciwnym razie 0.",
@@ -455,7 +456,7 @@ MSG.tutorials.hello_dwenguino = {
   step6Content: "Spróbuj teraz! Zmień tekst na ekranie na twoje własne imię. </br> Spróbuj też sprawić, by tekst pojawiał się w drugiej linii ekranu.",
 };
 
-SG.tutorials.blink = {
+MSG.tutorials.blink = {
   step1Title: "Migacz",
   step1Content: "W tym tutorialu napiszemy program, który będzie włączał i wyłączał LD13 na przemian. Zadbamy o to, aby LED zapalała się i gasła dwa razy na sekundę.",
   step2Title: "Symulator",
@@ -601,7 +602,7 @@ MSG.tutorials.nameOnLcdWeGoSTEM = {
   step6Title: "Dwa rzędy",
   step6Content: "Ekran LCD składa się z dwóch rzędów. Zmień wiersz z twoim imieniem z 0 na 1.",
   step7Tite: "Test",
-  step7Content: "przetestuj twój kod.",
+  step7Content:"przetestuj twój kod.",
   step8Title: "Gratulacje!",
   step8Content: "Dobra robota! Teraz już wiesz, jak umieścić tekst na ekranie LCD.",
 };
@@ -618,7 +619,7 @@ MSG.tutorials.introduceYourself = {
   step5Title: "Dostosuj kod",
   step5Content: "Istnieją pewne różnice między tekstem, który pokazuje ten program, a tym, co chcesz, aby program pokazywał.</br>Wyreguluj program tak, aby wyświetlany był prawidłowy tekst.",
   step6Title: "Udało się?",
-  step6Content: "Czy udało Ci się poprawić kod?",
+  step6Content:"Czy udało Ci się poprawić kod?",
 };
 
 MSG.tutorials.showNameAndDisappear = {
@@ -633,7 +634,7 @@ MSG.tutorials.showNameAndDisappear = {
   step5Title: "Dostosuj kod",
   step5Content: "Jakie są różnice między tym programem a tym, który chcesz dostać? </br> Popraw twój kod!",
   step6Title: "Udało się?",
-  step6Content: "Czy udało Ci się poprawić kod?",
+  step6Content:"Czy udało Ci się poprawić kod?",
 };
 
 MSG.tutorials.poem1 = {
@@ -650,7 +651,7 @@ MSG.tutorials.poem1 = {
   step6Title: "Udało się?",
   step6Content: "Czy udało Ci się poprawić kod?",
 };
-
+  
 MSG.tutorials.poem2 = {
   step1Title: "Otwórz okno symulatora",
   step1Content: "Otwórz okno symulatora naciskając przycisk symulatora.",
@@ -665,7 +666,7 @@ MSG.tutorials.poem2 = {
   step6Title: "Udało się?",
   step6Content: "Czy udało Ci się poprawić kod?",
 };
-
+    
 MSG.tutorials.lampOnOffWeGoSTEM = {
   step1Title: "Otwórz okno symulatora",
   step1Content: "Otwórz okno symulatora naciskając przycisk symulatora.",
@@ -678,9 +679,9 @@ MSG.tutorials.lampOnOffWeGoSTEM = {
   step5Title: "Dostosuj kod",
   step5Content: "Czy program działa tak, jak powinien?</br>Zmodyfikuj program tak, aby działał poprawnie",
   step6Title: "Udało się?",
-  step6Content: "Czy udało Ci się poprawić kod?",
+  step6Content:"Czy udało Ci się poprawić kod?",
 };
-
+      
 /**
  * Social robot tutorials
  */
@@ -698,11 +699,11 @@ MSG.tutorials.socialrobot['introduction'].stepTitles = [
   "Koniec"
 ];
 MSG.tutorials.socialrobot['introduction'].stepContents = [
-  "Podczas tego samouczka zajmiesz się projektowaniem twojego własnego robota społecznego. Odkryjesz, co możesz zrobić z <b>symulatorem</b>. <br><img class='tutorial' src='./../../app/static/img/tutorials/socialrobot/socialrobot.png'><br><!Po tym, możesz przejść przez następujące samouczki, aby dowiedzieć się, jak zbudować osobistego robota krok po kroku.-->",
+  "Podczas tego samouczka zajmiesz się projektowaniem twojego własnego robota społecznego. Odkryjesz, co możesz zrobić z <b>symulatorem</b>. <br><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/tutorials/socialrobot/socialrobot.png'><br><!Po tym, możesz przejść przez następujące samouczki, aby dowiedzieć się, jak zbudować osobistego robota krok po kroku.-->",
   "Budowanie robota odbywa się w symulatorze. Otwierasz i ukrywasz go klikając ten przycisk.",
   "W symulatorze można nie tylko budować roboty społeczne, ale także symulować roboty jeżdżące. Istnieją więc różne scenariusze. <b>Kliknij teraz scenariusz robota społecznego.</b> Zobaczysz wtedy inne bloki.",
   "Tutaj zobaczysz wszystkie bloki z symulatora, które możesz wykorzystać do zaprojektowania twojego robota. <br><br> Kliknij na przycisk <b>+</b>, aby dodać blok do twojego robota <b>. Czy widzisz, że pojawia się na dole symulacji?",
-  "Po dodaniu bloku konstrukcyjnego możesz przeciągnąć go tutaj w inne miejsce. W ten sposób możesz zdecydować, jak będzie wyglądał twój robot. <br><br>Przesuń mysz nad nowy blok konstrukcyjny i przeciągnij go na robota za pomocą <img class='tutorial' src='./../../app/static/img/tutorials/socialrobot/drag.jpg' width='20px'>.",
+  "Po dodaniu bloku konstrukcyjnego możesz przeciągnąć go tutaj w inne miejsce. W ten sposób możesz zdecydować, jak będzie wyglądał twój robot. <br><br>Przesuń mysz nad nowy blok konstrukcyjny i przeciągnij go na robota za pomocą <img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/tutorials/socialrobot/drag.jpg' width='20px'>.",
   "Jeśli dodałeś o jeden blok za dużo, możesz <b>usunąć</b> ostatnio utworzony blok ponownie za pomocą <b>przycisku</b>. <br><br>Usuń wszystkie bloki ze twojego robota. Czy się udało?",
   "Wiesz już, jak zbudować robota, ale twój robot nie może się jeszcze poruszać. Dlatego nadal musimy sterować robotem za pomocą samodzielnie napisanego programu. Można to zrobić za pomocą <b>bloków programistycznych</b> z <b>toolboxa</b>.",
   "Kiedy przeciągasz bloki z toolboxa, lądują one w <b>obszarze kodu</b>. To tutaj będzie program, który napiszesz.",
@@ -729,19 +730,19 @@ MSG.tutorials.socialrobot['socialrobots'].stepContents = [
   "<br><br><b>Czujniki</b> to wejścia sensoryczne, które pozwalają robotowi \"mierzyć\" swoje otoczenie.",
   "Te dane pomiarowe mogą być następnie przetwarzane na informacje. Istnieją wszelkiego rodzaju czujniki,",
   "na przykład czujniki temperatury, światła, podczerwieni, ciśnienia lub ruchu.",
-  "<br><br><div class='row'><div class='col-md-4'><img class='tutorial' src='./../../app/static/img/sonar.png' width='120px'></div>",
-  "<div class='col-md-4'><img class='tutorial' src='./../../app/static/img/socialrobot/pir.png' width='70px'></div></div>",
+  "<br><br><div class='row'><div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/sonar.png' width='120px'></div>",
+  "<div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/socialrobot/pir.png' width='70px'></div></div>",
   "<div class='row'><div class='col-md-4 tutorial'><i>Czujnik ultradźwiękowy</i></div><div class='col-md-4 tutorial'><i>Pasywny czujnik podczerwieni</i>.</div><br><br>",
   "<b>Aktuatory</b> są wyjściami, które pozwalają robotowi 'działać'.",
   "Na przykład, pomyśl o silniku serwo, który kontroluje ramię robota tak, że robot macha do ciebie, gdy cię widzi.<br><br>",
-  "<div class='row'><div class='col-md-4'><img class='tutorial' src='./../../app/static/img/servo.png' width='100px'></div>",
-  "<div class='col-md-4'><img class='tutorial' src='./../../app/static/img/dc.png' width='100px'></div></div>",
+  "<div class='row'><div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/servo_new_centered.png' width='100px'></div>",
+  "<div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/dc.png' width='100px'></div></div>",
   "<div class='row'><div class='col-md-4 tutorial'><i>Silnik serwo</i></div><div class='col-md-4 tutorial'><i>Silnik prądu stałego</i></div></div>",
   "Robot musi podejmować własne <b>decyzje</b>. Może to zrobić w oparciu o dane",
   "które mierzą czujniki. Decyzje podejmowane są zazwyczaj w <b>procesorze</b> (w komputerze)",
   "lub <b>mikrokontroler</b> (przy symulatorze).",
   "<br><br>Mikrokontroler naszego symulatora wygląda tak:",
-  "<div class='row'><img class='tutorial center-block' src='./../../app/static/img/tutorials/dwenguino.png'></div>"
+  "<div class='row'><img class='tutorial center-block' src='${settings.basepath}DwenguinoIDE/img/tutorials/dwenguino.png'></div>"
 ];
 MSG.tutorials.socialrobot['hello'] = {};
 MSG.tutorials.socialrobot['hello'].label = "3. Powiedz cześć";
@@ -766,10 +767,10 @@ MSG.tutorials.socialrobot['hello'].stepContents = [
   "Czas sprawić, by coś pojawiło się na ekranie. Kliknij na menu <b>Dwenguino</b>.",
   "i przeciągnij <b>ekran LCD</b> z toolboxa. Zatrzasnąć ekran w bloku \"set\".",
   " Wprowadź wiadomość, która ma być wyświetlana na ekranie.<br>",
-  "<div class='row'><img class='tutorial center-block' src='./../../app/static/img/tutorials/socialrobot/lcd1.png'>",
+  "<div class='row'><img class='tutorial center-block' src='${settings.basepath}DwenguinoIDE/img/tutorials/socialrobot/lcd1.png'>",
   "<p class='tutorial center-block'><i>Program wyświetli tekst \'Cześć!\' na ekranie LCD.</i></p></div>",
   "Teraz naciśnij przycisk <b>play</b>, aby uruchomić twój program.",
-  + "<br><br>Czy widzisz tekst pojawiający się na ekranie LCD robota?",
+    + "<br><br>Czy widzisz tekst pojawiający się na ekranie LCD robota?",
   "Teraz naciśnij przycisk <b>stop</b>, aby zatrzymać symulację.",
   "Placeholder"
 ];
@@ -881,4 +882,3 @@ MSG.validator = {
   errRequiredFields: "Je hebt niet alle velden ingevuld.",
   errRoleInvalid: "De opgegeven rol is niet geldig."
 };
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

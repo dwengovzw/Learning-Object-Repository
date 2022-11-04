@@ -22,5 +22,3 @@ var MSG = {
   xmlError: "No s'ha pogut carregar el teu fitxer desat.  Potser va ser creat amb una versió diferent de Blockly?",
   badXml: "Error d'anàlisi XML:\n%1\n\nSeleccioneu 'Acceptar' per abandonar els vostres canvis, o 'Cancel·lar' per continuar editant l'XML."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

@@ -24,14 +24,22 @@
  * exception is end-of-line comments, which the scraper will remove.
  * @author fraser@google.com (Neil Fraser)
  */
+'use strict';
 
+goog.provide('Blockly.Blocks.colour');  // Deprecated
+goog.provide('Blockly.Constants.Colour');
+
+goog.require('Blockly');
+goog.require('Blockly.Blocks');
+goog.require('Blockly.FieldColour');
+goog.require('Blockly.FieldLabel');
 
 
 /**
  * Unused constant for the common HSV hue for all blocks in this category.
  * @deprecated Use Blockly.Msg['COLOUR_HUE']. (2018 April 5)
  */
-let colorHue = 20;
+ let colorHue = 20;
 
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for colour picker.

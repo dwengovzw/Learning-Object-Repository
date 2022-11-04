@@ -26,11 +26,12 @@
  */
 
 
+
 /**
  * Unused constant for the common HSV hue for all blocks in this category.
  * @deprecated Use Blockly.Msg['MATH_HUE']. (2018 April 5)
  */
-let mathHue = 45;
+ let mathHue = 45;
 
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for numeric value.

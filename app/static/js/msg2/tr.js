@@ -22,5 +22,3 @@ var MSG = {
   xmlError: "Kaydedilen dosyanız yüklenemiyor\nBlockly'nin önceki sürümü ile kaydedilmiş olabilir mi?",
   badXml: "XML ayrıştırma hatası:\n%1\n\nDeğişikliklerden vazgeçmek için 'Tamam'ı, düzenlemeye devam etmek için 'İptal' seçeneğini seçiniz."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

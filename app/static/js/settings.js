@@ -1,3 +1,3 @@
 let settings = {
-    basepath: "backend"
+    basepath: "/dwenguinoblockly/"
 }

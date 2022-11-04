@@ -22,5 +22,3 @@ var MSG = {
   xmlError: "Kunne ikke hente din gemte fil.  Måske er den lavet med en anden udgave af Blockly?",
   badXml: "Fejl under fortolkningen af XML:\n%1\n\nVælg 'OK' for at opgive dine ændringer eller 'Afbryd' for at redigere XML-filen yderligere."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

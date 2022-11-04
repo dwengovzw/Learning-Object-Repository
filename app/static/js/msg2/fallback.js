@@ -9,6 +9,9 @@ var MSG_FALLBACK = {
   loadBlocksFileTooltip: "Load a blocks file you saved before",
   saveBlocksFileTooltip: "Save the blocks to a local file",
   toggleSimulator: "Toggle simulator view.",
+  compileAndDownload: "Compile and download the code to transfer it to the Dwenguino.",
+  compileEmptyProgram: "Download an empty program.",
+  openTutorials: "Open tutorials",
   badCode: "Program error:\n%1",
   timeout: "Maximum execution iterations exceeded.",
   trashTooltip: "Discard all blocks.",
@@ -27,7 +30,9 @@ var MSG_FALLBACK = {
   catOutput: "Output",
   catComments: "Comments",
   catBoardIO: "IO",
+  copy: "Copy",
   createVar: "Create variable",
+  examples: "Examples",
   listVariable: "list",
   textVariable: "text",
   httpRequestError: "There was a problem with the request.",
@@ -85,8 +90,10 @@ var MSG_FALLBACK = {
   dwenguinoLedBlock: "LED",
   dwenguinoSonarBlock: "sonar %1 %2 %3 trig pin number %4 echo pin number %5",
   dwenguinoServoBlock: "Servo motor %1 %2 %3 pin %4 angle %5",
+  dwenguinoContinuousServoBlock: "360° Servo motor %1 %2 %3 pin %4 speed %5",
   dwenguinoServoDropdownBlock: "Servo motor %1",
   dwenguinoServoBlockTooltip: "Set one of the servos connected to the Dwenguino to a specified angle between 0 and 180 degrees",
+  dwenguinoContinuousServoBlockTooltip: "Set one of the servos connected to the Dwenguino to a specified speed between -255 and 255",
   dwenguinoServoDropdownTooltip: "Select one of the two internal servo motors",
   dwenguinoDCMotorBlock: "DC Motor %1 %2 %3 channel %4 speed %5",
   dwenguinoDCMotorBlockTooltip: "Set the speed of one of the two Dwenguino motors. Speed = value between -255 (full speed backwards) and 255 (full speed forwards)",
@@ -138,6 +145,8 @@ var MSG_FALLBACK = {
   inputSoundSensorBlockTooltip: "",
   inputTouchSensorBlock: "Touch sensor %1 %2 %3 pin %4",
   inputTouchSensorBlockTooltip: "",
+  inputLightSensorBlock: "Light sensor %1 %2 %3 on pin %4",
+  inputLightSensorBlockTooltip: "Light sensor", 
   inputButtonBlock: "Button %1 %2 %3 pin %4",
   inputButtonBlockTooltip: "",
   outputRgbLedSelectBlock: "RGB LED %1 %2 %3 %4 on %5",
@@ -159,7 +168,8 @@ var MSG_FALLBACK = {
   pirButtonLabel: "PIR button",
   soundButtonLabel: "Sound button",
   touchButtonLabel: "Touch button",
-  lightSensorSliderLabel: "Light sensor slider",
+  lightSensorButtonLabel: "Light sensor",
+  lightSensorOptionsLabel: "Light sensor options",
   servoCostume: "Costume",
   servoOptions: "Servo motor options",
   sonarOptions: "Sonar sensor options",
@@ -174,6 +184,7 @@ var MSG_FALLBACK = {
   ledOptions: "LED options",
   pinOptions: "Pin",
   colorOptions: "Color",
+  downloadError: "<h3>Sorry, I was unable to download your code</h3>",
   runError: "<h3>Sorry, I was unable to upload the code to the board</h3>",
   uploadError: "Follow these steps to restart the Dwenguino board: \n    1. Disconnect the USB cable \n    2. Connect the computer and Dwenguino board with the USB cable \n    3. Simultaneously press the RESET and the SOUTH button of the Dwenguino board \n    4. Then first release the RESET button \n    5. Then release the SOUTH button \n    6. Upload the program again via the <span id='db_menu_item_run' class='fas fa-play-circle' alt='Upload code to Dwenguino board'></span> button in the main menu",
   cleanError: "The previous code could not be removed.\nPlease check if another application is using any .cpp files.\n Close the application.",
@@ -183,6 +194,7 @@ var MSG_FALLBACK = {
   delete: "Delete",
   restore: "Restore",
   open: "Open",
+  confirm_close: "Are you sure you want to leave the page?\nYour current program will be lost.",
 
   // TODO: Translate:
   dwenguinoStepperMotorBlock: "stepper-motor %1 %2 %3 nummer %4 aantal stappen %5",
@@ -206,8 +218,20 @@ var MSG_FALLBACK = {
   drawingrobotDrawing:"Tekening",
   stepperMotorOne: "STEPPER1", 
   stepperMotorTwo: "STEPPER2",
-  stepperMotorTooltip: "Select which stepper motor from the plotter robot you want to use."
-
+  stepperMotorTooltip: "Select which stepper motor from the plotter robot you want to use.",
+  triggerPin: "Trigger pin",
+  echoPin: "Echo pin",
+  defaultTabTitle: "New tab",
+  connect: "Connect",
+  disConnect: "Disconnect",
+  send: "Send",
+  serial_monitor: "Serial monitor",
+  serial_not_supported: "Your browser does not support the WebSerial API. Choose another browser to use this feature (https://developer.mozilla.org/en-US/docs/Web/API/Serial#browser_compatibility).",
+  serial_monitor_data_type_setting: "Data type:",
+  serial_monitor_data_display_setting: "Display type:",
+  serial_monitor_baud_rate_setting: "Baud rate:",
+  serial_monitor_send_field_placeholder: "Enter the data you want to send to the µC",
+  change_to_textual_programming_info: "When changing to the textual editor, you are no longer able to simulate your robot. You can only run your code on the Dwenguino",
 };
 
 MSG_FALLBACK.cookieConsent = {
@@ -343,10 +367,15 @@ MSG_FALLBACK.simulator = {
   sound: "Sound sensor",
   soundDescription: "Use the sound sensor to <b>detect sound</b>. In the simulator you will find a button to simulate the presence of sound. When the sound sensor detects sound it will output the value 1, otherwise it will output the value 0.",
   light: "Light sensor",
+  continuousservo: "360° servo",
+  continuousservoDescription: "This servo turns with a constant speed. -255 is max speed in one direction 255 max speed in the other direction. With a speed of 0, the motor stops.",
   lightDescription: "",
   buzzer: "Buzzer",
   buzzerDescription: "The buzzer on the Dwengo board can be used to <b>play a series of tones</b> or short sound fragments. The height of each tone is controlled by defining the <b>frequency</b> of the buzzer. Use a delay block to change the length of a tone.",
   decoration: "Decoration",
+  on: "on",
+  pin: "pin",
+  pins: "pins",
 };
 
 MSG_FALLBACK.socialrobot = {
@@ -643,6 +672,16 @@ MSG_FALLBACK.validator = {
   errRequiredFields: "You did not fill in all required fields.",
   errRoleInvalid: "Your selected role is invalid."
 };
+
+MSG_FALLBACK.pinNames = {
+  digitalPin: "digital pin",
+  analogPin: "analog pin",
+  redPin: "red pin",
+  greenPin: "green pin",
+  bluePin: "blue pin",
+  triggerPin: "trigger pin",
+  echoPin: "echo pin",
+}
 
 MSG_FALLBACK.conveyor = {
   chooseImage: "Choose an image",

@@ -26,11 +26,12 @@
  */
 
 
+
 /**
  * Unused constant for the common HSV hue for all blocks in this category.
  * @deprecated Use Blockly.Msg['LOOPS_HUE']. (2018 April 5)
  */
-let loopsHue = 120;
+ let loopsHue = 120;
 
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for repeat n times (external number).

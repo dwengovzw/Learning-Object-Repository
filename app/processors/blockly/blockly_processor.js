@@ -9,7 +9,7 @@ let logger = Logger.getLogger()
 class BlocklyProcessor extends Processor {
     constructor() {
         super();
-        this.blockly_base_url  = process.env.SIMULATOR_BASE_PATH;
+        this.blockly_base_url  = process.env.SIMULATOR_READONLY_BASE_PATH;
     }
 
     /**
@@ -18,7 +18,7 @@ class BlocklyProcessor extends Processor {
      * @param {object} args Optional arguments specific to the render function of the BlocklyProcessor
      * @returns 
      */
-    render(blocklyXml, args = { language: "nl", id: "" }) {
+    render(blocklyXml, args = { language: "nl", id: "" }, {height = 315, aspect_ratio = 'iframe-16-9'} = {}) {
         if (!args.language || args.language.trim() == "") {
             args.language = "nl";
         }
@@ -33,7 +33,39 @@ class BlocklyProcessor extends Processor {
             throw new InvalidArgumentError("The blockly XML is undefined. Please provide correct XML code.")
         }
 
-        let html = `
+        let simulatorUrl = `${this.blockly_base_url}?lang=${args.language}` 
+
+        let form  = `
+        <form action="${simulatorUrl}" method="post" id="blockly_form_${args.id}" target="blockly_iframe_${args.id}">
+            <input type="hidden" value='${blocklyXml}'>
+        </form>
+        `
+
+        let iframe = `
+        <div class="iframe-container ${aspect_ratio}"><iframe name="blockly_iframe_${args.id}" width="420px" height="${height}px" src="${simulatorUrl}" allowfullscreen></iframe></div>
+        `
+
+        let code = `(function(){
+            var auto = setTimeout(function(){ submitform(); }, 100);
+
+            function submitform(){
+              alert('test');
+              document.forms["blockly_form_${args.id}"].submit();
+            }
+    
+            function autoRefresh(){
+               clearTimeout(auto);
+               auto = setTimeout(function(){ submitform(); autoRefresh(); }, 10000);
+            }
+        })()
+        `
+
+        let script = `<script>${code}</script>`
+
+        let html = DOMPurify.sanitize(form + iframe, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']});
+        html = html + script;
+
+        /*let html = `
         <div id="blocklyDiv_${args.id}" class="blocklyDiv" style="height: 480px; "></div>
         <div id="simulator_link">
             <form formtarget="_blank" target="_blank" method="post" action="${this.blockly_base_url}" target="_blank">
@@ -96,7 +128,7 @@ class BlocklyProcessor extends Processor {
             }
             loadScript${args.id}(0)
         </script>
-        `
+        `*/
         return html; //TODO is not sanitized using DOMPurify.sanitize (problems with script tags)
     }
 

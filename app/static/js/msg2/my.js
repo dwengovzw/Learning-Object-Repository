@@ -129,7 +129,7 @@ var MSG = {
   socialRobotSoundSensorBlockTooltip: "",
   socialRobotTouchSensorBlock: "Touch sensor %1 %2 %3 pin %4",
   socialRobotTouchSensorBlockTooltip: "",
-  socialRobotButtonSensorBlock: "Button %1 %2 %3 pin %4",
+  socialRobotButtonBlock: "Button %1 %2 %3 pin %4",
   socialRobotButtonBlockTooltip: "",
   socialrobotSetPinState: "Set %1 %2",
   socialrobotServoBlock: "Servo motor %1 %2 %3 pin %4 angle %5",
@@ -185,6 +185,8 @@ var MSG = {
   colorpicker:"Kleur",
   drawingrobotSaveImage:"Tekening opslaan",
   drawingrobotDrawing:"Tekening",
+  triggerPin: "Trigger pin",
+  echoPin: "Echo pin",
 };
 
 MSG.cookieConsent = {
@@ -552,5 +554,3 @@ MSG.validator = {
   errGender: "Select your gender.",
   errActivityId: "Your activity title cannot be empty."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

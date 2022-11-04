@@ -118,7 +118,7 @@ var MSG = {
   socialRobotSoundSensorBlockTooltip: "",
   socialRobotTouchSensorBlock: "Sensore tattile %1 %2 %3 pin %4",
   socialRobotTouchSensorBlockTooltip: "",
-  socialRobotButtonSensorBlock: "Pulsante %1 %2 %3 pin %4",
+  socialRobotButtonBlock: "Pulsante %1 %2 %3 pin %4",
   socialRobotButtonBlockTooltip: "",
   socialrobotSetPinState: "Fissa %1 %2",
   socialrobotServoBlock: "Motore servo %1 %2 %3 pin %4 angolo %5",
@@ -175,6 +175,8 @@ var MSG = {
   drawingrobotDrawing:"Disegno",
   clear: "Cancellare",
   save: "Salvare",
+  triggerPin: "Trigger pin",
+  echoPin: "Echo pin",
 };
 
 MSG.cookieConsent = {
@@ -467,5 +469,3 @@ MSG.validator = {
   errRequiredFields: "Je hebt niet alle velden ingevuld.",
   errRoleInvalid: "De opgegeven rol is niet geldig."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

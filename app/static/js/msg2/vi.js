@@ -22,5 +22,3 @@ var MSG = {
   xmlError: "Không mở được chương trình của bạn.  Có thể nó nằm trong một phiên bản khác của Blockly?",
   badXml: "Lỗi sử lý XML:\n %1\n\nChọn 'OK' để từ bỏ các thay đổi hoặc 'Hủy' để tiếp tục chỉnh sửa các XML."
 };
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };

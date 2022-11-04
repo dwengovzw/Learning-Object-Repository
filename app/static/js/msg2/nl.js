@@ -11,6 +11,9 @@ var MSG = {
   loadBlocksFileTooltip: "Laad een block bestand in dat je eerder hebt opgeslagen.",
   saveBlocksFileTooltip: "Sla de blokken op naar een lokaal bestand.",
   toggleSimulator: "Open of sluit het simulatorvenster.",
+  compileAndDownload: "Compileer en download je code om het over te zetten naar de Dwenguino",
+  compileEmptyProgram: "Download een leeg programma.",
+  openTutorials: "Open de tutorials",
   badCode: "Programmafout:\n%1",
   timeout: "Het maximale aantal iteraties is overschreden.",
   trashTooltip: "Alle blokken verwijderen",
@@ -25,10 +28,14 @@ var MSG = {
   catArduino: "Arduino",
   catDwenguino: "Dwenguino",
   catSocialRobot: "Sociale robot",
+  catInput: "Invoer",
+  catOutput: "Uitvoer",
   catConveyor: "Transportband",
   catComments: "Commentaar",
   catBoardIO: "IO",
+  copy: "Kopiëren",
   createVar: "Maak nieuwe variabele",
+  examples: "Voorbeelden",
   listVariable: "lijst",
   textVariable: "tekst",
   httpRequestError: "Er is een probleem opgetreden tijdens het verwerken van het verzoek.",
@@ -46,6 +53,7 @@ var MSG = {
   clearLCD: "maak lcd-scherm leeg",
   dwenguinoLCD: "lcd-scherm %1 %2 %3 schrijf tekst: %4 op rij %5 vanaf kolom %6",
   pin: "pin",
+  digitalPin: "Digitale pin",
   toneOnPin: "speel toon af op ",
   frequency: "met frequentie",
   noToneOnPin: "stop toon op",
@@ -94,11 +102,11 @@ var MSG = {
   dwenguinoLedBlock: "led",
   dwenguinoSonarBlock: "sonar %1 %2 %3 trig pin nummer %4 echo pin nummer %5",
   dwenguinoServoBlock: "servomotor %1 %2 %3 pin %4 hoek %5",
+  dwenguinoContinuousServoBlock: "360° servomotor %1 %2 %3 pin %4 snelheid %5",
   dwenguinoServoDropdownBlock: "Servomotor %1",
   dwenguinoServoBlockTooltip: "Stel servo 1 of 2 in op een door jou gekozen hoek tussen 0 en 180 graden",
+  dwenguinoContinuousServoBlockTooltip: "Stel een servo in op een door jou gekozen snelheid tussen -255 en 255",
   dwenguinoServoDropdownTooltip: "Select one of the two internal servo motors",
-  dwenguinoServoOne: "1",
-  dwenguinoServoTwo: "2",
   dwenguinoDCMotorBlock: "dc-motor %1 %2 %3 nummer %4 snelheid %5",
   dwenguinoDCMotorBlockTooltip: "Stel de snelheid in van een van de twee motoren aangesloten op de Dwenguino. De snelheid is een waarde tussen -255 (volledige snelheid achteruit) en 255 (volledige snelheid vooruit)",
   dwenguinoAnalogWrite: "schrijf naar %1 de analoge waarde %2",
@@ -126,10 +134,10 @@ var MSG = {
   socialRobotPinRed: "pin rood",
   socialRobotPinGreen: "pin groen",
   socialRobotPinBlue: "pin blauw",
-  socialRobotRgbLedOffBlock: "Zet de rgb-led af met",
-  socialRobotRgbColorBlock: "RGB-kleur %1",
+  socialRobotRgbLedOffBlock: "zet de rgb-led uit met",
+  socialRobotRgbColorBlock: "rgb-kleur %1",
   socialRobotRgbColor: "rood %1 groen %2 blauw %3",
-  socialRobotLedmatrixImageBlock: "Toon patroon op het ledmatrix",
+  socialRobotLedmatrixImageBlock: "Toon patroon op de ledmatrix",
   socialRobotLedmatrixImageBlockTooltip: "Toon het gekozen patroon op het gekozen ledmatrix-segment.",
   socialRobotLedmatrixEyePatternBlock: "Toon oogpatroon",
   socialRobotLedmatrixEyePatternBlockTooltip: 'Toon het gekozen oogpatroon op het gekozen ledmatrix-segment.',
@@ -140,13 +148,25 @@ var MSG = {
   socialRobotLedmatrixClearDisplayBlockTooltip: "Maak de volledige ledmatrix leeg.",
   next: "Volgende",
   previous: "Vorige",
-  socialRobotPirBlock: "bewegingssensor %1 %2 %3 trig pin nummer %4",
-  socialRobotSoundSensorBlock: "geluidsensor %1 %2 %3 pin %4",
-  socialRobotSoundSensorBlockTooltip: "",
-  socialRobotTouchSensorBlock: "aanraaksensor %1 %2 %3 pin %4",
-  socialRobotTouchSensorBlockTooltip: "",
-  socialRobotButtonSensorBlock: "Knop %1 %2 %3 pin %4",
-  socialRobotButtonBlockTooltip: "",
+  inputPirBlock: "bewegingssensor %1 %2 %3 trig pin nummer %4",
+  inputPirBlockTooltip: "",
+  inputSonarSensorSelectBlock: "sonar %1 %2 %3 op %4",
+  inputSonarDropdownBlock: "sonarsensor",
+  inputSoundSensorSelectBlock: "geluid %1 %2 %3 op %4",
+  inputSoundDropdownBlock: "geluidssensor",
+  inputSoundSensorBlock: "geluidssensor %1 %2 %3 pin %4",
+  inputSoundSensorBlockTooltip: "",
+  inputTouchSensorBlock: "aanraaksensor %1 %2 %3 pin %4",
+  inputTouchSensorBlockTooltip: "",
+  inputButtonBlock: "Button %1 %2 %3 pin %4",
+  inputButtonBlockTooltip: "",
+  inputLightSensorBlock: "Lichtsensor %1 %2 %3 op pin %4",
+  inputLightSensorBlockTooltip: "Lichtsensor", 
+  outputRgbLedSelectBlock: "rgb-led %1 %2 %3 %4 op %5",
+  outputRgbLedSelectOffBlock: "zet de rgb-led uit %1 %2 %3 %4",
+  outputRgbLedDropdownBlock: "rgb-led",
+  outputRgbLedSelectBlockTooltip: "",
+  outputRgbLedSelectOffBlockTooltip: "",
   socialrobotSetPinState: "zet %1 %2",
   socialrobotServoBlock: "servomotor %1 %2 %3 pin %4 hoek %5",
   socialrobotWaveArmesBlock: "zwaai armen %1 %2 servo pin rechterarm %3 %4 servo pin linkerarm %5 %6",
@@ -154,20 +174,22 @@ var MSG = {
   socialRobotArmsDownBlock: "doe armen naar beneden %1 %2 %3 servo pin rechterarm %4 %5 servo pin linkerarm %6 %7",
   socialRobotEyesLeftBlock: "draai ogen naar links %1 %2 %3 servo pin linkeroog %4 %5 servo pin rechteroog %6 %7",
   socialRobotEyesRightBlock: "draai ogen naar rechts %1 %2 %3 servo pin linkeroog %4 %5 servo pin rechteroog %6 %7",
-  socialrobotReadPinBlock: "lees de waarde pin %1 %2",
+  inputReadPinBlock: "lees de waarde pin %1 %2",
   socialRobotServoRightHand: "servo pin rechterhand",
   socialRobotServoLeftHand: "servo pin linkerhand",
   sonarSliderLabel: "Afstand sonar",
   pirButtonLabel: "Bewegingssensorknop",
-  soundButtonLabel: "Geluidsensorknop",
+  soundButtonLabel: "Geluidssensorknop",
   touchButtonLabel: "Aanraaksensorknop",
-  lightSensorSliderLabel: "Lichtsensorknop",
+  lightSensorButtonLabel: "Lichtsensor",
+  lightSensorOptionsLabel: "Lichtsensor opties",
   servoCostume: "Uiterlijk",
+  options: "Opties",
   servoOptions: "Opties van de servomotor",
   sonarOptions: "Opties van de sonarsensor",
   lcdOptions: "Opties van het lcd-scherm",
   pirOptions: "Opties van de bewegingssensor",
-  soundOptions: "Opties van de geluidsensor",
+  soundOptions: "Opties van de geluidssensor",
   touchOptions: "Opties van de aanraaksensor",
   buttonOptions: "Opties van de knop",
   lightOptions: "Opties van de lichtsensor",
@@ -176,6 +198,7 @@ var MSG = {
   ledOptions: "Opties van de led",
   pinOptions: "Pin",
   colorOptions: "Kleur",
+  downloadError: "<h3>Sorry, het is niet gelukt om je code te downloaden</h3>",
   runError: "<h3>Sorry, het is niet gelukt om de code te uploaden naar het bord</h3>",
   uploadError: "Volg deze stappen om het Dwenguino-bord te herstarten: \n    1. Maak de USB-kabel los \n    2. Verbind de computer en het Dwenguino-bord met de USB-kabel \n    3. Druk tegelijkertijd de RESET-knop en de ZUID-knop in van het Dwenguino-bord \n    4. Los dan eerst de RESET-knop \n    5. Los daarna de ZUID-knop \n    6. Upload het programma opnieuw via de <span id='db_menu_item_run' class='fas fa-play-circle' alt='Upload code to Dwenguino board'></span>-knop in het hoofdmenu ",
   cleanError: "De code van het vorige programma kon niet worden verwijderd.\nControleer of er een ander programma een .cpp bestand gebruikt en sluit dit programma.",
@@ -207,8 +230,18 @@ var MSG = {
   delete: "Verwijder",
   restore: "Herstellen",
   open: "Open",
-  variablesDeclareSetInt: "stel %1 in op getal %2",
-
+  confirm_close: "Ben je zeker dat je de pagina wil verlaten?\nJe code in de editor zal verloren gaan.",
+  defaultTabTitle: "Nieuw tabblad",
+  connect: "Verbinden",
+  disConnect: "Verbreken",
+  send: "Verzenden",
+  serial_monitor: "Seriële monitor",
+  serial_not_supported: "Je browser ondersteunt the WebSerial API niet. Gebruik een andere browser om deze functionaliteit te kunnen gebruiken (https://developer.mozilla.org/en-US/docs/Web/API/Serial#browser_compatibility).",
+  serial_monitor_data_type_setting: "Data type:",
+  serial_monitor_data_display_setting: "Weergave:",
+  serial_monitor_baud_rate_setting: "Baud rate:",
+  serial_monitor_send_field_placeholder: "Vul hier de data in die je wil sturen naar de µC",
+  change_to_textual_programming_info: "Opgepast! Wanneer je naar tekstuele code overstapt dan kan je je programma niet meer simuleren in de browser. Je kan de code dan enkel nog uitvoeren op het Dwenguino bord.",
 };
 
 MSG.cookieConsent = {
@@ -327,9 +360,11 @@ MSG.simulator = {
   pirDescription: "Gebruik deze sensor om beweging te detecteren. In de simulator is een knop voorzien om beweging te simuleren door de knop in te drukken. Bij detectie geeft de sensor een 1 terug, anders een 0.",
   sonar: "Sonarsensor",
   sonarDescription: "Gebruik deze sensor om een persoon of object te detecteren en om te bepalen hoe ver van de sensor de persoon of het object zich bevindt. In de simulator is een schuifbalk voorzien om de afstand tussen het object en de sensor te simuleren. De sensor geeft de afstand terug in centimeter.",
-  sound: "Geluidsensor",
+  sound: "Geluidssensor",
   soundDescription: "Gebruik deze sensor om geluid te detecteren. In de simulator is een knop voorzien om geluid te simuleren. Bij geluid geeft de sensor 1 terug, bij stilte 0.",
   light: "Lichtsensor",
+  continuousservo: "360° servo",
+  continuousservoDescription: "Deze servo blijft draaien aan de snelheid die je kiest. -255 is maximale snelheid in de ene richting 255 is de maximale snelheid in de andere richting. Bij 0 staat de servo stil.",
   lightDescription: "Gebruik deze sensor om veel of weinig licht te detecteren. In de simulator is een schuifbalk voorzien om licht en donker te simuleren. Bij veel licht geeft de lichtsensor van de simulator een hoge waarde terug, bij weinig licht een lage.",
   led: "Led",
   ledDescription: "In de simulator beschik je over leds in vier kleuren. Een led wordt aangestuurd door een pin die je zelf aanduidt. Als de pin in toestand HOOG verkeert, dan brandt de led. Bij status LAAG is de led gedoofd.",
@@ -349,6 +384,9 @@ MSG.simulator = {
   buzzer: "Zoemer",
   buzzerDescription: "Met de zoemer kan je geluid laten afspelen met een frequentie die je zelf kiest. De gewenste frequentie (in Hz) geef je mee in je programma. Met een wacht-blok bepaal je hoelang het geluid wordt afgespeeld.",
   button: "Knop",
+  on: "op",
+  pin: "pin",
+  pins: "pinnen",
 };
 
 MSG.socialrobot = {
@@ -777,11 +815,11 @@ MSG.tutorials.socialrobot['introduction'].stepTitles = [
   "Einde"
 ];
 MSG.tutorials.socialrobot['introduction'].stepContents = [
-  "Tijdens deze tutorial ga je aan de slag om zelf een sociale robot te ontwerpen. Je ontdekt wat je met de <b>simulator</b> kan doen. <br><img class='tutorial' src='./../../app/static/img/img/tutorials/socialrobot/socialrobot.png'><br><!--Daarna kan je de volgende tutorials doorlopen om stap voor stap jouw persoonlijke robot te leren bouwen.-->",
+  `Tijdens deze tutorial ga je aan de slag om zelf een sociale robot te ontwerpen. Je ontdekt wat je met de <b>simulator</b> kan doen. <br><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/tutorials/socialrobot/socialrobot.png'><br><!--Daarna kan je de volgende tutorials doorlopen om stap voor stap jouw persoonlijke robot te leren bouwen.-->`,
   "Het bouwen van de robot gebeurt in de simulator. Je opent en verbergt hem door op deze knop te klikken.",
   "Je kan in de simulator niet alleen sociale robots bouwen, maar ook rijdende robots simuleren. Er zijn dus verschillende scenario's. <b>Klik nu het scenario van de sociale robot aan.</b> Je krijgt dan andere bouwblokken te zien.",
   "Hier zie je alle bouwblokken uit de simulator die je kan gebruiken om je robot te ontwerpen. <br><br> Klik eens op een <b>+ knop</b> om een bouwblok aan je robot <b>toe te voegen</b>. Zie je het onderaan in de simulatie verschijnen?",
-  "Nadat je een bouwblok hebt toegevoegd, kan je ze hier verslepen naar een andere plaats. Zo kan je zelf bepalen hoe jouw robot eruitziet. <br><br>Beweeg met de muis over het nieuwe bouwblok en versleep op de robot met het <img class='tutorial' src='./../../app/static/img/img/tutorials/socialrobot/drag.jpg' width='20px'>.",
+  `Nadat je een bouwblok hebt toegevoegd, kan je ze hier verslepen naar een andere plaats. Zo kan je zelf bepalen hoe jouw robot eruitziet. <br><br>Beweeg met de muis over het nieuwe bouwblok en versleep op de robot met het <img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/tutorials/socialrobot/drag.jpg' width='20px'>.`,
   "Als je een blok te veel toegevoegd hebt, kan je het laatst aangemaakte blok weer <b>verwijderen</b> met de <b>- knop</b>. <br><br>Haal alle blokken van je robot weer weg. Is het gelukt?",
   "Je weet nu hoe je een robot kan bouwen, maar je robot kan nog niet bewegen. Daarom moeten we de robot nog aansturen met een zelfgeschreven programma. Dit kan met de <b>programmeerblokken</b> uit de <b>toolbox</b>. ",
   "Wanneer je blokken uit de toolbox sleept, komen ze in het <b>codegebied</b> terecht. Hier komt het programma dat je gaat schrijven.",
@@ -808,19 +846,19 @@ MSG.tutorials.socialrobot['socialrobots'].stepContents = [
   + "<br><br><b>Sensoren</b> zijn zintuiglijke ingangen waarmee een robot zijn omgeving kan 'meten'. "
   + "Die meetgegevens kunnen nadien verwerkt worden tot informatie. Er bestaan allerlei sensoren, "
   + "bijvoorbeeld temperatuur-, licht-, infrarood-, druk- of bewegingssensoren."
-  + "<br><br><div class='row'><div class='col-md-4'><img class='tutorial' src='./../../app/static/img/img/sonar.png' width='120px'></div>"
-  + "<div class='col-md-4'><img class='tutorial' src='./../../app/static/img/socialrobot/pir.png' width='70px'></div></div>"
+  + `<br><br><div class='row'><div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/sonar.png' width='120px'></div>`
+  + `<div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/socialrobot/pir.png' width='70px'></div></div>`
   + "<div class='row'><div class='col-md-4 tutorial'><i>Ultrasoonsensor</i></div><div class='col-md-4 tutorial'><i>Passief infrarood sensor</i></div></div><br><br>"
   + "<b>Actuoren</b> vormen de uitgangen waarmee een robot kan 'handelen'. "
   + "Denk bijvoorbeeld aan een servomotor die de arm van een robot aanstuurt, zodat de robot naar je zwaait wanneer hij je ziet.<br><br>"
-  + "<div class='row'><div class='col-md-4'><img class='tutorial' src='./../../app/static/img/servo.png'  width='100px'></div>"
-  + "<div class='col-md-4'><img class='tutorial' src='./../../app/static/img/dc.png'  width='100px'></div></div>"
+  + `<div class='row'><div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/servo_new_centered.png'  width='100px'></div>`
+  + `<div class='col-md-4'><img class='tutorial' src='${settings.basepath}DwenguinoIDE/img/dc.png'  width='100px'></div></div>`
   + "<div class='row'><div class='col-md-4 tutorial'><i>Servomotor</i></div><div class='col-md-4 tutorial'><i>DC motor</i></div></div>",
   "Een robot hoort zelf <b>beslissingen</b> te nemen. Dit kan hij doen op basis van de gegevens "
   + "die de sensoren meten. Beslissingen worden doorgaans genomen in een <b>processor</b> (bij een computer)"
   + " of een <b>microcontroller</b> (bij de simulator)."
   + "<br><br>De microcontroller van onze simulator ziet er zo uit:"
-  + "<div class='row'><img class='tutorial center-block' src='./../../app/static/img/tutorials/dwenguino.png'></div>"
+  + `<div class='row'><img class='tutorial center-block' src='${settings.basepath}DwenguinoIDE/img/tutorials/dwenguino.png'></div>`
 ];
 
 MSG.tutorials.socialrobot['hello'] = {};
@@ -846,7 +884,7 @@ MSG.tutorials.socialrobot['hello'].stepContents = [
   "Tijd om iets op het scherm te laten verschijnen. Klik het <b>Dwenguino</b> menu open "
   + "en sleep het <b>LCD-scherm</b> uit de toolbox. Klik het scherm vast in het 'zet klaar' blok. "
   + " Vul een boodschap in die op het scherm moet komen.<br>"
-  + "<div class='row'><img class='tutorial center-block' src='./../../app/static/img/tutorials/socialrobot/lcd1.png'>"
+  + `<div class='row'><img class='tutorial center-block' src='${settings.basepath}DwenguinoIDE/img/tutorials/socialrobot/lcd1.png'>`
   + "<p class='tutorial center-block'><i>Het programma zal de tekst \'Hallo!\' tonen op het LCD-scherm.</i></p></div>",
   "Druk nu op de <b>afspeelknop</b> om je programma uit te voeren. "
   + "<br><br>Zie je de tekst op het LCD-scherm van je robot verschijnen?",
@@ -971,6 +1009,16 @@ MSG.validator = {
   errRoleInvalid: "De opgegeven rol is niet geldig."
 };
 
+MSG.pinNames = {
+  digitalPin: "digitale pin",
+  analogPin: "analoge pin",
+  redPin: "rode pin",
+  greenPin: "groene pin",
+  bluePin: "blauwe pin",
+  triggerPin: "trigger pin",
+  echoPin: "echo pin",
+};
+
 MSG.conveyor = {
   chooseImage: "Kies afbeelding",
   importImage: "Importeer afbeelding",
@@ -1014,6 +1062,4 @@ MSG.conveyor = {
   noColor: "Geen kleur",
   isSimilar: "lijkt op",
   withDifference: "met een speling van %3"
-}
-
-Blockly.Msg = { ...Blockly.Msg, ...MSG };
+};
