@@ -33,36 +33,30 @@ class BlocklyProcessor extends Processor {
             throw new InvalidArgumentError("The blockly XML is undefined. Please provide correct XML code.")
         }
 
-        let simulatorUrl = `${this.blockly_base_url}?lang=${args.language}` 
+        let simulatorUrl = `${this.blockly_base_url}` 
 
         let form  = `
         <form action="${simulatorUrl}" method="post" id="blockly_form_${args.id}" target="blockly_iframe_${args.id}">
-            <input type="hidden" value='${blocklyXml}'>
+            <input name="xml" type="hidden" value='${blocklyXml}'>
         </form>
         `
 
         let iframe = `
-        <div class="iframe-container ${aspect_ratio}"><iframe name="blockly_iframe_${args.id}" width="420px" height="${height}px" src="${simulatorUrl}" allowfullscreen></iframe></div>
+        <div class="iframe-container ${aspect_ratio}"><iframe name="blockly_iframe_${args.id}" height="530px" width="420px" allowfullscreen></iframe></div>
         `
 
         let code = `(function(){
-            var auto = setTimeout(function(){ submitform(); }, 100);
+            var auto = setTimeout(function(){ submitform(); }, 50);
 
             function submitform(){
-              alert('test');
               document.forms["blockly_form_${args.id}"].submit();
-            }
-    
-            function autoRefresh(){
-               clearTimeout(auto);
-               auto = setTimeout(function(){ submitform(); autoRefresh(); }, 10000);
             }
         })()
         `
 
         let script = `<script>${code}</script>`
 
-        let html = DOMPurify.sanitize(form + iframe, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']});
+        let html = DOMPurify.sanitize(form + iframe, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target']});
         html = html + script;
 
         /*let html = `
