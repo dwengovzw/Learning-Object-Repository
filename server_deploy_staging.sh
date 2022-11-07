@@ -5,7 +5,7 @@
 sudo rm -rf /home/ubuntu/dwengo-build/application/*
 
 # copy new repo code to deploy directory
-cp -r /home/ubuntu/dwengo-deploy/learning_object_backend/Learning-Object-Repository/* /home/ubuntu/dwengo-build/application/
+cp -r /home/ubuntu/dwengo-repo/Learning-Object-Repository/* /home/ubuntu/dwengo-build/application/
 
 # go to deploy directory
 cd /home/ubuntu/dwengo-build/application/
