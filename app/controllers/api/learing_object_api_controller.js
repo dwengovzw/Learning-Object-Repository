@@ -79,22 +79,24 @@ learningObjectApiController.getHtmlObject = async (query) => {
     if (metadata) {
         let id = metadata._id.toString();
         let file = path.resolve(process.env.LEARNING_OBJECT_STORAGE_LOCATION, id, "index.html");
-        await new Promise((resolve) => {
+        resHtml = await new Promise((resolve) => {
             fs.readFile(file, 'utf8', async function (err, data) {
                 if (err) {
-                    return console.log(err);
+                    console.log(err);
+                    resolve("") // if error return empty string
                 }
-                resHtml = data;
+                let html = data;
                 let regex = new RegExp("@@OBJECT_REPLACE\/(.*)\/(.*)\/(.*)@@", "g");
-                let match = regex.exec(resHtml)
+                let match = regex.exec(html)
+                // Look for containing learning object references and replace them by their respective html.
                 while (match) {
                     let objHtml = await learningObjectApiController.getHtmlObject({ hruid: match[1], language: match[2], version: match[3] });
-                    resHtml = resHtml.replace(`@@OBJECT_REPLACE/${match[1]}/${match[2]}/${match[3]}@@`, objHtml);
-                    match = regex.exec(resHtml)
+                    html = html.replace(`@@OBJECT_REPLACE/${match[1]}/${match[2]}/${match[3]}@@`, () => objHtml); // Using replacement function since the blockly xml might contain special replacement patterns (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_the_replacement)
+                    match = regex.exec(html) // As long as there are references to other learning objects, find and replace them recursively
                 }
-                resHtml = resHtml.replace(/@@URL_REPLACE@@/g, `${process.env.DOMAIN_URL}`)
+                html = html.replace(/@@URL_REPLACE@@/g, `${process.env.DOMAIN_URL}`)
 
-                resolve();
+                resolve(html);
             });
         })
     }
