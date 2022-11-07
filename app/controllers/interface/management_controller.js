@@ -26,7 +26,7 @@ managementController.getLogs = (req, res) => {
 }
 
 managementController.forceProcess = (req, res) => {
-    pullAndProcessRepository(path.resolve(process.env.LEARNING_OBJECT_REPOSITORY_LOCATION)).then(
+    pullAndProcessRepository(path.resolve(process.env.LEARNING_OBJECT_REPOSITORY_LOCATION), process.env.LEARNING_OBJECTS_GIT_REPOSITORY_BRANCH).then(
         () => {
             res.set('Content-Type', 'text/plain; charset=utf-8')
             res.write("done");
