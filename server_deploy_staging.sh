@@ -44,6 +44,7 @@ echo "CACHE_TIME_SECONDS=5" >> .env # cache time set to five seconds for staging
 
 # Install dependancies
 npm install
+npm audit fix --force
 
 #restart application (was started with: pm2 start 'npm run start-production' --name learning-object-repository)
 pm2 restart learning-object-repository || pm2 start 'npm run start-production' --name learning-object-repository
