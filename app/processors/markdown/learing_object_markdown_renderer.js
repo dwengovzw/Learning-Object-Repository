@@ -43,18 +43,18 @@ class LearningObjectMarkdownRenderer {
         } else if (href.startsWith(this.blocklyPrefix)) {
             // link to blockly (downloads)
             if (title) {
-                return `<a href="@@URL_REPLACE@@/api/learningObject/downloadFile/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${this.args.metadata._id}/${href.split(/\/(.+)/, 2)[1]}" target="_blank" title="${title}">${text}</a>`
+                return `<a href="@@URL_REPLACE@@/api/learningObject/downloadFile/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${this.args.metadata._id}/${href.split(/\/(.+)/, 2)[1]}" target="_blank" title="${title}">${text}</a>`
             }
-            return `<a href="@@URL_REPLACE@@/api/learningObject/downloadFile/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${this.args.metadata._id}/${href.split(/\/(.+)/, 2)[1]}" target="_blank">${text}</a>`
+            return `<a href="@@URL_REPLACE@@/api/learningObject/downloadFile/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${this.args.metadata._id}/${href.split(/\/(.+)/, 2)[1]}" target="_blank">${text}</a>`
         } else {
             // any other link
             if (isValidHttpUrl(href)) {
                 return `<a href="${href}" target="_blank" title="${title}">${text}</a>`;
             } else {
                 if (title) {
-                    return `<a href="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${this.args.metadata._id}/${href}" target="_blank" title="${title}">${text}</a>`
+                    return `<a href="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${this.args.metadata._id}/${href}" target="_blank" title="${title}">${text}</a>`
                 }
-                return `<a href="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${this.args.metadata._id}/${href}" target="_blank" >${text}</a>`
+                return `<a href="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${this.args.metadata._id}/${href}" target="_blank" >${text}</a>`
             }
         }
     };

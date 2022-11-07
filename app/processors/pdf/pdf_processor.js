@@ -36,7 +36,7 @@ class PdfProcessor extends Processor {
             throw new InvalidArgumentError("The metadata for for the object which uses the file '" + pdfUrl + "' is not loaded in the processor.");
         }
 
-        return DOMPurify.sanitize(`<embed src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${args.metadata._id}/${pdfUrl}" type="application/pdf" width="100%" height="800px"/>`, { ADD_TAGS: ["embed"] })
+        return DOMPurify.sanitize(`<embed src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${args.metadata._id}/${pdfUrl}" type="application/pdf" width="100%" height="800px"/>`, { ADD_TAGS: ["embed"] })
 
     }
 

@@ -51,7 +51,7 @@ class AudioProcessor extends Processor {
         }
 
         return DOMPurify.sanitize(`<audio controls>
-                <source src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${args.metadata._id}/${audioUrl}" type=${type}>
+                <source src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${args.metadata._id}/${audioUrl}" type=${type}>
                 Your browser does not support the audio element.
                 </audio>`);
 

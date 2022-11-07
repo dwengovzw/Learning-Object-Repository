@@ -39,7 +39,7 @@ class InlineImageProcessor extends Processor {
         if (!args.metadata._id) {
             throw new InvalidArgumentError("The metadata for for the object which uses the file '" + imageUrl + "' is not loaded in the processor.");
         }
-        return DOMPurify.sanitize(`<img src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_LOCATION}/${args.metadata._id}/${imageUrl}" alt="${args.altText}">`);
+        return DOMPurify.sanitize(`<img src="@@URL_REPLACE@@/${process.env.LEARNING_OBJECT_STORAGE_NAME}/${args.metadata._id}/${imageUrl}" alt="${args.altText}">`);
     }
 
     processFiles(files, metadata){
