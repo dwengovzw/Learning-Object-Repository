@@ -33,8 +33,8 @@ Create local .env file in project root with the correct configuration. These are
 - I_LEARN_REDIRECT_URI_EXTERNAL = "https://83.217.67.53/backend/api/learningObject/getRaw"
 - I_LEARN_REDIRECT_URI_SIMULATOR = "https://blockly-backend.dwengo.org/lti/inititate_login"
 - COOKIE_SECRET="4178a34a-e39c-4199-b849-d1c5d7ce1412"
-- ADMIN_USER_USERNAME="dwengo"
-- ADMIN_USER_PASSWORD="Dwengolom2021"
+- ADMIN_USER_USERNAME=""
+- ADMIN_USER_PASSWORD=""
 
 **Test**
 ```bash
