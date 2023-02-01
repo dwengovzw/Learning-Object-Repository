@@ -56,7 +56,7 @@ class BlocklyProcessor extends Processor {
 
         let script = `<script>${code}</script>`
 
-        let html = DOMPurify.sanitize(form + iframe, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target']});
+        let html = form + iframe // DOMPurify.sanitize(form + iframe, {ALLOW_UNKNOWN_PROTOCOLS: true, ADD_TAGS: ["iframe", "xml"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target']});
         html = html + script;
 
         return html; //TODO is not sanitized using DOMPurify.sanitize (problems with script tags)
