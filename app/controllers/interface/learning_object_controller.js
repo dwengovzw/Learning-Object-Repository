@@ -111,7 +111,7 @@ learningObjectController.processMarkdown = (md, files, metadata) => {
         return !f["originalname"].match(ignoreregex);
     })
     let proc = new ProcessingProxy({ files: filtered, metadata: metadata })
-    return proc.render(ProcessorContentType.TEXT_MARKDOWN, md);
+    return proc.render(ProcessorContentType.TEXT_MARKDOWN, md, args={metadata: metadata});
 };
 
 /**

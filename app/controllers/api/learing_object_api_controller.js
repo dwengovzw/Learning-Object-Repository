@@ -94,8 +94,9 @@ learningObjectApiController.getHtmlObject = async (query) => {
                     html = html.replace(`@@OBJECT_REPLACE/${match[1]}/${match[2]}/${match[3]}@@`, () => objHtml); // Using replacement function since the blockly xml might contain special replacement patterns (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_the_replacement)
                     match = regex.exec(html) // As long as there are references to other learning objects, find and replace them recursively
                 }
-                html = html.replace(/@@URL_REPLACE@@/g, `${process.env.DOMAIN_URL}`)
-
+                if (html){
+                    html = html.replace(/@@URL_REPLACE@@/g, `${process.env.DOMAIN_URL}`)
+                }
                 resolve(html);
             });
         })

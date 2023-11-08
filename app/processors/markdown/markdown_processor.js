@@ -8,6 +8,7 @@ import Processor from '../processor.js';
 import InvalidArgumentError from "../../utils/invalid_argument_error.js";
 import ProcessingHistory from '../../models/processing_history.js';
 import path from "path";
+import InlineImageProcessor from '../image/inline_image_processor.js';
 
 class MarkdownProcessor extends Processor {
     logger = Logger.getLogger();
@@ -22,13 +23,22 @@ class MarkdownProcessor extends Processor {
      * @param {string} mdText Plain markdown string to be converted to html. May contain links to learning objects which results in recursive processing.
      * @returns The sanitized version of the generated html.
      */
-    render(mdText, args = {}) {
+    render(mdText, args = {metadata: {}}) {
         let html = "";
         try {
+            mdText = this.replaceLinks(mdText, args.metadata); // Replace html image links with path based on metadata
             html = marked(mdText); //DOMPurify.sanitize(marked(mdText), { ADD_TAGS: ["embed", "iframe", "script"] });
         } catch (e) {
             throw new InvalidArgumentError(e.message);
         }
+        return html;
+    }
+
+    replaceLinks(html, metadata) {
+        let proc = new InlineImageProcessor();
+        html = html.replace(/<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g, (match, src, alt, altText, title, titleText) => {
+            return proc.render(src, { metadata: metadata, altText: altText || "No alt text", title: titleText || "No title" });
+        });
         return html;
     }
 
@@ -95,7 +105,7 @@ class MarkdownProcessor extends Processor {
         const renderer = new ObjectConverter().toJSON(new LearningObjectMarkdownRenderer({ files: filtered, metadata: metadata }));
         marked.use({ renderer });
 
-        return [this.render(splitdata.markdown), resfiles]
+        return [this.render(splitdata.markdown, {metadata: metadata}), resfiles]
     }
 }
 
