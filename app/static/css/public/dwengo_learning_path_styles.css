@@ -1,0 +1,59 @@
+.dwengo_content .title {
+    text-align: center;
+    color: #85C441;
+  }
+  
+  .dwengo_content .subtitle {
+    text-align: center;
+    color: #0E6942;
+    margin-bottom: 2rem;
+  }
+
+  .dwengo_content .items {
+    columns: 2 300px;
+    column-gap: 2rem;
+  }
+  
+  .dwengo_content .item {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  
+  .dwengo_content .info_item_title {
+    color: #0E6942;
+  }
+  
+  .dwengo_content .example_item {
+    border: 2px solid #85C441;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  
+  .dwengo_content .example_item_title {
+    background-color: #85C441;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px;
+    margin-top: -1px;
+    margin-bottom: 0;
+    font-size: 12pt;
+    font-weight: bolder;
+  }
+
+  .dwengo_content .example_item_content {
+    margin: 0;
+  }
+  .dwengo_content .example_item pre{
+    margin: 0;
+  }
+  .dwengo_content .example_item p{
+    margin: 0;
+  }
+
+  .dwengo_content .code-toolbar {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+  }

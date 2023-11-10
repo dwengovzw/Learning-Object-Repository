@@ -127,6 +127,7 @@
             type: "GET",
             url: basePath + '/api/manage/logsraw',
             success: (data) => {
+                data = data.replace(/\\\\/g, "/"); // replace double backslashes by slashes -> to make pathnames work on windows.
                 data = data.replace(/\\n/g, "</br>"); // replace newline characters
                 let lines = JSON.parse(data);
                 resetLog(lines);
