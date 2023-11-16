@@ -3,57 +3,173 @@
     color: #85C441;
   }
   
-  .dwengo_content .subtitle {
-    text-align: center;
-    color: #0E6942;
-    margin-bottom: 2rem;
-  }
+.dwengo_content .subtitle {
+  text-align: center;
+  color: #0E6942;
+  margin-bottom: 2rem;
+}
 
-  .dwengo_content .items {
-    columns: 2 300px;
-    column-gap: 2rem;
-  }
-  
-  .dwengo_content .item {
-    display: inline-block;
-    box-sizing: border-box;
-    width: 100%;
-  }
-  
-  .dwengo_content .info_item_title {
-    color: #0E6942;
-  }
-  
-  .dwengo_content .example_item {
-    border: 2px solid #85C441;
-    border-radius: 10px;
-    margin-top: 20px;
-  }
-  
-  .dwengo_content .example_item_title {
-    background-color: #85C441;
-    color: white;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 10px;
-    margin-top: -1px;
-    margin-bottom: 0;
-    font-size: 12pt;
-    font-weight: bolder;
-  }
+.dwengo_content .items {
+  columns: 2 300px;
+  column-gap: 2rem;
+}
 
-  .dwengo_content .example_item_content {
-    margin: 0;
-  }
-  .dwengo_content .example_item pre{
-    margin: 0;
-  }
-  .dwengo_content .example_item p{
-    margin: 0;
-  }
+.dwengo_content .item {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+}
 
-  .dwengo_content .code-toolbar {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow: hidden;
-  }
+.dwengo_content .info_item_title {
+  color: #0E6942;
+}
+
+.dwengo_content .example_item {
+  border: 2px solid #85C441;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.dwengo_content .example_item_title {
+  background-color: #85C441;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 10px;
+  margin-top: -1px;
+  margin-bottom: 0;
+  font-size: 12pt;
+  font-weight: bolder;
+}
+
+.dwengo_content .example_item_content {
+  margin: 0;
+}
+.dwengo_content .example_item pre{
+  margin: 0;
+}
+.dwengo_content .example_item p{
+  margin: 0;
+}
+
+.dwengo_content .code-toolbar {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  overflow: hidden;
+}
+
+/* Assignment CSS */
+
+.dwengo-content.assignment .title::after {
+  content: "?";
+  position: absolute;
+  top: 10px;
+  right: 1rem;
+  font-size: 35px;
+  border: 3px solid #000; /* Border color */
+  border-radius: 50%; /* Make it circular */
+  width: 40px; /* Adjust the width and height as needed */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dwengo-content.assignment {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #fab63cff;
+  margin-bottom: 1rem;
+}
+
+.dwengo-content.assignment .title {
+  background-color: #fab63cff;
+  padding: 1rem;
+  position: relative;
+}
+
+.dwengo-content.assignment .content {
+  padding: 1rem;
+}
+
+/* Sideinfo CSS */
+
+.dwengo-content.sideinfo .title::after {
+  content: "💡";
+  position: absolute;
+  top: 5px;
+  right: 1rem;
+  font-size: 40px;
+}
+
+.dwengo-content.sideinfo {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #0e6942ff;
+  margin-bottom: 1rem;
+}
+
+.dwengo-content.sideinfo .title {
+  background-color: #0e6942ff;
+  color: white;
+  padding: 1rem;
+  position: relative;
+}
+
+.dwengo-content.sideinfo .content {
+  padding: 1rem;
+}
+
+/* Important CSS */
+
+.dwengo-content.important .title::after {
+  content: "⚠";
+  position: absolute;
+  top: 5px;
+  right: 1rem;
+  font-size: 40px;
+}
+
+.dwengo-content.important {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #d02625ff;
+  margin-bottom: 1rem;
+}
+
+.dwengo-content.important .title {
+  background-color: #d02625ff;
+  color: white;
+  padding: 1rem;
+  position: relative;
+}
+
+.dwengo-content.important .content {
+  padding: 1rem;
+}
+
+/*<div class="dwengo-content assignment">
+<h2>Hier de titel van de opdracht</h2>
+<p>
+Hier de opdracht.
+</p>
+</div>
+
+// HTML voor een weetje of extra info
+
+<div class="dwengo-content sideinfo">
+<h2>Hier de titel van het weetje</h2>
+<p>
+Hier de inhoud van het weetje
+</p>
+</div>
+
+
+// HTML voor een weetje of extra info
+
+<div class="dwengo-content important">
+<h2>Hier de titel van de belangrijke informatie</h2>
+<p>
+Hier de inhoud.
+</p>
+</div>*/
