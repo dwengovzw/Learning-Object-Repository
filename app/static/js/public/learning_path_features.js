@@ -1,10 +1,21 @@
-function setupDOMUpdateObserver(){
+let LearningpathInteraction = {
+  formatLearningObject: (container, callback = () => {}) => {
+    LearningpathInteraction.formatSimulatorCode(container);
+    callback();
+  },
+  formatSimulatorCode: (container) => {
+    LearningpathInteraction.findDescendantWithClass(container, 'dwengo-code-simulator').forEach(element => {
+      LearningpathInteraction.formatCodeElement(element);
+    });
+  },
   // Function to be executed when the target class element is added
-  function onElementAdded(element) {
-    console.log('Element with the specified class name added!');
-    // Your custom code here
-    console.log(element.textContent);
-
+  formatCodeElement: (element) => {
+    let codeElement = element.querySelector('code');
+    if (!codeElement) {
+      console.log("No code element found in simulator element");
+      return;
+    }
+    let filename = element.querySelector("code").getAttribute("data-filename") || 'program.cpp'
     // Create a link element
     const link = document.createElement('a');
     link.textContent = 'Simulator';
@@ -17,7 +28,7 @@ function setupDOMUpdateObserver(){
       // Create a form element
       const form = document.createElement('form');
       form.method = 'POST';
-      form.action = 'https://blockly.dwengo.org/openState';
+      form.action = 'http://localhost:12032/openTextualProgram';
       form.target = '_blank'; // Open the result in a new tab
 
       // Create the input field for the state parameter
@@ -25,9 +36,8 @@ function setupDOMUpdateObserver(){
       stateInput.type = 'hidden';
       stateInput.name = 'state';
       stateInput.value = JSON.stringify({
-        view: 'text',
-        cppCode: [element.textContent],
-        scenario: 'spyrograph'
+        code: codeElement.textContent.trim(),
+        filename: filename
       });
 
       // Append the input field to the form
@@ -42,58 +52,22 @@ function setupDOMUpdateObserver(){
       // Remove the form from the document body
       document.body.removeChild(form);
     });
-
     // Append the link to the bottom of the element
     element.appendChild(link);
-  }
-
-  // Target element class name to observe
-  const targetClassName = 'dwengo-code-simulator';
-
-  // Function to check for existing elements with the target class during the initial load
-  function checkExistingElements() {
-    const elements = document.querySelectorAll(`.${targetClassName}`);
-    elements.forEach(element => {
-      // Execute your function for each existing element
-      onElementAdded(element);
-    });
-  }
-
-  // Select the target node
-  const targetNode = document.body; // You can specify another target element if needed
-
-  // Options for the observer (specify the type of mutations to observe)
-  const config = { childList: true, subtree: true, attributes: false, characterData: false };
-
-  // Check for existing elements during the initial load
-  checkExistingElements();
-
-  // Create a MutationObserver instance
-  const observer = new MutationObserver((mutationsList, observer) => {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-        // Check if the added node has the target class name
-        const addedNodes = Array.from(mutation.addedNodes);
-        const hasTargetClass = addedNodes.some(node => node.classList && node.classList.contains(targetClassName));
-
-        if (hasTargetClass) {
-          const addedNode = addedNodes.find(node => node.classList && node.classList.contains(targetClassName));
-          // Execute your function when an element with the target class is added
-          onElementAdded(addedNode);
-        }
-      }
+  },
+  findDescendantWithClass: (element, className) => {
+    // Check if the current element has the specified class
+    if (element.classList.contains(className)) {
+        return [element];
     }
-  });
 
-  // Start observing the target node for configured mutations
-  observer.observe(targetNode, config);
-
-  // Later, you can disconnect the observer when it's no longer needed
-  // observer.disconnect();
+    // Check each child element recursively
+    let decendantsWithClass = []
+    for (let i = 0; i < element.children.length; i++) {
+        decendantsWithClass = [...decendantsWithClass, ...LearningpathInteraction.findDescendantWithClass(element.children[i], className)]
+    }
+    return decendantsWithClass
+}
 }
 
-// Event listener to execute when the document is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('Document loaded!');
-  setupDOMUpdateObserver();
-});
+

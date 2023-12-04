@@ -58,6 +58,11 @@
   overflow: hidden;
 }
 
+.dwengo_content.table_container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 /* Assignment CSS */
 
 .dwengo-content.assignment .title::after {
