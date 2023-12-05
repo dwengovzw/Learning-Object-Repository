@@ -28,7 +28,7 @@ let LearningpathInteraction = {
       // Create a form element
       const form = document.createElement('form');
       form.method = 'POST';
-      form.action = 'http://localhost:12032/openTextualProgram';
+      form.action = 'https://kiks.ilabt.imec.be/staging/tandi/openTextualProgram';
       form.target = '_blank'; // Open the result in a new tab
 
       // Create the input field for the state parameter
