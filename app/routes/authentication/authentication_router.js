@@ -20,10 +20,12 @@ authenticationRouter.post('/signup', (req, res) => {
 
 
 authenticationRouter.get('/login', (req, res) => {
+    console.log("Trying to login")
     return authenticationController.renderLogin(req, res);
 })
 
 authenticationRouter.post('/login', passport.authenticate('local'), (req, res) => {
+    console.log("Authenticated");
     return authenticationController.processLogin(req, res);
 })
 
