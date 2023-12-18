@@ -84,6 +84,9 @@
         $.ajax({
             type: "GET",
             url: basePath + '/api/manage/livelogs',
+            hrFields: {
+                withCredentials: true
+            },
             success: (data) => {
                 // When processing is done, the server sends a response
                 let lines = JSON.parse(data);
@@ -126,6 +129,9 @@
         $.ajax({
             type: "GET",
             url: basePath + '/api/manage/logsraw',
+            xhrFields: {
+                withCredentials: true
+            },
             success: (data) => {
                 data = data.replace(/\\\\/g, "/"); // replace double backslashes by slashes -> to make pathnames work on windows.
                 data = data.replace(/\\n/g, "</br>"); // replace newline characters
