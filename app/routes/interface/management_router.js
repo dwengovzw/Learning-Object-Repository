@@ -47,6 +47,8 @@ managementRouter.route("/overview").get( (req, res) => {
 })
 
 managementRouter.route("/logsraw").get((req, res) => {
+    console.log("logsraw");
+    console.log(req.user);
     if (req.user && req.user.approved){
         managementController.logLines(req, res);
     }else{
