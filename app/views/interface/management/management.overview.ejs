@@ -152,6 +152,9 @@
         $.ajax({
             type: "GET",
             url: basePath + '/api/manage/forceProcess',
+            xhrFields: {
+                withCredentials: true
+            },
             success: (data) => {
                 // When processing is done, the server sends a response
                 if (data == "done"){
