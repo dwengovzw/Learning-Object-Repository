@@ -153,6 +153,12 @@
   padding: 1rem;
 }
 
+
+/* Injected simulator button css */
+
+.dwengo-editor-button{
+  margin-bottom: 1rem;
+}
 /*<div class="dwengo-content assignment">
 <h2>Hier de titel van de opdracht</h2>
 <p>
