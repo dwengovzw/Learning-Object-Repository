@@ -22,7 +22,7 @@ logger.info(`Running from directory: ${path.resolve(process.cwd())}`)
 logger.info(`Running in ${process.env.NODE_ENV} environment`)
 
 const app = express();
-app.use(cors())
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 
 // setup authentication middleware
 app.use(cookieParser());
