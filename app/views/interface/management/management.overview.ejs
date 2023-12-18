@@ -84,7 +84,7 @@
         $.ajax({
             type: "GET",
             url: basePath + '/api/manage/livelogs',
-            hrFields: {
+            xhrFields: {
                 withCredentials: true
             },
             success: (data) => {
