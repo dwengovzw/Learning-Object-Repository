@@ -6,6 +6,8 @@ let logger = Logger.getLogger()
 let managementRouter = express.Router({ mergeParams: true });
 
 managementRouter.route("/logs").get((req, res) => {
+    console.log("logs");
+    console.log(req.user);
     if (req.user && req.user.approved){
         managementController.getLogs(req, res);
     }else{
@@ -15,6 +17,8 @@ managementRouter.route("/logs").get((req, res) => {
 })
 
 managementRouter.route("/livelogs").get((req, res) => {
+    console.log("livelogs");
+    console.log(req.user);
     if (req.user && req.user.approved){
         managementController.getLiveLogLines(req, res);
     }else{
@@ -24,6 +28,8 @@ managementRouter.route("/livelogs").get((req, res) => {
 })
 
 managementRouter.route("/forceProcess").get((req, res) => {
+    console.log("process");
+    console.log(req.user);
     if (req.user && req.user.approved){
         managementController.forceProcess(req, res);
     }else{
