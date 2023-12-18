@@ -43,14 +43,19 @@ passport.serializeUser(function(user, done) {
 passport.use(new passportLocal.Strategy((username, password, done) => {
     User.findOne({ username: username }, (err, foundUser) => {
         if (err){
-            return done(err)
+          console.log("Error finding user: " + err);
+          return done(err)
         }
         if (!foundUser){
+          console.log("User not found");
             return done(null, false)
         }
         if (!foundUser.validPassword(password) || !foundUser.approved){
+          console.log("User password not correct");
             return done(null, false)
         }
+        console.log("Found user");
+        console.log(foundUser);
         return done(null, foundUser)
     })
 }))
