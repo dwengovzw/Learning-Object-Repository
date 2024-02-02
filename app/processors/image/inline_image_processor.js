@@ -18,7 +18,7 @@ class InlineImageProcessor extends Processor {
      */
     render(imageUrl, args = { altText: "", metadata: {} }) {
 
-        if (!isValidHttpUrl(imageUrl) && (!imageUrl || !imageUrl.toLowerCase().match(/^(?!http.*$)[^.].*\.(jpe?g|png|svg)/))) {
+        if (!isValidHttpUrl(imageUrl) && (!imageUrl || !imageUrl.toLowerCase().match(/^(?!http.*$)[^.].*\.(jpe?g|png|svg|gif)/))) {
             if (args.metadata && args.metadata.hruid && args.metadata.version && args.metadata.language){
                 ProcessingHistory.error(args.metadata.hruid, args.metadata.version, args.metadata.language, "The image cannot be found. Please check if the url is spelled correctly.")
             }else{
