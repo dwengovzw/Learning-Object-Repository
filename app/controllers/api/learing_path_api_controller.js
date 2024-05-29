@@ -273,16 +273,21 @@ learningPathApiController.removeLearningPaths = async () => {
 };
 
 learningPathApiController.getLearningPathsFromIdList = async (req, res) => {
-    let idList = req.query ? JSON.parse(req.query.pathIdList) : {};
-    let language = req.query ? req.query.language : "nl";
-    let queryList = []
-    for (let hruid of idList.hruids){
-        queryList.push({ "$and": [{"hruid": {$eq: hruid}}, {"language": {$eq: language}}] })
+    try {
+        let idList = req.query ? JSON.parse(req.query.pathIdList) : {};
+        let language = req.query ? req.query.language : "nl";
+        let queryList = []
+        for (let hruid of idList.hruids){
+            queryList.push({ "$and": [{"hruid": {$eq: hruid}}, {"language": {$eq: language}}] })
+        }
+        let query = {
+            "$or": queryList
+        }
+        learningPathApiController.performQueryAndMapImage(req, res, query, idList.hruids);
+    } catch (error) {
+        return res.send("Could not retrieve learning paths from database.");
     }
-    let query = {
-        "$or": queryList
-    }
-    learningPathApiController.performQueryAndMapImage(req, res, query, idList.hruids);
+    
 }
 
 /**
