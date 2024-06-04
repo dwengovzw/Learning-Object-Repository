@@ -115,7 +115,7 @@ learningObjectSchema.index({ title: 'text', description: 'text', keywords: 'text
 learningObjectSchema.path('skos_concepts').validate((val) => {
     let valid = true;
     val.forEach(elem => {
-        if (!/https?:\/\/ilearn\.ilabt\.imec\.be\/[\w#!:.?+=&%@!\-\/]*/.test(elem))
+        if (!/https?:\/\/ilearn\.ilabt\.imec\.be\/[\w#!:.?+=&%@!\-\/]*/.test(elem) || !/https?:\/\/w3id\.org\/[\w#!:.?+=&%@!\-\/]*/.test(elem))
             valid = false;
     });
     return valid;
