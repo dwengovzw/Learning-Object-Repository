@@ -28,13 +28,10 @@ app.use(cors({credentials: true, origin: process.env.CORS_ORIGIN}))
 app.use(cookieParser());
 app.use(session({ 
   name: '__session',
-  //secret: "dwengo",
+  secret: "dwengo", 
+  maxAge: 24 * 60 * 60 * 1000 * 10, // 10 days
   secure: true,
   sameSite: 'none',
-  // cookie: { 
-  //   secure: true,
-  //   sameSite: 'none',
-  // },
  }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
