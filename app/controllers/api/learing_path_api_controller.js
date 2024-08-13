@@ -488,7 +488,13 @@ learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async 
         aggregation.push(sort)
     }
 
-    return LearningPath.aggregate(aggregation)
+    try{
+    let result = await LearningPath.aggregate(aggregation)
+        return result
+    } catch(err){
+        console.log("Error executing query: ", err)
+        return []
+    }
 }
 
 
