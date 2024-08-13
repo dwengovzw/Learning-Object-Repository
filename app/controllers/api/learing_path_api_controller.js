@@ -478,7 +478,7 @@ learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async 
                   
     ]
 
-    console.log("query:")
+    console.log("aggregation:")
     console.log(JSON.stringify(aggregation))
 
     if (queryOrderList.length > 0){
