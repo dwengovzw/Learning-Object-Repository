@@ -296,9 +296,11 @@ learningObjectController.createLearningObject = async (req, res) => {
             
 
             // Write html file
+            console.log("Writing html file to: " + destination)
             learningObjectController.writeHtmlFile(destination, "index.html", htmlString);
 
             // Save all source files
+            console.log("Saving source files to: " + destination)
             learningObjectController.saveSourceFiles(resFiles, destination);
 
             if (existing) {
