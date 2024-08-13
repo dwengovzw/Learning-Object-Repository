@@ -252,6 +252,8 @@ learningObjectController.createLearningObject = async (req, res) => {
         await new Promise((resolve) => {
             repos.save(learningObject, (err) => {
                 if (err) {
+                    console.log("-----------------------------------------saving object failed-----------------------------------------");
+                    console.log(err);
                     ProcessingHistory.error(metadata.hruid, metadata.version, metadata.language,
                         "The object with hruid '" + metadata.hruid + "' at location '" + learning_object_location + "' could not be " + (existing ? "updated " : "saved") + " due to an error with the database or with the metadata.")
                     dbError = true;
