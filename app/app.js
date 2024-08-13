@@ -28,7 +28,8 @@ app.use(cors({credentials: true, origin: process.env.CORS_ORIGIN}))
 app.use(cookieParser());
 app.use(session({ secret: "dwengo",
   cookie: { 
-    secure: false
+    secure: true,
+    sameSite: 'none',
   },
  }));
 app.use(bodyParser.urlencoded({ extended: false }));
