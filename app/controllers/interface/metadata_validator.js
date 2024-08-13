@@ -316,6 +316,7 @@ class MetadataValidator {
             if (this.skos_concepts != undefined) {
                 // type array
                 if (!Array.isArray(this.skos_concepts)) {
+                    console.log("- The skos_concepts parameter needs to be an array of strings.\n")
                     return "- The skos_concepts parameter needs to be an array of strings.\n";
                 }
                 // elements are type string and correct url (http://ilearn.ilabt.imec.be/<concept>)
@@ -329,6 +330,7 @@ class MetadataValidator {
                 }
                 if (err.length != 0) {
                     err = "- The keywords parameter needs to be an array of correct urls (starting with http://ilearn.ilabt.imec.be/): \n" + err;
+                    console.log(err)
                     return err;
                 }
             } else {
