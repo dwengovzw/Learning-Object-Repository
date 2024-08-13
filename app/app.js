@@ -26,11 +26,15 @@ app.use(cors({credentials: true, origin: process.env.CORS_ORIGIN}))
 
 // setup authentication middleware
 app.use(cookieParser());
-app.use(session({ secret: "dwengo",
-  cookie: { 
-    secure: true,
-    sameSite: 'none',
-  },
+app.use(session({ 
+  name: '__session',
+  secret: "dwengo",
+  secure: true,
+  sameSite: 'none',
+  // cookie: { 
+  //   secure: true,
+  //   sameSite: 'none',
+  // },
  }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
