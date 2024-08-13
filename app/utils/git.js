@@ -10,6 +10,7 @@ import UserLogger from "../utils/user_logger.js"
 let logger = Logger.getLogger();
 
 let initialiseRepo = async function(git, repository) {
+    console.log("Initialising repository")
     return git
         .exec(() => logger.info("Initializing git repository..."))
         .init()
@@ -17,6 +18,7 @@ let initialiseRepo = async function(git, repository) {
 }
 
 let initRepository = async function(git, repository){
+    console.log("Checking if repository is initialized")
     return git.checkIsRepo('root')
             .then(isRepo => {
                 return !isRepo && initialiseRepo(git, repository)
@@ -24,6 +26,7 @@ let initRepository = async function(git, repository){
 }
 
 let pullChanges = async function(git, repository, branch){
+    console.log("Pulling changes")
     return new Promise((resolve, reject) => {
         try{
             git.exec(() => logger.info("Pulling changes from " + repository))
@@ -129,7 +132,8 @@ let checkDirRec = async (dir) => {
  * @param {string} destination - the destination directory for the remote files
  * @param {string} branch - the branch in the remote repository (default is 'main')
  */
-let pullAndProcessRepository = async function (destination, branch = "main") {    
+let pullAndProcessRepository = async function (destination, branch = "main") {  
+    console.log("Processing learning object repository.")  
     UserLogger.clear();
     let repository = process.env.LEARNING_OBJECTS_GIT_REPOSITORY
     // Pull Git repos
