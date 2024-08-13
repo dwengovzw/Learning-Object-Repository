@@ -31,11 +31,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 passport.serializeUser(function(user, done) {
+    console.log("Serializing user", user)
     done(null, user.id);
   });
   
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
+      console.log("Deserializing user", user)
       done(err, user);
     });
   });

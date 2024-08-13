@@ -24,9 +24,6 @@ authenticationRouter.get('/login', (req, res) => {
     return authenticationController.renderLogin(req, res);
 })
 
-authenticationRouter.post('/login', passport.authenticate('local'), (req, res) => {
-    console.log("Authenticated");
-    return authenticationController.processLogin(req, res);
-})
+authenticationRouter.post('/login', passport.authenticate('local',  { successRedirect: '/api/manage/overview'}));
 
 export default authenticationRouter
