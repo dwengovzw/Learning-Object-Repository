@@ -31,7 +31,7 @@ app.use(session({
   secret: "dwengo", 
   maxAge: 24 * 60 * 60 * 1000 * 10, // 10 days
   secure: true,
-  sameSite: 'none',
+  sameSite: 'lax',
  }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
