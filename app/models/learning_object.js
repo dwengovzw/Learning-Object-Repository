@@ -114,11 +114,17 @@ learningObjectSchema.index({ title: 'text', description: 'text', keywords: 'text
 
 learningObjectSchema.path('skos_concepts').validate((val) => {
     console.log("------------------->>>>> vali: " + JSON.stringify(val));
-    return true;
     let valid = true;
     val.forEach(elem => {
-        if (!/https?:\/\/ilearn\.ilabt\.imec\.be\/[\w#!:.?+=&%@!\-\/]*/.test(elem) || !/https?:\/\/w3id\.org\/[\w#!:.?+=&%@!\-\/]*/.test(elem))
-            valid = false;
+        let url;
+        try {
+            url = new URL(elem);
+            if (!(url.protocol === "http:" || url.protocol === "https:")){
+                valid = false;
+            }
+          } catch (_) {
+            valid = false;  
+          } 
     });
     return valid;
 });
