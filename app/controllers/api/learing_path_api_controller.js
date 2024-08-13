@@ -346,6 +346,8 @@ learningPathApiController.performQueryAndMapImage = async function(req, res, que
     let paths;
     try{
         paths = await learningPathApiController.searchAllValidLearningPathsWhichMeetCondition(query, queryOrderList);
+        console.log("Found paths: " + paths.length)
+        console.log("Paths:", paths)
         paths = paths.map((path) => {
             path.image = path.image.toString("base64")
             return path
@@ -470,6 +472,9 @@ learningPathApiController.searchAllValidLearningPathsWhichMeetCondition = async 
         }
                   
     ]
+
+    console.log("query:")
+    console.log(JSON.stringify(aggregation))
 
     if (queryOrderList.length > 0){
         let addOrderField = { "$addFields" : { "__order" : { "$indexOfArray" : [ queryOrderList, "$hruid" ] } } };
