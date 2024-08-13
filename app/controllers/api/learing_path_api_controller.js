@@ -273,6 +273,7 @@ learningPathApiController.removeLearningPaths = async () => {
 };
 
 learningPathApiController.getLearningPathsFromIdList = async (req, res) => {
+    console.log("getPathsFromIdListfunc")
     try {
         let idList = req.query ? JSON.parse(req.query.pathIdList) : {};
         let language = req.query ? req.query.language : "nl";
@@ -283,8 +284,10 @@ learningPathApiController.getLearningPathsFromIdList = async (req, res) => {
         let query = {
             "$or": queryList
         }
+        console.log('query:', query)
         learningPathApiController.performQueryAndMapImage(req, res, query, idList.hruids);
     } catch (error) {
+        console.log("Error: ", error)
         return res.send("Could not retrieve learning paths from database.");
     }
     
@@ -344,6 +347,7 @@ learningPathApiController.searchLearningPaths = async (req, res) => {
 
 learningPathApiController.performQueryAndMapImage = async function(req, res, query, queryOrderList){
     let paths;
+    console.log("QueryOrderlist: ", queryOrderList)
     try{
         paths = await learningPathApiController.searchAllValidLearningPathsWhichMeetCondition(query, queryOrderList);
         console.log("Found paths: " + paths.length)
@@ -354,6 +358,7 @@ learningPathApiController.performQueryAndMapImage = async function(req, res, que
         })
         return res.json(paths);
     }catch(error){
+        console.log("Error: ", error)
         return res.send("Could not retrieve learning paths from database.");
     }  
 }

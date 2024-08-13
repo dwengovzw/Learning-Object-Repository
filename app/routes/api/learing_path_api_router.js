@@ -7,6 +7,7 @@ learningPathApiRouter.route("/search").get((req, res) => {
 });
 
 learningPathApiRouter.route("/getPathsFromIdList").get((req, res) => {
+    console.log("getPathsFromIdList")
     learningPathApiController.getLearningPathsFromIdList(req, res);
 });
 
