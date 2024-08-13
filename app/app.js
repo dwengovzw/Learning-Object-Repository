@@ -28,7 +28,7 @@ app.use(cors({credentials: true, origin: process.env.CORS_ORIGIN}))
 app.use(cookieParser());
 app.use(session({ 
   name: '__session',
-  secret: "dwengo",
+  //secret: "dwengo",
   secure: true,
   sameSite: 'none',
   // cookie: { 
