@@ -313,6 +313,7 @@ class MetadataValidator {
         },
 
         skos_concepts() {
+            console.log("------------------------ validating skos_concepts ------------------------")
             if (this.skos_concepts != undefined) {
                 // type array
                 if (!Array.isArray(this.skos_concepts)) {
