@@ -31,6 +31,10 @@ let pullChanges = async function(git, repository, branch){
         try{
             git.exec(() => logger.info("Pulling changes from " + repository))
                 .pull(repository, branch, (err, update) => {
+                    if (err) {
+                        reject(err)
+                        return
+                    }
                     if (update && update.summary.changes) {
                         logger.info("There were " + update.summary.changes + " changes!");
                         resolve({changes: true, changedFiles: update.files})
@@ -162,6 +166,7 @@ let pullAndProcessRepository = async function (destination, branch = "main") {
     } catch (e) {
         UserLogger.info(`Error during processing: ${e}`)
         console.log(`Error during processing: ${e}`)
+        throw e
     }
     UserLogger.info("finished processing learning object repository.")
     console.log("finished processing learning object repository.")
